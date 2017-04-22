@@ -1,0 +1,64 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This class creates a partition of a dataset into folds. 
+// 
+// 
+// The type of fold partition is described by Tfold_control.
+// The fold affiliation is created by either the constructor (...) 
+// or the function read_from_file(...). The folds are, unlike the 
+// usual C/C++ convention, numbered from 1 to Tfold_control.number.
+// 
+//
+// clear()
+// Deletes existing fold affiliation.
+// 
+// size()
+// Returns the number of samples currently considered.
+// 
+// folds()
+// Returns the number of folds currently considered.
+// 
+// read_from_file(...)
+// Reads the fold affiliation information from a file and creates
+// the fold affiliation for dataset.
+// 
+// write_to_file(...)
+// Write the fold affiliation information to a file.
+// 
+// build_train_and_val_set(...)
+// This function returns the training and validation set that
+// correspond to <fold>. The function exits with an error, if 
+// <fold_control> and <dataset> is not passed to Tfold_manager 
+// by either the constructor or read_from_file(...).
+// 
+// max_val_size/max_train_size()
+// Returns the size of the largest validation fold, respectively 
+// the largest training set size.
+// 
+// fold_size(...)
+// Returns the size of the fold with specifiec number. 
+// 
+// get_train_set_info(...)
+// Returns the Tsubset_info of the training set created by the specified fold.
+// Note that this Tsubset_info is with respect to the dataset that is loaded
+// in Tfold_manager.
+// 
+//**********************************************************************************************************************************

@@ -1,0 +1,149 @@
+<deployment-project plugin="plugin.toolbox" plugin-version="1.0">
+  <configuration build-checksum="2632665581" file="/Users/thomapp/Documents/liquidSVM/bindings/matlab/liquidSVM.prj" location="/Users/thomapp/Documents/liquidSVM/bindings/matlab" name="liquidSVM" target="target.toolbox" target-name="Package Toolbox">
+    <param.appname>liquidSVM</param.appname>
+    <param.authnamewatermark>Ingo Steinwart,Nico Schmid,Philipp Thomann</param.authnamewatermark>
+    <param.email>liquidSVM@mathematik.uni-stuttgart.de</param.email>
+    <param.company>ISA Universität Stuttgart</param.company>
+    <param.summary>liquidSVM: A Fast and Versatile SVM Package</param.summary>
+    <param.description>Support vector machines (SVMs) and related kernel-based learning
+algorithms are a well-known class of machine learning algorithms, for
+non-parametric classification and regression.
+liquidSVM is an implementation of SVMs whose key features are:
+fully integrated hyper-parameter selection,
+extreme speed on both small and large data sets,
+full flexibility for experts, and
+inclusion of a variety of different learning scenarios:
+multi-class classification, ROC, and Neyman-Pearson learning, and
+least-squares, quantile, and expectile regression.</param.description>
+    <param.screenshot />
+    <param.version>1.0</param.version>
+    <param.output>${PROJECT_ROOT}/liquidSVM.mltbx</param.output>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.guid>8437cb49-d790-47e1-b28c-69fcd5755b52</param.guid>
+    <param.exclude.filters>.gitignore
+**/*~
+**/*.o
+**/.DS_Store
+*.xml
+Makefile
+toBeChanged
+src/sources/*/objecte_code/*
+README.md
+index.html
+svmModel*.mat
+liquidSVM-octave.zip
+% List files contained in your toolbox folder that you would like to exclude
+% from packaging.  Excludes should be listed relative to the toolbox folder.
+% Some examples of how to specify excludes are provided below:
+%
+% A single file in the toolbox folder:
+% .svn
+%
+% A single file in a subfolder of the toolbox folder:
+% example/.svn
+%
+% All files in a subfolder of the toolbox folder:
+% example/*
+%
+% All files of a certain name in all subfolders of the toolbox folder:
+% **/.svn
+%
+% All files matching a pattern in all subfolders of the toolbox folder:
+% **/*.bak
+%</param.exclude.filters>
+    <param.examples />
+    <param.demosxml />
+    <param.apps />
+    <param.docs />
+    <param.matlabpath.excludes />
+    <unset>
+      <param.screenshot />
+      <param.version />
+      <param.output />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+      <param.examples />
+      <param.demosxml />
+      <param.apps />
+      <param.docs />
+      <param.matlabpath.excludes />
+    </unset>
+    <fileset.rootdir>
+      <file>/Users/thomapp/Documents/liquidSVM/bindings/matlab</file>
+    </fileset.rootdir>
+    <fileset.rootfiles>
+      <file>${PROJECT_ROOT}/COPYING</file>
+      <file>${PROJECT_ROOT}/README.html</file>
+      <file>${PROJECT_ROOT}/README.txt</file>
+      <file>${PROJECT_ROOT}/classes</file>
+      <file>${PROJECT_ROOT}/data.mat</file>
+      <file>${PROJECT_ROOT}/demo_svm.m</file>
+      <file>${PROJECT_ROOT}/demo_svm.sh</file>
+      <file>${PROJECT_ROOT}/doc</file>
+      <file>${PROJECT_ROOT}/functions</file>
+      <file>${PROJECT_ROOT}/makeliquidSVM.m</file>
+      <file>${PROJECT_ROOT}/mexliquidSVM.cpp</file>
+      <file>${PROJECT_ROOT}/mexliquidSVM.mexmaci64</file>
+      <file>${PROJECT_ROOT}/mexliquidSVM.mexw64</file>
+      <file>${PROJECT_ROOT}/octaveTestliquidSVM.m</file>
+      <file>${PROJECT_ROOT}/src</file>
+      <file>${PROJECT_ROOT}/testliquidSVM.m</file>
+    </fileset.rootfiles>
+    <fileset.depfun.included />
+    <fileset.depfun.excluded />
+    <fileset.package />
+    <build-deliverables>
+      <file location="/Users/thomapp/Documents/liquidSVM/bindings/matlab" name="liquidSVM.mltbx" optional="false">/Users/thomapp/Documents/liquidSVM/bindings/matlab/liquidSVM.mltbx</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>/Applications/MATLAB_R2016a.app</root>
+      <toolboxes>
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabcoder" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="embeddedcoder" />
+      </toolboxes>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>true</unix>
+      <mac>true</mac>
+      <windows>false</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.12.4</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>maci64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

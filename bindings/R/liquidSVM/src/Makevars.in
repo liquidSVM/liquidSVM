@@ -1,0 +1,60 @@
+
+all: $(SHLIB)
+
+
+### additional preprocessor options (for example include paths) for C/C++ files: -I... -D...
+### the following help in development
+PKG_CPPFLAGS = -I . -I../../../.. -I ../../../common @ADDITIONAL_CPP_FLAGS@
+
+### additional compiler flags by setting
+### For C
+#PKG_CFLAGS
+### For C++
+#PKG_CXXFLAGS = 
+
+### addtitional linker flags: -l... -L...
+PKG_LIBS = $(SHLIB_PTHREAD_FLAGS) @ADDITIONAL_LIBS@
+
+#### WARNING: -Wno-* are not portable!
+#### At the moment this is for debugging. For production change -g to -O3
+PKG_CXXFLAGS_DEV = -g -march=native -fpermissive -w -Wno-comment -Wno-unused-variable -Wno-dangling-else -Wno-overloaded-virtual
+
+### @ADDITIONAL_CXXFLAGS@ is configured to include optionally -march=native and $(CPP_CUDA_FLAGS)
+PKG_CXXFLAGS = $(SHLIB_PTHREAD_FLAGS) @ADDITIONAL_CXXFLAGS@
+
+CXX_STD = CXX11
+
+
+#----------- CUDA-related paths ---------------------------------------------------------------------------------
+# If you have CUDA installed, but your paths are different, then these lines need to be
+# adapted.
+
+NVCC_PATH= @CUDA_PATH@/bin
+CUDA_INCLUDE_PATH= @CUDA_PATH@/include
+CUDA_LIB_PATH= @CUDA_PATH@/lib64
+
+NVCC= $(NVCC_PATH)/nvcc
+
+#----------- CUDA-compiler related flags --------------------------------------------------
+# The architecure flag can be set to higher values, if the hardware supports this.
+# The value below should be safe for essentially all non stone-age systems.
+
+NVCCFLAGS= -arch sm_30 -L$(CUDA_LIB_PATH) -DCOMPILE_WITH_CUDA__ -U__SSE2__ -U__AVX__ 
+
+
+#----------- CUDA related flags for GCC ----------------------------------------------------
+# These are only activated, if CUDA-compiler NVCC is detected.
+
+CPP_CUDA_LINK_FLAGS= -L$(CUDA_LIB_PATH) -static-libstdc++ -lcuda -lcudart
+CPP_CUDA_INCLUDE_FLAGS= -I$(CUDA_INCLUDE_PATH)
+CPP_CUDA_FLAGS= -fPIC -DCOMPILE_WITH_CUDA__ $(CPP_CUDA_LINK_FLAGS) $(CPP_CUDA_INCLUDE_FLAGS)    
+
+
+#----------- Pattern rule to make object files from cu-files  --------------------------------
+cuda_objects/%.o: sources/*/*/%.cu
+	@echo `basename $(NVCC)`: creating `basename $@`
+	$(NVCC) $(CPP_CUDA_INCLUDE_FLAGS) $(NVCCFLAGS) -c $< -o $@ \
+  $(PKG_CPPFLAGS) -Xcompiler="-fPIC" -DCOMPILE_SEPERATELY__
+
+
+OBJECTS = @CUDA_OBJECTS@ liquidSVM_R.o

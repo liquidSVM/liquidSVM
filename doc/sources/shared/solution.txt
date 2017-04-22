@@ -1,0 +1,64 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header files provides a generic solution of a solver. All 
+// solutions of non-generic solvers are supposed to be derived from 
+// this class since it provides an interface to the minimal 
+// functionality of such solutions.
+// 
+// 
+// resize(...) / reserve(...)
+// Sets the current size / current capacity ( = maximal size) of the object.
+// resize(...) may increase the current capacity while reserve(...) has no
+// effect if the new_capacity is smaller than the current capacity.
+// 
+// size() / capacity()
+// Returns the current size / current_capacity of the object.
+// 
+// read_from_file(...) / write_to_file(...)
+// Reads information of Tsolution from file or writes this information
+// to a file. Derived classes re-implementing these functions should call
+// Tsolution::read_from_file(...) / Tsolution::write_to_file(...).
+// 
+// operator =
+// Copies the object on the right side of = into the object of the 
+// left side of =
+// 
+// set_prediction_modifiers(...)
+// Sets the offset and clipp_value of the solution.
+// 
+// set_weights(...)
+// Copies the weights into internal variables, so that the solution
+// 'knows' for which weights it was built.
+// 
+// offset
+// Additive offset by which the predictions of Tsolution need to be
+// changed.
+// 
+// clipp_value
+// Value at which the predictions of Tsolution need to be clipped.
+// 
+// LIMITATIONS
+// The operations resize(), reserve(), =, and Tsolution(solution) must 
+// not be used by multiple threads. In multi-threaded environments you
+// need to ensure that only one, e.g., the master thread, calls these
+// operations.
+// 
+//********************************************************************************************************************************** 

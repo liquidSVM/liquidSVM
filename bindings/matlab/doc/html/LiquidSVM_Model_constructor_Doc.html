@@ -1,0 +1,375 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>LiquidSVM_Model_constructor_Doc</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-04-06"><meta name="DC.source" content="LiquidSVM_Model_constructor_Doc.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">LiquidSVM_Model (Constructor)</a></li><li><a href="#2">Syntax</a></li><li><a href="#3">Description</a></li><li><a href="#4">Input Arguments</a></li><li><a href="#5">required</a></li><li><a href="#7">optional</a></li><li><a href="#17">Hyperparameter Grid</a></li><li><a href="#22">Adaptive Grid</a></li><li><a href="#23">Cells</a></li><li><a href="#26">Weights</a></li><li><a href="#27">More Advanced Parameters</a></li><li><a href="#28">Output:</a></li><li><a href="#29">Example:</a></li><li><a href="#32">See also</a></li></ul></div><h2>LiquidSVM_Model (Constructor)<a name="1"></a></h2><p>Constructor of the class LiquidSVM_Model</p><h2>Syntax<a name="2"></a></h2><pre class="language-matlab">dataSourceHandleObj = LiquidSVM_DataSourceHandle(source,type,key,value);
+</pre><h2>Description<a name="3"></a></h2><p>LiquidSVM_Model create a new SVM and initialize with training data x and labels y.</p><h2>Input Arguments<a name="4"></a></h2><h2>required<a name="5"></a></h2><p><tt>x</tt>: numeric matrix containing the feature Samples of the traininng data</p><p><tt>y</tt>: numeric or categorical vector of same length as x containing the training labels</p><h2>optional<a name="7"></a></h2><p><b>key:</b> <tt>'readSol'</tt> <b>value:</b> In case a model was trained, selected written to a 'sol'-file this option allows to load the model. Default: <tt>''</tt></p><p><b>key:</b> <tt>'display'</tt> <b>value:</b> Has to be provided as a scalar double. This parameter determines the amount of information displayed to the screen: The larger its value is, the more you see.  Default: <tt>0</tt></p><p><b>key:</b> <tt>threads</tt> <b>value:</b> This parameter determines the number of cores used for computing the kernel matrices, the validation error, and the test error.</p><p><tt>threads =  0</tt> (default) means that all physical cores of your CPU run one thread. <tt>threads = -1</tt>  means that all but one physical cores of your CPU run one thread.</p><p><b>key:</b> <tt>partition_choice</tt> <b>value:</b> This parameter determines the way the input space is partitioned. This allows larger data sets for which the kernel matrix does not fit into memory.</p><div><ul><li><tt>partition_choice=0</tt> (default) disables partitioning.</li><li><tt>partition_choice=4</tt> gives usually highest speed.</li><li><tt>partition_choice=6</tt> gives usually the best test error.</li></ul></div><p><b>key:</b> <tt>grid_choice</tt> <b>value:</b> This parameter determines the size of the hyper- parameter grid used during the training phase. Larger values correspond to larger grids. By default, a 10x10 grid is used. Exact descriptions are given in the 'Hyperparameter Grid' section (see below).</p><p><b>key:</b> <tt>adaptivity_control</tt> <b>value:</b> This parameter determines, whether an adaptive grid search heuristic is employed. Larger values lead to more aggressive strategies. The default <tt>adaptivity_control = 0</tt> disables the heuristic.</p><p><b>key:</b> <tt>random_seed</tt> <b>value:</b> This parameter determines the seed for the random generator. <tt>random_seed</tt> = -1 uses the internal timer create the seed. All other values lead to repeatable behavior of the svm.</p><p><b>key:</b> <tt>folds</tt> <b>value:</b> How many folds should be used.</p><h2>Hyperparameter Grid<a name="17"></a></h2><p>For Support Vector Machines two hyperparameters have to be figured out:</p><div><ul><li><tt>gamma</tt> the bandwith of the kernel</li><li><tt>lambda</tt> has to be chosen such that neither over- nor underfitting happen. lambda values are the classical regularization parameter in front of the norm term.</li></ul></div><p>LiquidSVM has build in a cross-validation scheme to calculate validation errors for many values of these hyperparameters and then to choose the best pair. Since there are two parameters this means we consider a two-dimensional grid.</p><p>For both parameters either specific values can be given or a geometrically spaced grid can be specified.</p><p><b>key:</b> <tt>gamma_steps</tt>, <tt>min_gamma</tt>, <tt>max_gamma</tt> <b>value:</b> specifies in the interval between <tt>min_gamma</tt> and <tt>max_gamma</tt> there should be <tt>gamma_steps</tt> many values.</p><p><b>key:</b> <tt>gammas</tt> <b>value:</b> e.g. <tt>gammas = [0.1 1 10 100]</tt> will do these four gamma values</p><p><b>key:</b> <tt>lambda_steps</tt>, <tt>min_lambda</tt>, <tt>max_lambda</tt> <b>value:</b> specifies in the interval between <tt>min_lambda</tt> and <tt>max_lambda</tt> there should be <tt>lambda_steps</tt> many values</p><p><b>key:</b> <tt>lambdas</tt> <b>value:</b>  e.g. <tt>lambdas = [0.1,1,10,100]</tt> will do these four lambda values</p><p><b>key:</b> <tt>c_values</tt> <b>value:</b>  the classical term in front of the empirical error term, e.g. <tt>c_values = [0.1,1,10,100]</tt> will do these four cost values (basically inverse of <tt>lambdas</tt>)</p><p><b>Note:</b> the min and max values are scaled according to the number of samples, the dimensionality of the data sets, the number of folds used, and the estimated diameter of the data set.</p><p>Using <tt>grid_choice</tt> allows for some general choices of these parameter.</p><p>
+<table border=1>
+<tr><td>grid_choice</td><td>0</td><td>1</td><td>2</td></tr>
+<tr><td>gamma_steps</td><td>10</td><td>15</td><td>20</td></tr>
+<tr><td>lambda_steps_steps</td><td>10</td><td>15</td><td>20</td></tr>
+<tr><td>min_gamma</td><td>0.2</td><td>0.2</td><td>0.05</td></tr>
+<tr><td>max_gamma</td><td>5</td><td>10</td><td>20</td></tr>
+<tr><td>min_lambda</td><td>0.001</td><td>0.0001</td><td>0.00001</td></tr>
+<tr><td>max_lambda</td><td>0.01</td><td>0.01</td><td>0.01</td></tr>
+</table>
+</p><p>Using negative values of <tt>grid_choice</tt> we create a grid with listed gamma and lambda values:</p><p>
+<table border=1>
+<tr><td>grid_choice</td><td>-1</td><td>-2</td></tr>
+<tr><td>gamma</td><td>[10.0, 5.0, 2.0, 1.0, 0.5, 0.25, 0.1, 0.05]</td><td>[10.0, 5.0, 2.0, 1.0, 0.5, 0.25, 0.1, 0.05]</td></tr>
+<tr><td>lambdas</td><td>[1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001]</td><td>-</td></tr>
+<tr><td>c_values</td><td>-</td><td>[0.01, 0.1, 1, 10, 100, 1000, 10000]</td></tr>
+</table>
+</p><h2>Adaptive Grid<a name="22"></a></h2><p>An adaptive grid search can be activated. The higher the values of <tt>MAX_LAMBDA_INCREASES</tt> and <tt>MAX_NUMBER_OF_WORSE_GAMMAS</tt> are set the more conservative the search strategy is. The values can be freely modified.</p><pre class="language-matlab">{<span class="string">'ADAPTIVITY_CONTROL'</span>,1} = {<span class="string">'ADAPTIVE_SEARCH'</span>, 1, <span class="string">'MAX_LAMBDA_INCREASES'</span>, 4, <span class="string">'MAX_NUMBER_OF_WORSE_GAMMAS'</span>, 4}
+{<span class="string">'ADAPTIVITY_CONTROL'</span>,2} = {<span class="string">'ADAPTIVE_SEARCH'</span>, 1, <span class="string">'MAX_LAMBDA_INCREASES'</span>, 3, <span class="string">'MAX_NUMBER_OF_WORSE_GAMMAS'</span>, 3}
+</pre><h2>Cells<a name="23"></a></h2><p>A major issue with SVMs is that for larger sample sizes the kernel matrix does not fit into the memory any more. Classically this gives an upper limit for the class of problems that traditional SVMs can handle without significant runtime increase. Furthermore also the time complexity is <img src="LiquidSVM_Model_constructor_Doc_eq10473944910243465017.png" alt="$O(n^2)$">.</p><p>LiquidSVM implements two major concepts to circumvent these issues. One is random chunks which is known well in the literature. However we prefer the new alternative of splitting the space into spatial cells and use local SVMs on every cell.</p><p><b>key:</b> <tt>'useCells'</tt> <b>value:</b> If you specify <tt>true</tt> then the sample space <img src="LiquidSVM_Model_constructor_Doc_eq12362013959998143435.png" alt="$X$"> gets partitioned into a number of cells. The training is done first for cell 1 then for cell 2 and so on. Now, to predict the label for a value <img src="LiquidSVM_Model_constructor_Doc_eq10743523006004970742.png" alt="$x\in X$"> LiquidSVM first finds out to which cell this <img src="LiquidSVM_Model_constructor_Doc_eq12428413953531653171.png" alt="$x$"> belongs and then uses the SVM of that cell to predict a label for it.</p><p><i>If you run into memory issues turn cells on:</i> <tt>'useCells',true</tt></p><p>This is quite performant, since the complexity in both time and memory are both <img src="LiquidSVM_Model_constructor_Doc_eq00269809687379812429.png" alt="$O(\mbox{CELLSIZE} \times n)$"> and this holds both for training as well as testing! It also can be shown that the quality of the solution is comparable, at least for moderate dimensions.</p><p><b>key:</b> <tt>'partition_choice'</tt> <b>value:</b> The cells can be configured using the <tt>partition_choice</tt>:</p><div><ul><li>This gives a partition into random chunks of size 2000</li></ul></div><pre class="language-matlab">{<span class="string">'PARTITION_CHOICE'</span>,1} = {<span class="string">'VORONOI'</span>,<span class="string">'1 2000'</span>}
+</pre><div><ul><li>This gives a partition into 10 random chunks</li></ul></div><pre class="language-matlab">{<span class="string">'PARTITION_CHOICE'</span>,2} = {<span class="string">'VORONOI'</span>,<span class="string">'2 10'</span>}
+</pre><div><ul><li>This gives a Voronoi partition into cells with radius not larger than 1.0. For its creation a subsample containing at most 50.000 samples is used.</li></ul></div><pre class="language-matlab">{<span class="string">'PARTITION_CHOICE'</span>,3} = {<span class="string">'VORONOI'</span>,<span class="string">'3 1.0 50000'</span>}
+</pre><div><ul><li>This gives a Voronoi partition into cells with at most 2000 samples (approximately). For its creation a subsample containing at most 50.000 samples is used. A shrinking heuristic is used to reduce the number of cells.</li></ul></div><pre class="language-matlab">{<span class="string">'PARTITION_CHOICE'</span>,4} = {<span class="string">'VORONOI'</span>, <span class="string">'4 2000 1 50000'</span>}
+</pre><div><ul><li>This gives a overlapping regions with at most 2000 samples (approximately). For its creation a subsample containing at most 50.000 samples is used. A stopping heuristic is used to stop the creation of regions if 0.5 * 2000 samples have not been assigned to a region, yet.</li></ul></div><pre class="language-matlab">{<span class="string">'PARTITION_CHOICE'</span>,5} = {<span class="string">'VORONOI'</span>,<span class="string">'5 2000 0.5 50000 1'</span>}
+</pre><div><ul><li>This splits the working sets into Voronoi like with <tt>PARTITION_TYPE=4</tt>. Unlike that case, the centers for the Voronoi partition are found by a recursive tree approach, which in many cases may be faster. This is the same as <tt>{'useCells',true}</tt></li></ul></div><pre class="language-matlab">{<span class="string">'PARTITION_CHOICE'</span>,6} = {<span class="string">'VORONOI'</span>,<span class="string">'6 2000 1 50000 2.0 20 4'</span>}
+</pre><h2>Weights<a name="26"></a></h2><div><ul><li>qtSVM, exSVM:   Here the number of considered tau-quantiles as well as the   considered tau-values are defined. You can freely change these   values but notice that the list of tau-values is space-separated!</li></ul></div><div><ul><li>nplSVM, rocSVM:   Here, you define, which weighted classification problems will be considered.   The meaning of the values can be found by typing svm-train -w   The choice is usually a bit tricky. Good luck ...</li></ul></div><p>|r NPL: WEIGHT_STEPS=10 MIN_WEIGHT=0.001 MAX_WEIGHT=0.5 GEO_WEIGHTS=1</p><p>ROC: WEIGHT_STEPS=9 MAX_WEIGHT=0.9 MIN_WEIGHT=0.1 GEO_WEIGHTS=0 |</p><h2>More Advanced Parameters<a name="27"></a></h2><p>The following parameters should only employed by experienced users and are self-explanatory for these:</p><p><tt>SVM_TYPE</tt>   : "KERNEL_RULE", "SVM_LS_2D", "SVM_HINGE_2D", "SVM_QUANTILE", "SVM_EXPECTILE_2D", "SVM_TEMPLATE"</p><p><tt>LOSS_TYPE</tt>   : "CLASSIFICATION_LOSS", "MULTI_CLASS_LOSS", "LEAST_SQUARES_LOSS", "WEIGHTED_LEAST_SQUARES_LOSS", "PINBALL_LOSS", "TEMPLATE_LOSS"</p><p><tt>VOTE_SCENARIO</tt>   : "VOTE_CLASSIFICATION", "VOTE_REGRESSION", "VOTE_NPL"</p><p><tt>KERNEL</tt>   : "GAUSS_RBF", "POISSON"</p><p><tt>KERNEL_MEMORY_MODEL</tt>   : "LINE_BY_LINE", "BLOCK", "CACHE", "EMPTY"</p><p><tt>RETRAIN_METHOD</tt>   : "SELECT_ON_ENTIRE_TRAIN_SET", "SELECT_ON_EACH_FOLD"</p><p><tt>FOLDS_KIND</tt>   : "FROM_FILE", "BLOCKS", "ALTERNATING", "RANDOM", "STRATIFIED", "RANDOM_SUBSET"</p><p><tt>WS_TYPE</tt>   : "FULL_SET", "MULTI_CLASS_ALL_VS_ALL", "MULTI_CLASS_ONE_VS_ALL", "BOOT_STRAP"</p><p><tt>PARTITION_KIND</tt>   : "NO_PARTITION", "RANDOM_CHUNK_BY_SIZE", "RANDOM_CHUNK_BY_NUMBER", "VORONOI_BY_RADIUS", "VORONOI_BY_SIZE", "OVERLAP_BY_SIZE"</p><h2>Output:<a name="28"></a></h2><p><tt>model</tt> a new object of class LiquidSVM_Model</p><h2>Example:<a name="29"></a></h2><p>url source</p><pre class="codeinput"> dataSources1 = LiquidSVM_DataSourceHandle(<span class="string">'http://www.isa.uni-stuttgart.de/liquidData'</span>,<span class="string">'url'</span>);
+</pre><p>local source</p><pre class="codeinput"> dataSources2 = LiquidSVM_DataSourceHandle(pwd,<span class="string">'local'</span>);
+</pre><h2>See also<a name="32"></a></h2><p>LiquidSVM_DataFile, LiquidSVM_Data</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+ %% LiquidSVM_Model (Constructor)
+ % Constructor of the class LiquidSVM_Model
+ %% Syntax
+ %   dataSourceHandleObj = LiquidSVM_DataSourceHandle(source,type,key,value);
+ %% Description
+ % LiquidSVM_Model create a new SVM and initialize with training
+ % data x and labels y.
+ %% Input Arguments
+ %
+ %% required
+ % |x|: numeric matrix containing the feature Samples of the
+ % traininng data
+ %
+ %%
+ % |y|: numeric or categorical vector of same length as x
+ % containing the training labels
+ %% optional
+ % *key:* |'readSol'|
+ % *value:* In case a model was trained, selected written to a
+ % 'sol'-file this option allows to load the model.
+ % Default: |''|
+ %%
+ % *key:* |'display'|
+ % *value:* Has to be provided as a scalar double. This parameter
+ % determines the amount of information displayed to the screen:
+ % The larger its value is, the more you see.
+ %  Default: |0|
+ %%
+ % *key:* |threads|
+ % *value:* This parameter determines the number of cores
+ % used for computing the kernel matrices, the
+ % validation error, and the test error.
+ %%
+ % |threads =  0| (default) means that all physical cores of your CPU run one thread.
+ % |threads = -1|  means that all but one physical cores of your CPU run one thread.
+ %%
+ % *key:* |partition_choice|
+ % *value:* This parameter determines the way the input space
+ % is partitioned. This allows larger data sets for which
+ % the kernel matrix does not fit into memory.
+ %%
+ % * |partition_choice=0| (default) disables partitioning.
+ % * |partition_choice=4| gives usually highest speed.
+ % * |partition_choice=6| gives usually the best test error.
+ %%
+ % *key:* |grid_choice|
+ % *value:* This parameter determines the size of the hyper-
+ % parameter grid used during the training phase.
+ % Larger values correspond to larger grids. By
+ % default, a 10x10 grid is used. Exact descriptions are given
+ % in the 'Hyperparameter Grid' section (see below).
+ %%
+ % *key:* |adaptivity_control|
+ % *value:* This parameter determines, whether an adaptive
+ % grid search heuristic is employed. Larger values
+ % lead to more aggressive strategies. The default
+ % |adaptivity_control = 0| disables the heuristic.
+ %%
+ % *key:* |random_seed|
+ % *value:* This parameter determines the seed for the random
+ % generator. |random_seed| = -1 uses the internal
+ % timer create the seed. All other values lead to
+ % repeatable behavior of the svm.
+ %%
+ % *key:* |folds|
+ % *value:* How many folds should be used.
+ %
+ %% Hyperparameter Grid
+ % For Support Vector Machines two hyperparameters have to be figured out:
+ %
+ % * |gamma| the bandwith of the kernel
+ % * |lambda| has to be chosen such that neither over- nor underfitting happen.
+ % lambda values are the classical regularization parameter in front of the norm term.
+ %
+ % LiquidSVM has build in a cross-validation scheme to calculate validation errors for
+ % many values of these hyperparameters and then to choose the best pair.
+ % Since there are two parameters this means we consider a two-dimensional grid.
+ %
+ % For both parameters either specific values can be given or a geometrically spaced grid can be specified.
+ %
+ % *key:* |gamma_steps|, |min_gamma|, |max_gamma|
+ % *value:* specifies in the interval between |min_gamma| and |max_gamma| there
+ % should be |gamma_steps| many values.
+ %
+ % *key:* |gammas|
+ % *value:* e.g. |gammas = [0.1 1 10 100]| will do these four gamma values
+ %
+ % *key:* |lambda_steps|, |min_lambda|, |max_lambda|
+ % *value:* specifies in the interval between |min_lambda| and |max_lambda| there should be |lambda_steps| many values
+ %
+ % *key:* |lambdas|
+ % *value:*  e.g. |lambdas = [0.1,1,10,100]| will do these four lambda values
+ %
+ % *key:* |c_values|
+ % *value:*  the classical term in front of the empirical error term,
+ % e.g. |c_values = [0.1,1,10,100]| will do these four cost values (basically inverse of |lambdas|)
+ %
+ % *Note:* the min and max values are
+ % scaled according to the number of samples, the dimensionality
+ % of the data sets, the number of folds used, and the estimated
+ % diameter of the data set.
+ %%
+ % Using |grid_choice| allows for some general choices of these parameter.
+ %%
+ % <html>
+ % <table border=1>
+ % <tr><td>grid_choice</td><td>0</td><td>1</td><td>2</td></tr>
+ % <tr><td>gamma_steps</td><td>10</td><td>15</td><td>20</td></tr>
+ % <tr><td>lambda_steps_steps</td><td>10</td><td>15</td><td>20</td></tr>
+ % <tr><td>min_gamma</td><td>0.2</td><td>0.2</td><td>0.05</td></tr>
+ % <tr><td>max_gamma</td><td>5</td><td>10</td><td>20</td></tr>
+ % <tr><td>min_lambda</td><td>0.001</td><td>0.0001</td><td>0.00001</td></tr>
+ % <tr><td>max_lambda</td><td>0.01</td><td>0.01</td><td>0.01</td></tr>
+ % </table>
+ % </html>
+ %%
+ % Using negative values of |grid_choice| we create a grid with listed gamma and lambda values:
+ %%
+ % <html>
+ % <table border=1>
+ % <tr><td>grid_choice</td><td>-1</td><td>-2</td></tr>
+ % <tr><td>gamma</td><td>[10.0, 5.0, 2.0, 1.0, 0.5, 0.25, 0.1, 0.05]</td><td>[10.0, 5.0, 2.0, 1.0, 0.5, 0.25, 0.1, 0.05]</td></tr>
+ % <tr><td>lambdas</td><td>[1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001]</td><td>-</td></tr>
+ % <tr><td>c_values</td><td>-</td><td>[0.01, 0.1, 1, 10, 100, 1000, 10000]</td></tr>
+ % </table>
+ % </html>
+ %% Adaptive Grid
+ %
+ % An adaptive grid search can be activated. The higher the values
+ % of |MAX_LAMBDA_INCREASES| and |MAX_NUMBER_OF_WORSE_GAMMAS| are set
+ % the more conservative the search strategy is. The values can be
+ % freely modified.
+ %
+ %   {'ADAPTIVITY_CONTROL',1} = {'ADAPTIVE_SEARCH', 1, 'MAX_LAMBDA_INCREASES', 4, 'MAX_NUMBER_OF_WORSE_GAMMAS', 4}
+ %   {'ADAPTIVITY_CONTROL',2} = {'ADAPTIVE_SEARCH', 1, 'MAX_LAMBDA_INCREASES', 3, 'MAX_NUMBER_OF_WORSE_GAMMAS', 3}
+ %
+ %% Cells
+ %
+ % A major issue with SVMs is that for larger sample sizes the kernel matrix
+ % does not fit into the memory any more.
+ % Classically this gives an upper limit for the class of problems that traditional
+ % SVMs can handle without significant runtime increase.
+ % Furthermore also the time complexity is $O(n^2)$.
+ %
+ % LiquidSVM implements two major concepts to circumvent these issues.
+ % One is random chunks which is known well in the literature.
+ % However we prefer the new alternative of splitting the space into
+ % spatial cells and use local SVMs on every cell.
+ %
+ %%
+ % *key:* |'useCells'|
+ % *value:*
+ % If you specify |true| then the sample space $X$ gets partitioned into
+ % a number of cells.
+ % The training is done first for cell 1 then for cell 2 and so on.
+ % Now, to predict the label for a value $x\in X$ LiquidSVM first finds out
+ % to which cell this $x$ belongs and then uses the SVM of that cell to predict
+ % a label for it.
+ %
+ % _If you run into memory issues turn cells on:_ |'useCells',true|
+ %
+ % This is quite performant, since the complexity in both
+ % time and memory are both $O(\mbox{CELLSIZE} \times n)$
+ % and this holds both for training as well as testing!
+ % It also can be shown that the quality of the solution is comparable,
+ % at least for moderate dimensions.
+ %
+ %%
+ % *key:* |'partition_choice'|
+ % *value:*
+ % The cells can be configured using the |partition_choice|:
+ %
+ % * This gives a partition into random chunks of size 2000
+ %
+ %   {'PARTITION_CHOICE',1} = {'VORONOI','1 2000'}
+ %
+ % * This gives a partition into 10 random chunks
+ %
+ %   {'PARTITION_CHOICE',2} = {'VORONOI','2 10'}
+ %
+ % * This gives a Voronoi partition into cells with radius
+ % not larger than 1.0. For its creation a subsample containing
+ % at most 50.000 samples is used.
+ %
+ %   {'PARTITION_CHOICE',3} = {'VORONOI','3 1.0 50000'}
+ %
+ % * This gives a Voronoi partition into cells with at most 2000
+ % samples (approximately). For its creation a subsample containing
+ % at most 50.000 samples is used. A shrinking heuristic is used
+ % to reduce the number of cells.
+ %
+ %   {'PARTITION_CHOICE',4} = {'VORONOI', '4 2000 1 50000'}
+ %
+ % * This gives a overlapping regions with at most 2000 samples
+ % (approximately). For its creation a subsample containing
+ % at most 50.000 samples is used. A stopping heuristic is used
+ % to stop the creation of regions if 0.5 * 2000 samples have
+ % not been assigned to a region, yet.
+ %
+ %   {'PARTITION_CHOICE',5} = {'VORONOI','5 2000 0.5 50000 1'}
+ %
+ % * This splits the working sets into Voronoi like with |PARTITION_TYPE=4|.
+ % Unlike that case, the centers for the Voronoi partition are
+ % found by a recursive tree approach, which in many cases may be
+ % faster. This is the same as |{'useCells',true}|
+ %
+ %   {'PARTITION_CHOICE',6} = {'VORONOI','6 2000 1 50000 2.0 20 4'}
+ %% Weights
+ %
+ % * qtSVM, exSVM:
+ %   Here the number of considered tau-quantiles as well as the
+ %   considered tau-values are defined. You can freely change these
+ %   values but notice that the list of tau-values is space-separated!
+ %
+ % * nplSVM, rocSVM:
+ %   Here, you define, which weighted classification problems will be considered.
+ %   The meaning of the values can be found by typing svm-train -w
+ %   The choice is usually a bit tricky. Good luck ...
+ %
+ % |||r
+ % NPL:
+ % WEIGHT_STEPS=10
+ % MIN_WEIGHT=0.001
+ % MAX_WEIGHT=0.5
+ % GEO_WEIGHTS=1
+ %
+ % ROC:
+ % WEIGHT_STEPS=9
+ % MAX_WEIGHT=0.9
+ % MIN_WEIGHT=0.1
+ % GEO_WEIGHTS=0
+ % |||
+ %
+ %% More Advanced Parameters
+ %
+ % The following parameters should only employed by experienced users and are self-explanatory for these:
+ %
+ % |SVM_TYPE|
+ %   : "KERNEL_RULE", "SVM_LS_2D", "SVM_HINGE_2D", "SVM_QUANTILE", "SVM_EXPECTILE_2D", "SVM_TEMPLATE"
+ %
+ % |LOSS_TYPE|
+ %   : "CLASSIFICATION_LOSS", "MULTI_CLASS_LOSS", "LEAST_SQUARES_LOSS", "WEIGHTED_LEAST_SQUARES_LOSS", "PINBALL_LOSS", "TEMPLATE_LOSS"
+ %
+ % |VOTE_SCENARIO|
+ %   : "VOTE_CLASSIFICATION", "VOTE_REGRESSION", "VOTE_NPL"
+ %
+ % |KERNEL|
+ %   : "GAUSS_RBF", "POISSON"
+ %
+ % |KERNEL_MEMORY_MODEL|
+ %   : "LINE_BY_LINE", "BLOCK", "CACHE", "EMPTY"
+ %
+ % |RETRAIN_METHOD|
+ %   : "SELECT_ON_ENTIRE_TRAIN_SET", "SELECT_ON_EACH_FOLD"
+ %
+ % |FOLDS_KIND|
+ %   : "FROM_FILE", "BLOCKS", "ALTERNATING", "RANDOM", "STRATIFIED", "RANDOM_SUBSET"
+ %
+ % |WS_TYPE|
+ %   : "FULL_SET", "MULTI_CLASS_ALL_VS_ALL", "MULTI_CLASS_ONE_VS_ALL", "BOOT_STRAP"
+ %
+ % |PARTITION_KIND|
+ %   : "NO_PARTITION", "RANDOM_CHUNK_BY_SIZE", "RANDOM_CHUNK_BY_NUMBER", "VORONOI_BY_RADIUS", "VORONOI_BY_SIZE", "OVERLAP_BY_SIZE"
+ %% Output:
+ % |model| a new object of class LiquidSVM_Model
+ %% Example:
+ %%
+ % url source
+ dataSources1 = LiquidSVM_DataSourceHandle('http://www.isa.uni-stuttgart.de/liquidData','url');
+ %%
+ % local source
+ dataSources2 = LiquidSVM_DataSourceHandle(pwd,'local');
+ %% See also
+ % LiquidSVM_DataFile, LiquidSVM_Data
+##### SOURCE END #####
+--></body></html>

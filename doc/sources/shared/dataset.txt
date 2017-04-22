@@ -1,0 +1,174 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// Tsubset_info
+// A data type used to create subsets of Tdataset. Currently, this
+// information is given by the indices of the samples in Tdataset.
+// 
+// compose(info1, info2)
+// Returns the vector info1[info2[ . ]]. If info2[i] exceeds the
+// length of info1, the program aborts with an error message. 
+// 
+// 
+// The class Tdataset provides basic functionality for handling
+// collections of samples. 
+// 
+// 
+// Internally, the samples are stored as a list of pointers to the  
+// actual samples to increase efficiency for dataset manipulation 
+// operations such as copying parts of a dataset. To make sure
+// that only one dataset has the ability to destroy the samples, 
+// Tdataset has two different modi: ownership and non-ownership.
+// If Tdataset is in ownership mode, then it is responsible for
+// the destruction of the samples when the destructor or clear()
+// is called, otherwise it is not responsible. 
+// By default, Tdataset is in non-ownership mode, and only the 
+// functions enforce_ownership() and read_from_file(...) can and 
+// do change this. 
+// In particular, the constructor Tdataset(const Tdataset& dataset)
+// and the operator = result in a dataset in non-ownership mode. 
+// 
+// Clearly, this design decision makes the class unsafe. Therefore,
+// here some hints for using this class safely and correctly:
+// 
+// - The ownership mode is typically used when several datasets
+//   share a common list of samples and at least one of these
+//   datasets may change some of these samples. Without ownership
+//   mode of the changing dataset, all other sharing datasets 
+//   see the changes, too. In most situations, this side-effect 
+//   may not be desirable.
+// 
+// - Temporarily created samples should not be pushed_back into 
+//   a dataset that is in non-ownership mode, since this may result 
+//   in loss of data or SEGMENTATION FAULTS. Sometimes, however, 
+//   the compiler detects this anyway during compilation time.
+// 
+// - When pushing a dataset D2 into a dataset D1 and then changing 
+//   the dataset D2, the dataset D1 will see the changes if D1 does
+//   not have ownership. In particular, if the samples in D2 are destroyed,
+//   a SEGMENTATION FAULT occurs. This can be prevented by enforcing
+//   ownership for D1 at the beginning.
+// 
+// - When using the operator = and the right is a dataset without 
+//   ownership or even a temporary object, then almost certainly a
+//   SEGMENTATION FAULT will occur sooner or later.
+// 
+// - For reasons of efficiency, the function sample(...) only returns 
+//   a reference to the sample, and hence the sample may be altered 
+//   from outside the class! This may cause unwanted side-effects! 
+//   In particular, if the destructor of that sample is called, 
+//   then the program aborts with an error message pointing to this
+//   improper use.
+// 
+// 
+// Tdataset(...)
+// Constructs a copy of dataset without gaining ownership.
+// 
+// clear()
+// Deletes all information and changes to non-ownership modus.
+// 
+// push_back(...)
+// Pushes one or more samples at the end of the dataset D, push_back(...) 
+// belongs to. Depending on the ownership modus of D, either a copy of 
+// these samples is created or simply the pointers are copied. If the 
+// non-pointer variant of push_back(...) is used, then the program aborts
+// with an error message if D does not have ownership.
+// 
+// read_from_file(...)
+// The dataset is cleared and then the samples from filename are read.
+// The dataset is then set into ownership modus.
+// 
+// enforce_ownership(...)
+// If the dataset is not in ownership modus,, then copies of all samples
+// are created and the dataset is set into ownership modus. Otherwise,
+// nothing is done.
+// 
+// sample(...)
+// Returns a pointer to the i-th sample, where i = index. If i >= size(),
+// then the program is aborted displaying an error message.
+// 
+// dim()
+// Returns the maximal dimension of the stored samples. For the sake
+// of efficiency, this function is NOT SAFE against the above mentioned
+// side-effects.
+// 
+// size()
+// Returns the total number of stored samples. 
+// 
+// is_classification_data()
+// Returns true iff all labels are integers and there is at least one 
+// label not equal to zero.
+// 
+// is_classification_data()
+// Returns true iff all labels are equal to 0.
+// 
+// get_labels()
+// Returns a vector containing the labels of all samples.
+// 
+// store_original_labels()
+// If is_classification_data() == true and there are at most 
+// 2 different labels, then these labels together with the 
+// more frequent one are stored internally. Otherwise, the 
+// program aborts with an error message.
+// 
+// get_original_labels()
+// Returns the information stored by store_original_labels().
+// 
+// create_subset_info_with_label(...)
+// Returns a vector containing those indices that belong to 
+// samples having the described label.
+// 
+// create_subset(...)
+// The returned subset contains the samples whose indices
+// belong to the specified vector of indices. The subset is
+// set into non-ownership modus.
+// 
+// operator = 
+// Assigns a copy of the right dataset to the left. The left
+// dataset is set into non-ownership modus.
+// 
+// operator ==
+// Returns true, if the stored pointers to the samples of both 
+// datasets are the same.
+// 
+// create_cover_subset_info_by_radius(...)
+// Returns a list of indices such that the corresponding samples
+// are a cover of the specified radius. The farthest first 
+// traversal algorithm is used to construct the cover.
+// 
+// create_cover_subset_info_by_kNN(...)
+// Returns a list of indices such that each cell of the Voronoi 
+// partition of the corresponding samples contains at most kNN
+// samples. A heuristic is used to keep the number of cells small
+// and the sizes of the cells somewhat balanced.
+// 
+// sort_by_number()
+// Sorts the dataset according to the samples internal number
+// in increasing order.
+// 
+// get_sample_numbers()
+// Returns a vector of the internal numbers of the stored samples.
+// 
+// check_whether_complete_and_ordered()
+// Aborts the program with an error message if the one of the 
+// samples internal number is not equal to its current index.
+// 
+// 
+//**********************************************************************************************************************************

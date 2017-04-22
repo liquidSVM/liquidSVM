@@ -1,0 +1,161 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header file provides macros and inline functions related
+// to single instruction multiple data (SIMD) operations. Depending
+// on the supported hardware, these instructions may be different
+// from the implementation side, but these are (almost) invisible
+// to the user of these functions and macros. In particular, these
+// macros also work, if the hardware does not support SIMD instructions,
+// since in this case, standard arithmetic operations are used.
+// 
+// The _simdd functions operate on simd__ registers, and and _CL function
+// operate on CACHELINE_STEP many consecutive elements of an array
+// with the help of SIMD instructions. The latter 
+// 
+// Currently, SIMD operations are implemented for SSE2, AVX, and AVX2.
+// For all other platforms, standard arithmetic operations are used.
+// 
+// 
+// Constants
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// CACHELINE and CACHELINE_STEP 
+// The constant CACHELINE gives the length of the cacheline of the
+// CPU. The value can be determined by sysconf(_SC_LEVEL1_DCACHE_LINESIZE) 
+// from #include <unistd.h>;
+// The constant CACHELINE_STEP is the number of doubles a cacheline contains, i.e.
+// CACHELINE_STEP = CACHELINE / sizeof(double)
+// 
+// PREFETCH_xx
+// These macros provide an easier to read version of prefetch hints. Here
+// _Lx means that the hint suggest loading the data in the cache of level x,
+// and _NO means that no loading is suggested. 
+// Information about prefetch hints can be found at http://lwn.net/Articles/250967/
+// From my informal experience prefetching saves about 20% of runtime on somewhat
+// small datasets. In the future, the right prefetching strategy could be guessed
+// automatically using the cache sizes and the dataset sizes. However, first experiments 
+// with manually changed prefetch strategy indicate that we can only achieve about 1%
+// performance increase, so that this idea is delayed.
+// 
+// simdd__ 
+// SIMD data type for floating point numbers of double precision. Objects of these
+// types are stored in SIMD registers of the CPU.
+// 
+// SIMD_WORD_SIZE
+// Number of doubles stored in the type simdd__
+// 
+// 
+// Functions 
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// cache_prefetch(...)
+// Suggests to load data from the memory address to the cache. The hint should be one
+// of the constants PREFETCH_xx. If no prefetch() instruction is available on
+// the CPU, cache_prefetch(...) does not contain code, so that it is always safe
+// to use.
+// 
+// zero_simdd
+// Returns a simd__ containing zeros at all positions.
+// 
+// assign_simdd(...)
+// Returns a simdd__ containing the value at each position.
+// 
+// load_simdd(...) 
+// Returns a simdd__ containing values loaded from the given memory address.
+// 
+// store_simdd(...)
+// Stores the simdd__ value at the given memory address.
+// 
+// add_simdd(...) / sub_simdd(...) / mult_simdd(...)
+// Returns a simdd__ that is the sum / difference / product of the two simd__ 
+// operands.
+// 
+// min_simdd(...) / max_simdd(...)
+// Returns a simd__ that is the minimum / maximum of the two simd__ arguments.
+// 
+// seq_argmax_simdd(...) 
+// Returns a simd__ that equals arg1 if value1 >= value2, and arg2 otherwise.
+// For efficiency it is assumed that arg1 < arg2. This assumption is crucial
+// for the code to work correctly. The seq_ in the function name serves as a 
+// reminder of this.
+// 
+// abs_simdd(...)
+// Returns a simd__ containing the absolute values of the arguments
+// 
+// negate_simdd(...)
+// Returns a simd__ that has been obtained from the arguments by multiplying 
+// all arguments by -1.0.
+// 
+// pos_part_simdd(...) /neg_part_simdd(...)
+// Returns a simd__ containing the positive /negative parts of the arguments.
+// 
+// clipp_simdd(...) / clipp_0max_simdd(...)
+// Returns a simd__ which is clipped at bottom and top, where bottom = 0 for
+// the second function.
+// 
+// fuse_mult_add_simdd(...) 
+// Returns a simd__ that is the result of factor_1 * factor_2 + addend.
+// 
+// fuse_mult_sub_simdd(...) 
+// Returns a simd__ that is the result of factor_1 * factor_2 + subtrahend.
+// 
+// reduce_sums_simdd(...)
+// Returns the sum of all doubles stored in the simd__.
+// 
+// arg_simdd(...)
+// Returns the maximum and its position of the values stored in the simd__.
+// 
+// 
+// 
+// assign_CL(...)
+// Assigns the value to CACHELINE_STEP many consecutive array elements starting
+// at the address vector points to.
+// 
+// copy_CL(...)
+// Copies the values of CACHELINE_STEP many consecutive array elements of source
+// to target.
+// 
+// copy_CL(...)
+// Copies the values of CACHELINE_STEP many consecutive array elements of source
+// to target.
+// 
+// fuse_mult_sum_CL(...)
+// Adds CACHELINE_STEP many products to sum_simdd.
+// 
+// sum_CL(...)
+// Adds CACHELINE_STEP many terms to sum_simdd.
+// 
+// add_CL(...) / mult_CL(...);
+// Computes CACHELINE_STEP many sums / products and stores them in an array.
+// 
+// fuse_mult_add3_CL(...)
+// Adds CACHELINE_STEP many products to the addend vector and stores the result in the latter.
+// 
+// fuse_mult_add4_CL(...)
+// Adds CACHELINE_STEP many products to the addend vector and stores the result in 
+// the result array.
+// 
+// get_aligned_chunk(...);
+// Splits size into (almost) equally sized blocks and returns the start and stop position
+// of the chunk with the specified number. start_index and stop_index are multiples of 
+// CACHELINE_STEP.
+// 
+//**********************************************************************************************************************************

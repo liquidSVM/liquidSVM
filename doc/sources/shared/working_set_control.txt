@@ -1,0 +1,111 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//  
+// This header provides the class Tworking_set_control that describes how Tworking_set_manager
+// splits its dataset.
+// In general, the splitting is performed in two tiers:
+// - splitting the whole dataset into tasks, e.g. for multiclass classification and boot-strap.
+// - splitting each task into cells, e.g. for speed up. This splitting is performed
+//   for each task individually.
+// Here each tier may consist of a trivial splitting, i.e. no splitting is performed.
+// 
+// write_to_file(...)
+// Writes all information of the object to the specified file.
+// 
+// read_from_file(...)
+// Reads all required information from the specified file into the object.
+// 
+// classification
+// A flag indicating, whether the learning scenario is of classification type or not.
+// 
+// size_of_tasks
+// This value describes the size of each task. It is applicable for the following 
+// WORKING_SET_SELECTION_TYPES: BOOT_STRAP
+// 
+// number_of_tasks
+// This value describes the number of tasks. It is applicable for the following 
+// WORKING_SET_SELECTION_TYPES: BOOT_STRAP
+// 
+// working_set_selection_method
+// Contains one of the values of WORKING_SET_SELECTION_TYPES
+// 
+// partition_method
+// Contains one of the values of PARTITION_TYPES
+// 
+// radius
+// Describes the radius used by some PARTITION_TYPES. It is applicable for the following
+// PARTITION_TYPES: VORONOI_BY_RADIUS
+// 
+// size_of_cells
+// Describes the (maximal) size of each partiton cell. It is applicable for the following
+// PARTITION_TYPES: RANDOM_CHUNK_BY_SIZE, VORONOI_BY_SIZE
+// 
+// number_of_cells
+// Describes the number of cells a partition has. It is applicable for the following
+// PARTITION_TYPES: RANDOM_CHUNK_BY_NUMBER
+// 
+// size_of_dataset_to_find_partition
+// Describes the size of the random subset used to find the partition for the
+// PARTITION_TYPE VORONOI_BY_SIZE. If size_of_dataset_to_find_partition == 0,
+// then the entire dataset is used.
+// 
+// random_seed
+// Seed to initialize the random generator (if applicable).
+// 
+// 
+// WORKING_SET_SELECTION_TYPES
+// Values used to determine, how the whole dataset is split into tasks.
+// 
+// FULL_SET
+// Do not split the dataset into tasks, i.e., take the whole dataset.
+// 
+// MULTI_CLASS_ALL_VS_ALL
+// Split the dataset according to all-vs-all multiclass classification
+// 
+// MULTI_CLASS_ONE_VS_ALL
+// Split the dataset according to one-vs-all multiclass classification
+// 
+// BOOT_STRAP
+// Split the dataset according to a boot strap
+// 
+// 
+// PARTITION_TYPES
+// Values to determine, how each task is split into cells.
+// 
+// NO_PARTITION
+// Do not split the tasks into cells, i.e. take the dataset of the task
+// 
+// RANDOM_CHUNK_BY_SIZE
+// Split the task dataset into random cells of specified size.
+// 
+// RANDOM_CHUNK_BY_NUMBER
+// Split the task dataset into n random cells, where n needs to be specified.
+// 
+// VORONOI_BY_RADIUS
+// Split the dataset into a Voronoi partition created from an eps-net of the dataset,
+// where eps is the specified radius.
+// 
+// VORONOI_BY_SIZE
+// Split the dataset into a Voronoi partition, where the centers are chosen according
+// to some heuristic that guarantees that no cell is larger than the specified size.
+// Usually, the sizes of most cells are in between half of the maximal size and the 
+// maximal size.
+// 
+//**********************************************************************************************************************************

@@ -1,0 +1,54 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This class provides the interface of a decision function. It does not 
+// implement any functionality except the manipulation of labels and 
+// validation errors. 
+// Thus the interface is minimal in the sense that it only provides
+// the functiones needed by Tdecision_function_manager.
+// Any additional functionality including the evaluation of the decision 
+// function needs to be specified in a derived class.
+// 
+// 
+// The stored errors are used in decision_function_manager to compute
+// weights for the different decision functions. 
+// Internally the decision_function_manager translates each binary
+// classification problem into a -1/1 binary classification problem.
+// The internal labels in decision_function are used by decision_function_manager
+// to translate the -1/1 output of a corresponding decision function
+// back into the original labels. 
+// 
+//
+// write_to_file(...)
+// Writes the protected labels and errors to the specified file.
+// 
+// read_from_file(...)
+// Reads the labels and errors from the specified file.
+// 
+// set_error(...)
+// Copies the validation errors from train_val_info into the internal
+// variables.
+// 
+// set_labels()
+// Copies the labels into the internal variables. The inner pair specifies 
+// two binary classification labels and the third label specifes the binary
+// classification label, which should be used as a default.
+//
+//**********************************************************************************************************************************

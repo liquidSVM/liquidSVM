@@ -1,0 +1,45 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header file provides a LRU cache in which keys can be inserted 
+// and positions, which are numbers between 0 and size-1, are automatically 
+// created, updated, and replaced. These positions can then be used to 
+// manage a data vector outside this class.
+//  
+// 
+// 
+// clear(...)
+// Deletes all entries of the cache including the statistics but keeps its size.
+// 
+// reserve(...)
+// Calls clear() and then sets the new size.
+// 
+// size()
+// Returns the current number of keys stored in the cache.
+// 
+// insert(...)
+// Inserts the key if it is not already in the cache and returns, in any
+// case the corresponding position.
+// 
+// [...]
+// Returns the position that corresponds to key.
+// 
+//**********************************************************************************************************************************
+   

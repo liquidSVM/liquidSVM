@@ -1,0 +1,64 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//  
+// This header provides the class Tgrid_control that controls the construction
+// of an object of type Tgrid.
+// 
+// 
+// write_to_file(...) 
+// Writes the information of the object to the specified file.
+// 
+// read_from_file(...)
+// Reads the informaton of the specified file into the object.
+// 
+// scale_endpoints(...)
+// Scales the values of min_gamma and min_lambda provided that the corresponding 
+// scaling flag of the object is set to true. To this end, the sizes of the datasets 
+// used for training is estimated. The the following scaling rules are applied:
+// 		min_gamma  = min_gamma_unscaled * exp(-log(approx_train_size)/data_dim)
+// 		min_lambda = min_lambda_unscaled/(approx_train_size)
+// 
+// compute_gamma(...)
+// Returns the gamma value between min_gamma and max_gamma at the specified position.
+// The spacing is geometrical.
+// 
+// compute_weights(...)
+// Returns the weights between min_weight and max_weight at the specified position.
+// The spacing is either geometrical or arithmetical. 
+// In case of geometrical spacing, the opposite value of weight_class is geometrically spaced, 
+// the other weight gets the value of 
+// 		1.0 - geometrically spaced weight.
+// In the case of arithmetical spacing, the following formulas are applied:
+// 		pos_weight = min_weight +  position/(weight_size - 1) * (max_weight - min_weight);
+// 		neg_weight = 1 - pos_weight;
+// Finally, in both cases a weight_size == 1 leads to 
+// 		neg_weight = min_weight;
+// 		pos_weight = max_weight;
+// 
+// compute_lambda(...)
+// Returns the lambda value between min_lambda and max_lambda at the specified position.
+// The spacing is geometrical.
+// 
+// 
+// LIMITATIONS
+// Currently, only grid structures of cubic form are supported, i.e. no adaptive
+// format can be described.
+// 
+//**********************************************************************************************************************************

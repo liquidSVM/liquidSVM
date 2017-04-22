@@ -1,0 +1,71 @@
+default: lib
+
+MAIN_DIR=src
+SRC_DIR=$(MAIN_DIR)
+COMMON_BASE_DIR=$(MAIN_DIR)
+BIN_DIR=.
+
+LIBNAME_LINUX=libliquidsvm.so
+LIBNAME_MAC=libliquidsvm.jnilib
+LIBNAME_WIN=liquidsvm.dll
+
+ifeq ($(OS),Windows_NT)
+LIBNAME=$(LIBNAME_WIN)
+OS_NAME=win32
+OS_NAME_NICE=Windows
+WARNING_JAVA_HOME=set JAVA_HOME="C:\Program Files\Java\jdk..."
+else
+	OS=$(shell uname -s)
+	ifeq ($(OS),Darwin)
+		LIBNAME=$(LIBNAME_MAC)
+		OS_NAME=darwin
+		OS_NAME_NICE=MacOS X
+		WARNING_JAVA_HOME=export JAVA_HOME=/Library/Java/JavaVirtualMachines/*/Contents/Home
+	else
+		LIBNAME=$(LIBNAME_LINUX)
+		OS_NAME=linux
+		OS_NAME_NICE=Linux
+		WARNING_JAVA_HOME=export JAVA_HOME=/usr/lib/jvm/default-java
+	endif
+endif
+
+ifndef JAVA_HOME
+$(warning Warning: JAVA_HOME environment variable not set. On $(OS_NAME) this often is: $(WARNING_JAVA_HOME))
+endif
+
+JAVA_HOME_Q="$(JAVA_HOME)"
+
+NAME_PACKAGE=de.uni_stuttgart.isa.liquidsvm
+MAIN_CLASS=$(NAME_PACKAGE).LiquidData
+
+MAIN_PATH_PREFIX=de_uni_stuttgart_isa_liquidsvm
+MAIN_PATH_CPP=$(MAIN_PATH_PREFIX)_SVM.cpp
+MAIN_PATH_H=$(MAIN_PATH_PREFIX)_SVM.h
+
+JAVA_INCLUDE_PATH=-I$(JAVA_HOME_Q)/include/ -I$(JAVA_HOME_Q)/include/$(OS_NAME)
+
+CXX=g++
+#CXX=clang++
+CXX_FLAGS=-shared -fPIC -std=c++0x -m64 -o $(BIN_DIR)/$(LIBNAME) $(JAVA_INCLUDE_PATH) -I$(MAIN_DIR) -I$(COMMON_BASE_DIR) $(SRC_DIR)/$(MAIN_PATH_CPP) -w
+
+lib: native
+
+native:
+	mkdir -p $(BIN_DIR)
+	$(CXX) -g0 -O3 -march=native $(CXX_FLAGS)
+
+generic:
+	mkdir -p $(BIN_DIR)
+	$(CXX) -g0 -O3 -mtune=generic -msse2 $(CXX_FLAGS)
+
+debug:
+	mkdir -p $(BIN_DIR)
+	$(CXX) -g2 -mtune=generic -msse2 $(CXX_FLAGS)
+
+empty:
+	mkdir -p $(BIN_DIR)
+	$(CXX) $(CXX_FLAGS)
+
+demo:
+	$(JAVA_HOME_Q)/bin/java -Djava.library.path=$(BIN_DIR) -jar $(BIN_DIR)/liquidSVM.jar
+

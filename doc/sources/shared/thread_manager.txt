@@ -1,0 +1,175 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header provides some classes for a simple and efficient thread management.
+// The main features of these classes are:
+// - A simple programming interface for large multi-threaded environments that include 
+//   code over various classes.
+// - Threads that run on their own physical core for maximal speed in some situations 
+// - A very fast synchronization barrier for i3-i7 (and maybe other x64-) platforms
+// - GPU support 
+// 
+// 
+// Tthread_manager
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// Provides a class to control the execution flow in a threaded environment started 
+// by Tthread_manager_active.
+// 
+// Usage (in the following order):
+// - Construct and then call reserve_threads(Tparallel_control parallel_ctrl) for each
+//   object which will used in a threaded environment before the threads are started.
+// - Tthread_manager_active::start_threads() should be called once.
+//   This function starts the number of threads specified in Tparallel_control
+//   and connects them to GPUs, if GPUs > 0. Then reserve_on_GPU() is called
+//   to allocate additional resources needed for GPU if required. This function
+//   thus needs to be implemented from the user-side if necessary. Then the pure virtual 
+//   function thread_entry() is called for each thread. This function should thus contain 
+//   the (main) parallel code. Also each object derived from Tthread_manager
+//   for which reserve_threads(...) was called enjoys the functionality of the 
+//   parallel tools such as the thread_id's synchronization, and the mutexes.
+//   When the threads return from thread_entry(), clear_on_GPU() is called (again this
+//   needs to be implemented from the user-side if necessary), and then the 
+//   threads are disconnect from the GPU (if applicable). Finally they are joined. 
+//   CONSEQUENCE: all parallel code need to be contained in an implemented version
+//   of thread_entry() and its objects. These objects need to be derived from 
+//   Tthread_manager if they need the parallel instructions provided by Tthread_manager.
+// - clear_threads() should be called for each object for which reserve_threads
+//   was called.
+// 
+// Limitations:
+// - Each thread is assigned to a fixed logical core of the system. Thus, the number
+//   of logical cores is an upper bound on the number of threads that can be started.
+// - Each object derived from Tthread_manager and used during thread_entry() needs
+//   to have the same of number of threads reserved. If this is violated, the program 
+//   aborts with an error message.
+// - Each function used in these derived objects need to be executed by all threads
+//   if a ...sync() or reduce...() function is called inside this function. Otherwise,
+//   the program will hang since it will wait for a thread that will never pass the
+//   synchronization point.
+//   CONSEQUENCE: different code for different threads must not contain such a 
+//   synchronization point.
+// 
+// 
+// reserve_threads(...)
+// Tells the object derived from Tthread_manager how many threads and GPUs will be used.
+// 
+// clear_threads()
+// Deletes all information set inside the object by the function reserve_threads(...).
+// If this function is called when the derived object runs in an threaded environment,
+// then the program aborts with an error message.
+// 
+// get_parallel_control()
+// Returns the Tparallel_control object used in the Tthreadmanager.
+// 
+// hyper_threads_are_pairs()
+// Returns true if the logical processor 0 and 1 share the same core. Otherwise false is 
+// returned. If no hyperthreading is avaliable the functions thus always returns false,
+// while if hyperthreaing is available, the result depends on how the logical cores
+// (= hyperthreads) are numbered.
+// 
+// get_number_of_physical_cores() / get_number_of_logical_processors
+// Returns the number of physical cores or logical processors for the current system.
+// 
+// reserve_on_GPU() / clear_on_GPU()
+// Functions called when threads are started / joined. These virtual functions need to 
+// be implemented in derived classes if necessary. They can be used to (de)allocate additional
+// resources.
+// 
+// get_GPU_id()
+// Returns the logical number of the physical GPU the current thread uses.
+// 
+// get_number_of_CPU_threads_on_used_GPU()
+// Returns the number of CPU threads that share the same (hardware) GPU of the current 
+// thread, if the object is in an threaded environment and the code is compiled with 
+// nvcc. Otherwise, 0 is returned.
+// 
+// free_memory_on_GPU()
+// Returns the total free memory on the GPU the current thread is assigned to, if the 
+// object is in an threaded environment and the code is compiled with nvcc. Otherwise, 
+// 0.0 is returned. The precision of the returned free memory is in the range of double.
+// 
+// available_memory_on_GPU(...)
+// Returns free_memory_on_GPU() / get_number_of_CPU_threads_on_used_GPU() * allowed_percentage.
+// 
+// get_team_size() 
+// Returns the number of threads that are reserved.
+// 
+// get_thread_id()
+// Returns the logical number of the current thread. The value is between 0 and get_team_size()-1.
+// 
+// is_first_team_member() / is_last_team_member()
+// Returns true iff current thread is the thread with thread_id == 0 / thread_id == get_team_size()-1.
+// 
+// get_thread_chunk()
+// Returns a Tthread_chunk object with start and stop fields filled in. The fields 
+// start_index and stop_index_aligned are always a multiple of alignment, while stop_index 
+// is the minimum of stop_index_aligned and the size. 
+// The difference start_index - stop_index_aligned is approximately equal for all threads.
+// 
+// sync_threads() / lazy_sync_threads()
+// Creates a barrier at which the threads are synchronized. On platforms with SSE2 sync_threads()
+// provides a very fast, hardware oriented implementation, on all other platforms an implementation
+// based on mutexes is provided. The lazy-version includes some sleeping of the waiting threeads.
+// WARNING: while the hardware oriented implementation is available on all platforms supporting
+// SSE2, it has only been tested on i3-i7 platforms. In case of problems, the code needs to be
+// changed so that it calls lazy_sync_threads_with_locks() instead of lazy_sync_threads_without_locks();
+// 
+// ..._get_time_difference(...)
+// Returns the time difference between in_time and the current time for the speficied thread. The
+// sync-versions have a synchronization point in front of the time measurement.
+// 
+// thread_safe_set() / thread_safe_add()
+// Sets or adds a value using mutexes (and cacheline flushes if available).
+// 
+// reduce_sums()
+// Returns the sum of the values stored in the array thread_local_sum. It is assumed that this
+// array has the size of get_team_size();
+// 
+// lock_mutex() / unlock_mutex()
+// Locks and unlocks a mutex hidden in tthread_manager.
+// 
+// 
+// 
+// Tthread_manager_active
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// Class to start a threaded environment.
+// 
+// start_threads()
+// This starts a threaded environment. Once each thread is established, i.e. assigned to a core,
+// connected to a GPU if required etc., the virtual function thread_entry is called. When each 
+// function is returned from this call, the threads are disconnected from their GPUs (if applicable)
+// and finally, they are joined.
+// 
+// thread_entry()
+// Function that needs to be implemented in a derived class. It should contain (parts) of the 
+// parallel code. The remaining parallel code should be contained in objects derived from 
+// Tthread_manager for which reserve_threads(...) was called before starts_threads().
+// 
+// 
+// 
+// Tthread_chunk
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// This class contains some information for equally sharing chunks of a vector between 
+// different threads.
+// 
+//**********************************************************************************************************************************

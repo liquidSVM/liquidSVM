@@ -1,0 +1,37 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+// 
+// This header provides some functions for computing a (pre-)kernel 
+// for two samples.
+// 
+// compute_gamma_factor(...)
+// Returns a transformation of gamma that does depend on the kernel type.
+// GAUSS_RBF: -1.0/(gamma * gamma);
+// POISSON:   -1.0/gamma;
+// 
+// pre_kernel_function(...)
+// Returns the pre_kernel_function for a given kernel. Currently it is
+// the squared Euclidean distance.
+// 
+// kernel_function(...)
+// Returns the kernel function according to the type and gamma_factor.
+// The __target_device__ version can be used both by CPU code and GPU code.
+//  
+//**********************************************************************************************************************************

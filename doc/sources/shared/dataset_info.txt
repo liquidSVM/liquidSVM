@@ -1,0 +1,41 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// The class Tdataset_info analyzes the dataset it is constructed from.
+// The obtained information is stored in the public data fields. 
+// If 0.0 <= tau <= 0.5, the tau and 1-tau quantiles are computed,
+// otherwise, the operation is skipped.
+// 
+// 
+// kind == CLASSIFICATION:
+// The vectors label_list and label_count are filled and the most
+// frequent label is computed. Here label_list is ordered from
+// small to large. 
+// 
+// get_label_number(...)
+// Returns the position of label in label_list.
+// 
+// coordinates_with_positive_quantile_distance
+// Lists the coordinates, for which the inter-quantile distance is positive.
+// 
+// sample_indices_outside_quantile_box
+// Lists the samples, that fall outside the quantiles in at least one coordinate.
+// 
+//**********************************************************************************************************************************

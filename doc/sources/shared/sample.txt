@@ -1,0 +1,84 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This class stores a single sample. 
+// 
+// 
+// Internally the x-part can  be represented as a simple vector or in a 
+// sparse format similar to LIBSVMs file format (LSV case). The format 
+// is determined when the sample is read from a file. 
+// 
+//
+// Tsample(...)
+// If no sample_type is specified, either the sample_type of the 
+// parameter sample is used or, the default type, namely CSV is used.
+// 
+// get_number()
+// Returns a a unique number assigned by Tdataset. Default is 0.
+// 
+// get_internal_representation() 
+// Returns the interval representation of the sample. Possible values
+// are LSV and CSV.
+// 
+// dim()
+// Returns the dimension of the sample.
+// 
+// dim_aligned()
+// Returns the internally used dimension of the sample if its type
+// is not LSV.
+// 
+// coord(...) / operator [...] 
+// Gives read access to the i-th component of the x part of the 
+// sample independent of its internal representation. If i is larger
+// than dim(), then 0.0 is returned.
+// 
+// get_x_part(...)
+// Returns the x-part of the sample to either the return vector or 
+// the memory location. In the latter case, no check is made, whether
+// it is possible to write to the address or not, so a segmentation fault
+// or similar things may happen, if the memory was not properly allocated
+// in the calling environment. 
+// WARNING: If the address has allocated DIM many doubles, but the sample
+// has a dimension smaller than DIM, the remaining doubles are not touched
+// by get_x_part(), so that you should make sure that they are properly 
+// initiated, e.g., by zeroes.
+//
+// get_2norm2(...) 
+// Returns the squared Euclidean norm of the sample.
+// 
+// operator * 
+// Returns a scaled sample or the inner product of the two samples. The label 
+// and the sample_type are copied
+// 
+// operator +
+// Returns the sum of the sample and the translate, the label and the
+// sample_type are copied
+// 
+// squared_distance(...)
+// Returns the squared Euclidean distance between the samples.
+// 
+// double label
+// Stores the label of the sample. 
+// 
+// bool labeled
+// Indicates, whether sample does have a label or not. If labeled == false,
+// then the value of label has not meaning.
+// 
+//**********************************************************************************************************************************

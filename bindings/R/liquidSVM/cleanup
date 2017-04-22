@@ -1,0 +1,3 @@
+
+if [ -r src/Makevars ] ; then rm src/Makevars ; fi
+

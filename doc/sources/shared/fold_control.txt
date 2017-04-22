@@ -1,0 +1,74 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header file provides tha class Tfold_control that controls the
+// the behavior of Tfold_manager.
+// 
+// 
+// read_from_file(...)
+// Reads the information of the data fields of the class from the specified 
+// file.
+//
+// write_to_file(...)
+// Writes the information of the data fields of the class to the specified 
+// file.
+//
+// number
+// Number of folds to be created. 
+// 
+// kind
+// Specifies how the folds are created. Allowed values are specified by
+// FOLD_CREATION_TYPES, see below for their meaning.
+// 
+// train_fraction
+// All folds together contain train_fraction * data_set_size many
+// samples. If train_fraction < 1.0, then the remaining samples are used
+// for validation, otherwise (Tfold_control::number - 1) many folds
+// are used for training and 1 fold is used for validation. The default
+// value is FRACTION_NOT_ASSIGNED, which is converted to 1.0 by Tfold_manager.
+// 
+// negative_fraction
+// Specifies the fraction of negative samples in each fold for RANDOM_SUBSET.
+// 
+// 
+// FOLD_CREATION_TYPES
+// 
+// FROM_FILE
+// Read the fold assignment of each sample from file.
+// 
+// BLOCKS
+// Each folds consists of a contiguous block in the original data set.
+// 
+// ALTERNATING 
+// The samples of the original data set are assigned to the folds in turns.
+// 
+// RANDOM
+// The samples are randomly assigned to the folds. 
+// 
+// STRATIFIED
+// The samples are assigned stratified randomly. This is only available, if 
+// the data set is of classification type.
+// 
+// RANDOM_SUBSET
+// The fraction of negative and positive samples in each fold is specified by 
+// negative fraction. The assignment is random. The remaining samples are used 
+// for validation if train_fraction < 1.0.
+// 
+//********************************************************************************************************************************** 

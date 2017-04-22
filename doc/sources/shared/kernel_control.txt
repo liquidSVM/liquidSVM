@@ -1,0 +1,157 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+// 
+// This header provides to classes that control the behavior of objects of
+// the class Tkernel in general and on GPUs.
+// 
+// 
+// 
+// KERNEL_TYPES
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// GAUSS_RBF:  the classical Gaussian RBF kernel.
+// POISSON:    Similar to the Gaussian kernel but the Euclidean norm and the gamma are 
+//             not squared.
+// 
+// 
+// 
+// KERNEL_MEMORY_MODELS
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// Describe the possible memory models for Tkernel. Their meaning is explained there.
+// 
+// 
+// 
+// class Tkernel_control
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// read_from_file(...)
+// Reads all relevant information from the specified file.
+// 
+// write_to_file(...)
+// Writes all relevant information to the specified file.
+// 
+// clear()
+// Sets all information back to default values.
+// 
+// is_full_matrix_pre_model() / is_full_matrix_model()
+// Returns true if the corresponding memory model is either LINE_BY_LINE or BLOCK
+// 
+// 
+// kernel_type
+// Determines the kernel type in Tkernel. Allowed values are listed in KERNEL_TYPES.
+// default is  GAUSS_RBF
+// 
+// memory_model_pre_kernel / memory_model_kernel
+// Determines the memory model in Tkernel, see the description there. Allowed
+// values are listed in KERNEL_MEMORY_MODELS.
+// default is  LINE_BY_LINE
+// 
+// cache_size / pre_cache_size
+// Sets the sizes of the cache in MEGABYTE for the kernel and pre-kernel matrix, if the 
+// corresponding memory model is CACHE.
+// defaults are  512 and 1024
+// 
+// kernel_store_on_GPU /pre_kernel_store_on_GPU
+// Flags that determine whether the kernel or pre_kernel matrix are stored on the GPU or
+// copied back to the motherboard's RAM.
+// defaults are false / true
+// 
+// split_matrix_on_GPU_by_rows
+// Flag that determines whether the matrix is split with respect to the row_data_set or
+// the col_data_set.
+// default is true
+// 
+// allowed_percentage_of_GPU_RAM
+// Tells Tkernel how much GPU memory of the total memory available for the current thread
+// it may use. For example, if 2 threads share a GPU having 2GB RAM, then each thread has
+// 1GB RAM and allowed_percentage_of_GPU_RAM = 0.5 would mean that Tkernel may use 0.5GB
+// for each of its two threads. The variable allowed_percentage_of_GPU_RAM is useful when
+// more than one object needs significant resources on a GPU. This in particular happens
+// if two Tkernels are used for training and validation.
+// default is  0.5
+// 
+// same_data_sets
+// Is true, if the column and row data sets need to be viewed to be identical. This requires
+// that they actually are identical, but it is perfectly fine not to set the flag if the 
+// sets are identical. The result influences how the pre-kernel matrix is treated and 
+// Tkernel::get_kNN_list() behaves.
+// default is  false
+// 
+// max_col_set_size / max_row_set_size
+// Tells Tkernel the maximal number of rows and columns it needs to allocate. These values
+// are useful when when Tkernel::reserve is called before a cross validation phase since
+// it allows to allocate the memory only once.
+// defaults are 0 and 0
+// 
+// include_labels
+// Indicates whether the labels are multiplied in front of the kernel values or not. For
+// example, for a hinge svm solver the flag is in generally set, whereas for a least-squares 
+// svm solver it is gnerally not. In other words, the `correct' value of include_labels 
+// depends on the solver that uses the Tkernel object.
+// The flag has only an effect, if same_data_sets is also set.
+// default is  true
+// 
+// kNNs
+// Tells the Tkernel object how many nearest neighbors it should return in Tkernel::get_kNN_list().
+// If kNNs == DEFAULT_NN, then the solver may get a hint that it needs to set the variable.
+// default is  DEFAULT_NN
+//  
+//
+// 
+// struct Tkernel_control
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// This structur controls the kernel matrix computation on GPUs. It is actually not meant to be
+// used during programming but needs to be visible for technical reasons related to the interaction
+// between GCC un NVCC (Maybe there is a smarter way around this, but I saved some time, here).
+// 
+// dim
+// Needs to be set to the dimension of the dataset.
+// 
+// size
+// Maximal number of entries of the matrix on the GPU.
+// 
+// row_start /col_start
+// row_stop /row_start
+// row_set_size / col_set_size / col_set_size_aligned
+// These values need to be set differently depending on whether Tkernel_control::split_matrix_on_GPU_by_rows
+// was set or not for the kernel set up. If it was set to be true, then the kernel matrix is split
+// horizontally between different GPUS, where the value kernel_control.max_row_size was used to 
+// determine the positions of the splittings at row_start. Otherwise it is split vertically, where 
+// the value Tkernel::max_aligned_col_set_size is used to determine the positions.
+// 
+// row_labels / col_labels
+// Points to memory on the GPU, in which the labels of the corresponding 
+// datasets are stored.
+// 
+// row_data_set / col_data_set
+// Points to memory on the GPU, in which the corresponding datasets are stored.
+// 
+// kernel_offset
+// gamma_factor
+
+// kernel_type
+// Same as in Tkernel_control
+// 
+// pre_kernel_matrix / kernel_matrix
+// Points to the memory on the GPU, in which the pre_matrix and the matrix are stored.
+// 
+//**********************************************************************************************************************************

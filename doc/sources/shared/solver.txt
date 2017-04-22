@@ -1,0 +1,87 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header files provides a generic solver class. Actual solver 
+// classes are supposed to be derived from this class and implement 
+// some of the empty functions.
+// 
+// 
+// 
+// clear()
+// Clears all resources related to the generic Tsolver object.
+// 
+// reserve(...)
+// Reserves all resources related to the generic Tsolver object.
+// This includes the reservation of threads. In addition, the
+// Tsolver_control_type object may be changed, e.g. default flags
+// may trigger setting solver specific default values or values 
+// in the embedded Tkernel_control objects may be a changed.
+// 
+// 
+// load(...)
+// Loads the Tkernel obejcts into the solver. This is necessary
+// before running the solver.
+// 
+// initialize_new_weight_and_lambda_line(...)
+// This function should be called before run_solver(...) is called 
+// for a new sequence of weights and lambdas since this way solver
+// specific initializations can be done.
+// 
+// initialize_new_lambda_line()
+// This function should be called before run_solver(...) is called 
+// for a new sequence of lambdas since this way solver specific 
+// initializations can be done. 
+// 
+// run_solver(...)
+// Runs the solver for the weight and lambda stored in train_val_info
+// according to the settings defined during the reserve(...) call and
+// returns the solution if Tsolver_control_type::save_solution == true.
+// 
+// training_set_size / training_set_size_aligned / validation_set_size
+// Sizes of the training and validaiton set. The _aligned -version 
+// is the training set size when aligned to CACHELINE, see memory_allocation.h
+// for details. These variables are set by load(...).
+// 
+// stop_eps
+// Stopping eps used in the solver for a specific weight and lambda.
+// This solver specific value needs to be set by the solver implementation.
+// 
+// offset
+// Offest of the obtained decision function. Again, this is solver specific 
+// and thus needs to be set by the solver implementaion.
+// 
+// training_kernel / validation_kernel
+// Pointers to the kernel objected loaded by load(...)
+// 
+// loss_function
+// Tloss_function object initialized by reserve(). Note that the weights
+// of the loss may depend on the weights in the grid in which case
+// Tsolver_control_type::fixed_loss should be set to false.
+// 
+// solver_ctrl
+// Tsolver_control_type object stored and manipulated during reserve(...)
+// 
+// NO_PREVIOUS_LAMBDA
+// Particular constant that may be used to signal that the considered 
+// lambda is the first in a sequence of lambda values for which run-solver(...)
+// will be called.
+// 
+// 
+//**********************************************************************************************************************************

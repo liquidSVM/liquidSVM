@@ -1,0 +1,148 @@
+==== Bindings-Version 1.0: ====
+Feature Complete: Mi 14.11.2016
+Release: Fr 2.12.2016
+
+~~~~~ Common
+Done
+- Auto scaling
+Prio 1
+- config names case insensitive?
+- Error handling:
+    error() and warning() functions
+    meaningful exceptions
+Prio 2
+- Version string of core-package?
+
+~~~~~ R
+Done
+- better print method for class svm
+- plot methods for ROC-Curve
+- RC4-Class (Needs R 2.12)
+- basic mlr-support
+- read/write solution: documentation-vignette
+- getSolution/getCover unittests, documentation-vignette
+- make Tests optionally (skip_on_cran()) quicker, (print in master thread?)
+Prio 1
+- mlr unittests, demo?, documentation
+Questions:
+- is heuristic for grid warning okay:
+    more than 1/folds boundary hits, boundaryFactor=5?
+- useCells=TRUE if n > 10000
+- rename functions:
+    lsSVM -> svm.ls, ...; getConfig -> get or [] or ?
+Prio 2
+- RANDOM_SEED vs. set.seed?
+- make default configuration values configurable (options(...))
+- use Tdataset transpose in init and test
+- caret binding: http://topepo.github.io/caret/using-your-own-model-in-train.html
+~~~~~ MATLAB
+Prio 1
+- Documentation
+- smldata: class, load, download, split
+  Maybe we could even have it like:  load covtype.1000
+- (else: make banana_*_y categorical)
+- read/write: documentation
+- cover/solution: documentation, testing
+- Constructor with Filename: Load data from solFileStream?
+- train/selectErrors with colnames (they are in liquidSvmModel.error_colnames)
+- remove temporary files in objRead/objSave
+- use Tdataset transpose in init and test
+Prio 2
+- plot methods for ROC-Curve or more
+- with smldata: automagical test
+- make autoTrainSelect optionally disabled
+- more unittest
+- CUDA?
+- disp for model?
+~~~~~ Java
+Done
+- read/write/cover/solution: bind, testing
+Prio 1
+- Documentation
+- Warn more about thread safety in docs
+- read/write/cover/solution: documentation
+- include banana-*, reg-1d
+- GUI: Load Data sets, parse command line options
+- exceptions?
+Prio 2
+~~~~~ Python
+Prio 1
+- Documentation
+- Sanity check about no training data?
+- read/write: bind, documentation, testing
+- smldata: download, split
+- Windows: case insensitive configuration?
+- unittest
+- what happens with model$select_errors in multiple selects?
+Prio 2
+- MacOS disable 32bit compilation
+- scikit-learn compatibility
+- real bindings?
+  - cover/solution
+- CUDA: Maybe like https://github.com/AaronParsons/aipy_cuda/blob/master/setup.py ??
+~~~~~ Command line utilities
+Done
+- make them usable from any directory
+- make Configuration possible on command line
+Prio 1
+- autoscale?
+- document file formats
+- instead of uncommenting MakeFile use: make CPP_VERSION=-std=c++0x
+~~~~~ Benchmarks
+- Use params from tune.svm
+- add EnsembleSVM/BudgetedSVM/GURLS(LeastSquares)
+- check errors
+~~~~~ Institutional
+Prio 1
+- CRAN
+- MLOSS
+Prio 2
+- Homepage
+- Github
+- Mailing List
+- MLOSS.org
+
+
+
+==== Bindings-version 1.1 / commandline 1.2? ====
+Feature Complete Fr 2.12.2016
+Release: Fr 15.12.2016
+
+- Bindings Makefile to make all binaries and maybe easy publish new versions ?
+- Revision / beta / alpha versions?
+- fix task enumeration: mcSVM vs the others?
+- Documentation, example
+- Change Ad-hoc matrix formats
+- Sparse Matrix formats
+- random cookies?
+- new Tconfig only if new Tsvm_manager in order to not have configurations for non-existing cookies.
+- make STORE_SOLUTIONS_INTERNALLY default for some cases?
+~~~~~ R
+Prio 1
+Prio 2
+- unittests for warn if to many params at boundary
+- Regression Tests on different platforms
+- get "best" lambda, gamma, weights
+- summary for NPL
+- Serialization
+- .DollarNames(...) to get configuration parameters into tab completion?
+~~~~~ MATLAB
+Prio 1
+Prio 2
+~~~~~ Java
+Prio 1
+Prio 2
+- catch InterruptedException in train/select/test and stop worker threads?
+- CUDA?
+- smldata: download, split
+~~~~~ Python
+Prio 1
+Prio 2
+
+~~~~~ Institutional
+Prio 1
+- make available on github
+- mailing list
+- homepage -> git
+
+

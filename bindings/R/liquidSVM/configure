@@ -1,0 +1,104 @@
+#!/bin/bash
+
+if [ x$OUT = x ]; then
+  OUT=src/Makevars
+fi
+if [ "x$CUDA_PATH_DEFAULT" = x ]; then
+### This gave too much trouble on many systems
+  : # CUDA_PATH_DEFAULT=/usr/local/cuda
+fi
+
+LIQUID_SVM_CXX1X=`"${R_HOME}/bin/R" CMD config CXX1X`
+
+if [ x$TARGET = x ]; then
+  case `basename $LIQUID_SVM_CXX1X` in
+  g++ | clang++ )
+    if uname -m | grep -iq sparc ; then
+      echo Since this is a sparc processor we set TARGET=default
+      TARGET=default
+    else
+      TARGET=native
+    fi
+    ;;
+  *)
+    echo unknown compiler: $LIQUID_SVM_CXX1X therefore we set TARGET=default
+    TARGET=default
+    ;;
+  esac
+  #TARGET=compatible
+  #touch src/liquidSVM_R.cpp
+fi
+
+if [ x$LIQUIDSVM_TARGET != x ]; then
+  TARGET=$LIQUIDSVM_TARGET
+fi
+
+if [ x$1 != x ]; then
+case $1 in
+native | generic | default | debug | empty )
+  TARGET=$1
+  shift 1
+  ;;
+esac
+fi
+
+echo Using target: $TARGET 
+echo Using further args: $@
+
+if [ $TARGET = native ]; then
+  CXX_FLAGS="-O2 -march=native $CXX_FLAGS"
+elif [ $TARGET = generic ]; then
+  CXX_FLAGS="-mtune=generic -msse2 -O3 $CXX_FLAGS"
+elif [ $TARGET = default ]; then
+  CXX_FLAGS="$CXX_FLAGS"
+elif [ $TARGET = debug ]; then
+  CXX_FLAGS="-mtune=generic -msse2 -g $CXX_FLAGS"
+elif [ $TARGET = empty ]; then
+  : ## don't do anything
+fi
+
+## the next parameter could be location of cuda:
+if [ "x$1" = xNO_CUDA ]; then
+echo Config: disabling CUDA due to argument NO_CUDA
+  shift 1
+elif [ "x$1" != x ] && [ -d "$1" ]; then
+echo Config: Got CUDA_PATH from argument $1
+  CUDA_PATH="$1"
+  shift 1
+elif [ -d "$CUDA_PATH_DEFAULT" ]; then
+echo Config: Got CUDA_PATH from default location $CUDA_PATH_DEFAULT
+  CUDA_PATH="$CUDA_PATH_DEFAULT"
+fi
+
+if [ x$1 != x ]; then
+  CXX_FLAGS="$@ $CXX_FLAGS"
+fi
+
+if [ "$CUDA_PATH" ]; then
+  CUDA_OBJECTS=
+  for i in `find src/sources -name *.cu|grep -v .ins.cu`; do
+    echo $i
+    #j=${i:4}
+    j=`basename $i`
+    export CUDA_OBJECTS="$CUDA_OBJECTS cuda_objects/${j%.*}.o"
+  done
+  mkdir src/cuda_objects
+   CXX_FLAGS="$CXX_FLAGS \$(CPP_CUDA_FLAGS)"
+  ADDITIONAL_LIBS="$ADDITIONAL_LIBS \$(CPP_CUDA_LINK_FLAGS)"
+  ADDITIONAL_CPP_FLAGS="$ADDITIONAL_CPP_FLAGS -DCOMPILE_SEPERATELY__CUDA"
+#else
+#  CUDA_PATH=/dev/null
+fi
+
+echo Config in $PWD
+echo Config: using CXX_FLAG=$CXX_FLAGS
+echo Config: using ADDITIONAL_LIBS=$ADDITIONAL_LIBS
+echo Config: using ADDITIONAL_CPP_FLAGS=$ADDITIONAL_CPP_FLAGS
+echo Config: using CUDA_PATH=$CUDA_PATH
+echo Config: using CUDA_OBJECTS=$CUDA_OBJECTS
+
+sed -e "s|@ADDITIONAL_CXXFLAGS@|$CXX_FLAGS|" -e "s|@ADDITIONAL_LIBS@|$ADDITIONAL_LIBS|" \
+  -e "s|@ADDITIONAL_CPP_FLAGS@|$ADDITIONAL_CPP_FLAGS|" \
+  -e "s|@CUDA_PATH@|$CUDA_PATH|" -e "s|@CUDA_OBJECTS@|$CUDA_OBJECTS|" \
+  src/Makevars.in > $OUT
+

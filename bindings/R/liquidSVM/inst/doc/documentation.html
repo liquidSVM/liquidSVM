@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Philipp Thomann &amp; Ingo Steinwart" />
+
+<meta name="date" content="2017-03-01" />
+
+<title>liquidSVM: Documentation for R</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">liquidSVM: Documentation for R</h1>
+<h4 class="author"><em>Philipp Thomann &amp; Ingo Steinwart</em></h4>
+<h4 class="date"><em>2017-03-01</em></h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#installation">Installation</a><ul>
+<li><a href="#download-and-install-using-r">Download and Install using R</a></li>
+<li><a href="#install-a-downloaded-package">Install a downloaded package</a></li>
+<li><a href="#advanced-configuration-options-with-source-install">Advanced Configuration Options with Source Install</a><ul>
+<li><a href="#windows-configuration">Windows configuration</a></li>
+<li><a href="#common-problems">Common Problems</a></li>
+</ul></li>
+<li><a href="#cuda">CUDA</a></li>
+</ul></li>
+<li><a href="#configuration-parameters">Configuration parameters</a><ul>
+<li><a href="#overview-of-configuration-parameters">Overview of Configuration Parameters</a></li>
+<li><a href="#specialized-configuration-parameters">Specialized configuration parameters</a></li>
+<li><a href="#hyperparameter-grid">Hyperparameter Grid</a></li>
+<li><a href="#adaptive-grid">Adaptive Grid</a></li>
+<li><a href="#cells">Cells</a></li>
+<li><a href="#weights">Weights</a></li>
+<li><a href="#more-advanced-parameters">More Advanced Parameters</a></li>
+</ul></li>
+<li><a href="#known-issues-common-problems">Known Issues / Common Problems</a><ul>
+<li><a href="#using-external-parallelization">Using external parallelization</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>To see a demonstration of the capabilities of liquidSVM from an R viewpoint, please look at the <a href="demo.html">demo</a>.</p>
+<blockquote>
+<p><em>Disclaimer:</em> liquidSVM and the R-bindings are in general quite stable and well tested by several people. However, use in production is at your own risk.</p>
+<p>If you run into problems please check first the documentation for more details, or report the bug to the maintainer.</p>
+</blockquote>
+<div id="installation" class="section level1">
+<h1>Installation</h1>
+<p>There are several options to install the package.</p>
+<div id="download-and-install-using-r" class="section level2">
+<h2>Download and Install using R</h2>
+<p>The most convenient way is to use the standard install to get it from CRAN:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;liquidSVM&quot;</span>)</code></pre></div>
+<p>You can also use our repository:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;liquidSVM&quot;</span>, <span class="dt">repos=</span><span class="st">&quot;http://www.isa.uni-stuttgart.de/software/R&quot;</span>)</code></pre></div>
+<p>Remark that in R a package can be installed either as source or binary</p>
+<dl>
+<dt>Source (default on Linux Systems):</dt>
+<dd>Allows for optimization to the system and liquidSVM can benefit a lot from these optimizations. The drawback is that this needs a C++ compiler. This is usually okay on Linux-systems, but on Windows one has to install <a href="Rtools">https://cran.r-project.org/bin/windows/Rtools/</a>, and on MacOS X <a href="Xcode%20in%20MacApp%20Store">https://itunes.apple.com/de/app/xcode/id497799835?mt=12</a> (<a href="Xcode%20also%20for%20older%20MacOS%20versions">https://developer.apple.com/download/</a>.)
+</dd>
+<dt>Binary (default on Windows and MacOS X):</dt>
+<dd>compiled versions are provided, so you do not need compilers. However, these are optimized for generic processors (e.g. they do not use AVX), and hence you might do much better on your machine if you compile it yourself.
+</dd>
+</dl>
+<p>You can change the default behaviour of <code>install.packages(...)</code> under Windows/MacOS by using the parameter <code>type=&quot;source&quot;</code>.</p>
+<blockquote>
+<p>The binaries in our repository are only compiled using R version 3.*. If you use another version, they might not work and you have to try source installation (<code>type=&quot;source&quot;</code>).</p>
+<p>Note: on MacOS X there can be an issue with binary package installation. If you get the error <code>tar: Failed to set default locale</code> then consult</p>
+<p><a href="https://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html#Internationalization-of-the-R_002eapp" class="uri">https://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html#Internationalization-of-the-R_002eapp</a></p>
+</blockquote>
+</div>
+<div id="install-a-downloaded-package" class="section level2">
+<h2>Install a downloaded package</h2>
+<p>Download the source or binary package from <a href="http://www.isa.uni-stuttgart.de/software/" class="uri">http://www.isa.uni-stuttgart.de/software/</a>. On the command line use:</p>
+<pre><code>R CMD INSTALL path-to-package/liquidSVM_1.0.1.tar.gz
+# Windows
+Rcmd INSTALL path-to-package/liquidSVM_1.0.1.zip
+# MacOS X using Termninal
+R CMD INSTALL path-to-package/liquidSVM_1.0.1.tgz</code></pre>
+<p>or in a running R session:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;path-to-package/liquidSVM_1.0.1.tar.gz&quot;</span>,<span class="dt">repos=</span><span class="ot">NULL</span>)
+<span class="co"># Windows binary</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;path-to-package/liquidSVM_1.0.1.zip&quot;</span>,<span class="dt">repos=</span><span class="ot">NULL</span>)
+<span class="co"># MacOS X binary</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;path-to-package/liquidSVM_1.0.1.tgz&quot;</span>,<span class="dt">repos=</span><span class="ot">NULL</span>)</code></pre></div>
+<p>You can use also the means of any R-IDE. E.g. in RStudio go to the menu</p>
+<pre><code>Tools &gt; Install packages...</code></pre>
+<p>Then set <code>install from</code> to <code>package archive file (.tar.gz or .tgz)</code> and choose your package and install the package.</p>
+</div>
+<div id="advanced-configuration-options-with-source-install" class="section level2">
+<h2>Advanced Configuration Options with Source Install</h2>
+<p>liquidSVM can be configured for different uses of available hardware. We provide the following configurations:</p>
+<dl>
+<dt><code>native</code></dt>
+<dd>compiles for the current system, e.g. uses AVX or even AVX2 if available. This uses <code>g++/clang++ -march=native -O3</code>.
+</dd>
+<dt><code>generic</code></dt>
+<dd>compiles for a wide range of currently deployed CPUs (uses SSE). This uses <code>g++/clang++ -mtune=generic -O3</code>. Our binary packages are compiled with this configuration.
+</dd>
+<dt><code>default</code></dt>
+<dd>compiles using the default values provided by R.
+</dd>
+<dt><code>debug</code></dt>
+<dd>compiles with debugging enabled.
+</dd>
+<dt><code>empty</code></dt>
+<dd>gives no default compile arguments.
+</dd>
+</dl>
+<p>Additional compiler flags can be provided as well. On the command line, here are some examples:</p>
+<pre><code>R CMD INSTALL --configure-args=native path-to-package/liquidSVM_1.0.1.tar.gz
+R CMD INSTALL --configure-args=generic path-to-package/liquidSVM_1.0.1.tar.gz
+R CMD INSTALL --configure-args=&quot;empty -march=core2 -O3&quot; path-to-package/liquidSVM_1.0.1.tar.gz</code></pre>
+<p>or in a running R session:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;liquidSVM&quot;</span>,<span class="dt">configure.args=</span><span class="st">&quot;native&quot;</span>)
+<span class="kw">install.packages</span>(<span class="st">&quot;liquidSVM&quot;</span>,<span class="dt">configure.args=</span><span class="st">&quot;generic&quot;</span>)
+<span class="kw">install.packages</span>(<span class="st">&quot;liquidSVM&quot;</span>,<span class="dt">configure.args=</span><span class="st">&quot;empty -march=core2 -O3&quot;</span>)</code></pre></div>
+<p>Under MacOS you have to add the paramter <code>type=&quot;source&quot;</code> in order to trigger compilation.</p>
+<blockquote>
+<p><strong>Hint:</strong> to see whether liquidSVM got compiled with SSE and/or AVX use:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">compilationInfo</span>()
+<span class="co">#&gt; [1] &quot;Compiled&quot; &quot;with&quot;     &quot;SSE2__&quot;   &quot;and&quot;      &quot;AVX__&quot;</span></code></pre></div>
+</blockquote>
+<div id="windows-configuration" class="section level3">
+<h3>Windows configuration</h3>
+<p>On <strong>Windows</strong> unfortunately neither <code>--configure-args</code> nor <code>configure.args</code> have any effect. We enable compilation configuration by reading the environment variable <code>LIQUIDSVM_CONFIGURE_ARGS</code> and using it in the same way as the configure args on the other platforms (see above). So on the Windows command line use</p>
+<pre><code>set LIQUIDSVM_CONFIGURE_ARGS=native
+R CMD INSTALL path-to-package/liquidSVM_1.0.1.tar.gz
+
+set LIQUIDSVM_CONFIGURE_ARGS=empty -march=core2 -O3
+R CMD INSTALL path-to-package/liquidSVM_1.0.1.tar.gz</code></pre>
+<p>Remark that no quotation has to be used. It is not tested whether paths with spaces will work in this setting.</p>
+<p>If you wish to install from within R you can specify the environment variable as well:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.setenv</span>(<span class="dt">LIQUIDSVM_CONFIGURE_ARGS=</span><span class="st">&quot;native&quot;</span>)
+<span class="kw">install.packages</span>(<span class="st">&quot;liquidSVM&quot;</span>)
+
+<span class="kw">Sys.setenv</span>(<span class="dt">LIQUIDSVM_CONFIGURE_ARGS=</span><span class="st">&quot;empty -march=core2 -O3&quot;</span>)
+<span class="kw">install.packages</span>(<span class="st">&quot;liquidSVM&quot;</span>)</code></pre></div>
+<p>If you have <a href="Rtools">https://cran.r-project.org/bin/windows/Rtools/</a> installed then you should definitely try to use <code>native</code>, because on Windows we use <code>generic</code> as the default configuration even for source installs.</p>
+</div>
+<div id="common-problems" class="section level3">
+<h3>Common Problems</h3>
+<ul>
+<li><strong>MacOS X</strong>: It seems that in some cases <code>clang++ -march=native</code> does not activate AVX even if it is available. Hence if you know it is available, use <code>configure.args=&quot;native -mavx&quot;</code> or even <code>configure.args=&quot;native -mavx2&quot;</code>.</li>
+<li><strong>Windows</strong>: On one machine <code>set LIQUIDSVM_CONFIGURE_ARGS=native</code> compiled but crashed on execution: the compiler thought that FusedMultiplyAdd was available but it was not. The solution was to <code>set LIQUIDSVM_CONFIGURE_ARGS=native -mno-fma</code></li>
+</ul>
+<p>For GCC it can help to use <code>g++ -Q --help=target -march=native ...</code> to figure out which options trigger what optimizations. For both GCC and clang you can also print the compilation headers by <code>g++ -march=native ... -dM -E - &lt; /dev/null | egrep &quot;SSE|AVX&quot;</code>.</p>
+</div>
+</div>
+<div id="cuda" class="section level2">
+<h2>CUDA</h2>
+<p>liquidSVM also is able to calculate the kernel on a GPU if it is compiled with CUDA-support. Since there is a big overhead in moving the kernel matrix from the GPU memory, this is most useful for problems with many feature-dimensions (see <a href="demo.html#CUDA">demo</a>)</p>
+<p>To activate CUDA support you have to specify its location (usually <code>/usr/local/cuda</code>) as a parameter to the configure arguments:</p>
+<pre><code>R CMD INSTALL --configure-args=&quot;native /my/path/to/cuda&quot; path-to-package/liquidSVM_1.0.1.tar.gz</code></pre>
+<p>or again in R</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">'liquidSVM'</span>,<span class="dt">configure.args=</span><span class="st">&quot;native /my/path/to/cuda&quot;</span>)</code></pre></div>
+<blockquote>
+<p>Note that due to lack of testing machines this is known to work only on some Linux machines. The above instructions will probably not work on Windows!</p>
+</blockquote>
+<p>If you have compiled with CUDA-support, you can activate it for a computation by using <code>svm(..., GPUs=1)</code>:</p>
+</div>
+</div>
+<div id="configuration-parameters" class="section level1">
+<h1>Configuration parameters</h1>
+<p>The uses of <code>svm(...)</code>, <code>lsSVM(...)</code>, <code>mcSVM(...)</code>, etc. can be configured using the following parameters.</p>
+<div id="overview-of-configuration-parameters" class="section level2">
+<h2>Overview of Configuration Parameters</h2>
+<dl>
+<dt><code>display</code></dt>
+<dd>This parameter determines the amount of output of you see at the screen: The larger its value is, the more you see. This can help as a progress indication.
+</dd>
+<dt><code>scale</code></dt>
+<dd><p>If set to a true value then for every feature in the training data a scaling is calculated so that its values lie in the interval <span class="math inline">\([0,1]\)</span>. The training then is performed using these scaled values and any testing data is scaled transparently as well.</p>
+<p>Because SVMs are not scale-invariant any data should be scaled for two main reasons: First that all features have the same weight, and second to assure that the default gamma parameters that liquidSVM provide remain meaningful.</p>
+<p>If you do not have scaled the data previously this is an easy option.</p>
+</dd>
+<dt><code>threads</code></dt>
+<dd><p>This parameter determines the number of cores used for computing the kernel matrices, the validation error, and the test error.</p>
+<ul>
+<li><code>threads=0</code> (default) means that all physical cores of your CPU run one thread.</li>
+<li><code>threads=-1</code> means that all but one physical cores of your CPU run one thread.</li>
+</ul>
+</dd>
+<dt><code>partition_choice</code></dt>
+<dd><p>This parameter determines the way the input space is partitioned. This allows larger data sets for which the kernel matrix does not fit into memory.</p>
+<ul>
+<li><code>partition_choice=0</code> (default) disables partitioning.</li>
+<li><code>partition_choice=6</code> gives usually highest speed.</li>
+<li><code>partition_choice=5</code> gives usually the best test error.</li>
+</ul>
+</dd>
+<dt><code>grid_choice</code></dt>
+<dd>This parameter determines the size of the hyper- parameter grid used during the training phase. Larger values correspond to larger grids. By default, a 10x10 grid is used. Exact descriptions are given in the next section.
+</dd>
+<dt><code>adaptivity_control</code></dt>
+<dd>This parameter determines, whether an adaptive grid search heuristic is employed. Larger values lead to more aggressive strategies. The default <code>adaptivity_control = 0</code> disables the heuristic.
+</dd>
+<dt><code>random_seed</code></dt>
+<dd>This parameter determines the seed for the random generator. <code>random_seed</code> = -1 uses the internal timer create the seed. All other values lead to repeatable behavior of the svm.
+</dd>
+<dt><code>folds</code></dt>
+<dd>How many folds should be used.
+</dd>
+</dl>
+</div>
+<div id="specialized-configuration-parameters" class="section level2">
+<h2>Specialized configuration parameters</h2>
+<p>Parameters for regression (least-squares, quantile, and expectile)</p>
+<dl>
+<dt><code>clipping</code></dt>
+<dd>This parameter determines whether the decision functions should be clipped at the specified value. The value <code>clipping</code> = -1.0 leads to an adaptive clipping value, whereas <code>clipping</code> = 0 disables clipping.
+</dd>
+</dl>
+<p>Parameter for multiclass classification determine the multiclass strategy: <code>mc-type=0</code> : AvA with hinge loss. <code>mc-type=1</code> : OvA with least squares loss. <code>mc-type=2</code> : OvA with hinge loss. <code>mc-type=3</code> : AvA with least squares loss.</p>
+<p>Parameters for Neyman-Pearson Learning</p>
+<dl>
+<dt><code>class</code></dt>
+<dd>The class, the <code>constraint</code> is enforced on.
+</dd>
+<dt><code>constraint</code></dt>
+<dd>The constraint on the false alarm rate. The script actually considers a couple of values around the value of <code>constraint</code> to give the user an informed choice.
+</dd>
+</dl>
+</div>
+<div id="hyperparameter-grid" class="section level2">
+<h2>Hyperparameter Grid</h2>
+<p>For Support Vector Machines two hyperparameters need to be determined:</p>
+<ul>
+<li><code>gamma</code> the bandwith of the kernel</li>
+<li><code>lambda</code> has to be chosen such that neither over- nor underfitting happen. lambda values are the classical regularization parameter in front of the norm term.</li>
+</ul>
+<p>liquidSVM has a built-in a cross-validation scheme to calculate validation errors for many values of these hyperparameters and then to choose the best pair. Since there are two parameters this means we consider a two-dimensional grid.</p>
+<p>For both parameters either specific values can be given or a geometrically spaced grid can be specified.</p>
+<dl>
+<dt><code>gamma_steps</code>, <code>min_gamma</code>, <code>max_gamma</code></dt>
+<dd>specifies in the interval between <code>min_gamma</code> and <code>max_gamma</code> there should be <code>gamma_steps</code> many values
+</dd>
+<dt><code>gammas</code></dt>
+<dd>e.g. <code>gammas=c(0.1,1,10,100)</code> will do these four gamma values
+</dd>
+<dt><code>lambda_steps</code>, <code>min_lambda</code>, <code>max_lambda</code></dt>
+<dd>specifies in the interval between <code>min_lambda</code> and <code>max_lambda</code> there should be <code>lambda_steps</code> many values
+</dd>
+<dt><code>lambdas</code></dt>
+<dd>e.g. <code>lambdas=c(0.1,1,10,100)</code> will do these four lambda values
+</dd>
+<dt><code>c_values</code></dt>
+<dd>the classical term in front of the empirical error term, e.g. <code>c_values=c(0.1,1,10,100)</code> will do these four cost values (basically inverse of <code>lambdas</code>)
+</dd>
+</dl>
+<p>Note the min and max values are scaled according the the number of samples, the dimensionality of the data sets, the number of folds used, and the estimated diameter of the data set.</p>
+<p>Using <code>grid_choice</code> allows for some general choices of these parameters</p>
+<table>
+<thead>
+<tr class="header">
+<th><code>grid_choice</code></th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>gamma_steps</code></td>
+<td>10</td>
+<td>15</td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td><code>lambda_steps</code></td>
+<td>10</td>
+<td>15</td>
+<td>20</td>
+</tr>
+<tr class="odd">
+<td><code>min_gamma</code></td>
+<td>0.2</td>
+<td>0.1</td>
+<td>0.05</td>
+</tr>
+<tr class="even">
+<td><code>max_gamma</code></td>
+<td>5.0</td>
+<td>10.0</td>
+<td>20.0</td>
+</tr>
+<tr class="odd">
+<td><code>min_lambda</code></td>
+<td>0.001</td>
+<td>0.0001</td>
+<td>0.00001</td>
+</tr>
+<tr class="even">
+<td><code>max_lambda</code></td>
+<td>0.01</td>
+<td>0.01</td>
+<td>0.01</td>
+</tr>
+</tbody>
+</table>
+<p>Using negative values of <code>grid_choice</code> we create a grid with listed gamma and lambda values:</p>
+<table>
+<thead>
+<tr class="header">
+<th><code>grid_choice</code></th>
+<th>-1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>gammas</code></td>
+<td><code>c(10.0, 5.0, 2.0, 1.0, 0.5, 0.25, 0.1, 0.05)</code></td>
+</tr>
+<tr class="even">
+<td><code>lambdas</code></td>
+<td><code>c(1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001)</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th><code>grid_choice</code></th>
+<th>-2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>gammas</code></td>
+<td><code>c(10.0, 5.0, 2.0, 1.0, 0.5, 0.25, 0.1, 0.05)</code></td>
+</tr>
+<tr class="even">
+<td><code>c_values</code></td>
+<td><code>c(0.01, 0.1, 1, 10, 100, 1000, 10000)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="adaptive-grid" class="section level2">
+<h2>Adaptive Grid</h2>
+<p>An adaptive grid search can be activated. The higher the values of <code>MAX_LAMBDA_INCREASES</code> and <code>MAX_NUMBER_OF_WORSE_GAMMAS</code> are set the more conservative the search strategy is. The values can be freely modified.</p>
+<table>
+<thead>
+<tr class="header">
+<th><code>ADAPTIVITY_CONTROL</code></th>
+<th>1</th>
+<th>2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>MAX_LAMBDA_INCREASES</code></td>
+<td>4</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td><code>MAX_NUMBER_OF_WORSE_GAMMAS</code></td>
+<td>4</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="cells" class="section level2">
+<h2>Cells</h2>
+<p>A major issue with SVMs is that for larger sample sizes the kernel matrix does not fit into the memory any more. Classically this gives an upper limit for the class of problems that traditional SVMs can handle without significant runtime increase. Furthermore also the time complexity is at least <span class="math inline">\(O(n^2)\)</span>.</p>
+<p>liquidSVM implements two major concepts to circumvent these issues. One is random chunks which is known well in the literature. However we prefer the new alternative of splitting the space into spatial cells and use local SVMs on every cell.</p>
+<p>If you specify <code>useCells=TRUE</code> then the sample space <span class="math inline">\(X\)</span> gets partitioned into a number of cells. The training is done first for cell 1 then for cell 2 and so on. Now, to predict the label for a value <span class="math inline">\(x\in X\)</span> liquidSVM first finds out to which cell this <span class="math inline">\(x\)</span> belongs and then uses the SVM of that cell to predict a label for it.</p>
+<blockquote>
+<p>If you run into memory issues turn cells on: <code>useCells=TRUE</code></p>
+</blockquote>
+<p>This is quite performant, since the complexity in both time and memore are both <span class="math inline">\(O(\mbox{CELLSIZE} \times n)\)</span> and this holds both for training as well as testing! It also can be shown that the quality of the solution is comparable, at least for moderate dimensions.</p>
+<p>The cells can be configured using the <code>partition_choice</code>:</p>
+<ol style="list-style-type: decimal">
+<li><p>This gives a partition into random chunks of size 2000</p>
+<p><code>VORONOI=c(1, 2000)</code></p></li>
+<li><p>This gives a partition into 10 random chunks</p>
+<p><code>VORONOI=c(2, 10)</code></p></li>
+<li><p>This gives a Voronoi partition into cells with radius not larger than 1.0. For its creation a subsample containing at most 50.000 samples is used.</p>
+<p><code>VORONOI=c(3, 1.0, 50000)</code></p></li>
+<li><p>This gives a Voronoi partition into cells with at most 2000 samples (approximately). For its creation a subsample containing at most 50.000 samples is used. A shrinking heuristic is used to reduce the number of cells.</p>
+<p><code>VORONOI=c(4, 2000, 1, 50000)</code></p></li>
+<li><p>This gives a overlapping regions with at most 2000 samples (approximately). For its creation a subsample containing at most 50.000 samples is used. A stopping heuristic is used to stop the creation of regions if 0.5 * 2000 samples have not been assigned to a region, yet.</p>
+<p><code>VORONOI=c(5, 2000, 0.5, 50000, 1)</code></p></li>
+<li><p>This splits the working sets into Voronoi like with <code>PARTITION_TYPE=4</code>. Unlike that case, the centers for the Voronoi partition are found by a recursive tree approach, which in many cases may be faster.</p>
+<p><code>VORONOI=c(6, 2000, 1, 50000, 2.0, 20, 4,)</code></p></li>
+</ol>
+<p>The first parameter values correspond to <code>NO_PARTITION</code>, <code>RANDOM_CHUNK_BY_SIZE</code>, <code>RANDOM_CHUNK_BY_NUMBER</code>, <code>VORONOI_BY_RADIUS</code>, <code>VORONOI_BY_SIZE</code>, <code>OVERLAP_BY_SIZE</code></p>
+</div>
+<div id="weights" class="section level2">
+<h2>Weights</h2>
+<ul>
+<li><p>qt, ex: Here the number of considered tau-quantiles/expectiles as well as the considered tau-values are defined. You can freely change these values but notice that the list of tau-values is space-separated!</p></li>
+<li><p>npl, roc: Here, you define, which weighted classification problems will be considered. The choice is usually a bit tricky. Good luck …</p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">NPL:
+WEIGHT_STEPS=<span class="dv">10</span>
+MIN_WEIGHT=<span class="fl">0.001</span>
+MAX_WEIGHT=<span class="fl">0.5</span>
+GEO_WEIGHTS=<span class="dv">1</span>
+
+ROC:
+WEIGHT_STEPS=<span class="dv">9</span>
+MAX_WEIGHT=<span class="fl">0.9</span>
+MIN_WEIGHT=<span class="fl">0.1</span>
+GEO_WEIGHTS=<span class="dv">0</span></code></pre></div>
+</div>
+<div id="more-advanced-parameters" class="section level2">
+<h2>More Advanced Parameters</h2>
+<p>The following parameters should only employed by experienced users and are self-explanatory for these:</p>
+<dl>
+<dt><code>KERNEL</code></dt>
+<dd>specifies the kernel to use, at the moment either <code>GAUSS_RBF</code> or <code>POISSON</code>
+</dd>
+<dt><code>RETRAIN_METHOD</code></dt>
+<dd>After training on grids and folds there are only solutions on folds. In order to construct a global solution one can either retrain on the whole training data (<code>SELECT_ON_ENTIRE_TRAIN_SET</code>) or the (partial) solutions from the training are kept and combined using voting (<code>SELECT_ON_EACH_FOLD</code> default)
+</dd>
+<dt><code>store_solutions_internally</code></dt>
+<dd>If this is true (default in all applicable cases) then the solutions of the train phase are stored and can be just reused in the select phase. If you slowly run out of memory during the train phase maybe disable this. However then in the select phase the best models have to be trained again.
+</dd>
+</dl>
+<p>For completeness here are some values that usually get set by the learning scenario</p>
+<dl>
+<dt><code>SVM_TYPE</code></dt>
+<dd><code>KERNEL_RULE</code>, <code>SVM_LS_2D</code>, <code>SVM_HINGE_2D</code>, <code>SVM_QUANTILE</code>, <code>SVM_EXPECTILE_2D</code>, <code>SVM_TEMPLATE</code>
+</dd>
+<dt><code>LOSS_TYPE</code></dt>
+<dd><code>CLASSIFICATION_LOSS</code>, <code>MULTI_CLASS_LOSS</code>, <code>LEAST_SQUARES_LOSS</code>, <code>WEIGHTED_LEAST_SQUARES_LOSS</code>, <code>PINBALL_LOSS</code>, <code>TEMPLATE_LOSS</code>
+</dd>
+<dt><code>VOTE_SCENARIO</code></dt>
+<dd><code>VOTE_CLASSIFICATION</code>, <code>VOTE_REGRESSION</code>, <code>VOTE_NPL</code>
+</dd>
+<dt><code>KERNEL_MEMORY_MODEL</code></dt>
+<dd><code>LINE_BY_LINE</code>, <code>BLOCK</code>, <code>CACHE</code>, <code>EMPTY</code>
+</dd>
+<dt><code>FOLDS_KIND</code></dt>
+<dd><code>FROM_FILE</code>, <code>BLOCKS</code>, <code>ALTERNATING</code>, <code>RANDOM</code>, <code>STRATIFIED</code>, <code>RANDOM_SUBSET</code>
+</dd>
+<dt><code>WS_TYPE</code></dt>
+<dd><code>FULL_SET</code>, <code>MULTI_CLASS_ALL_VS_ALL</code>, <code>MULTI_CLASS_ONE_VS_ALL</code>, <code>BOOT_STRAP</code>
+</dd>
+</dl>
+</div>
+</div>
+<div id="known-issues-common-problems" class="section level1">
+<h1>Known Issues / Common Problems</h1>
+<ul>
+<li><p>Ctrl-C / Interrupt is tricky. It works most of the time, but it can fail. If you get weird results or errors save your models and restart the R session.</p></li>
+<li>CUDA has not been tested neither on Windows nor on macOS.</li>
+<li><p>32-bit has been seen to work but is not supported.</p></li>
+</ul>
+<div id="using-external-parallelization" class="section level2">
+<h2>Using external parallelization</h2>
+<p>liquidSVM does its own threading - hence do not parallelize on top of that, unless you know what you are doing. Hence just give the parameter <code>threads=n</code> or let the default use all of your physical cores.</p>
+<p>If you really want to do it yourself you have to serialze the solutions. Furthermore you have to be carefule to assign disjoint cores else they will fight for the same core:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(parallel)
+## how big should the cluster be
+workers &lt;-<span class="st"> </span><span class="dv">2</span>
+cl &lt;-<span class="st"> </span><span class="kw">makeCluster</span>(workers)
+## how many threads should each worker use
+threads &lt;-<span class="st"> </span><span class="dv">2</span>
+
+sml &lt;-<span class="st"> </span><span class="kw">liquidData</span>(<span class="st">'reg-1d'</span>)
+<span class="kw">clusterExport</span>(cl, <span class="kw">c</span>(<span class="st">&quot;sml&quot;</span>,<span class="st">&quot;threads&quot;</span>,<span class="st">&quot;workers&quot;</span>))
+obj &lt;-<span class="st"> </span><span class="kw">parLapply</span>(cl, <span class="dv">1</span>:workers, function(i) {
+  <span class="kw">library</span>(liquidSVM)
+  ## to make it interesting use disjoint parts of sml$train
+  data &lt;-<span class="st"> </span>sml$train[ <span class="kw">seq</span>(i,<span class="kw">nrow</span>(sml$train),workers) , ]
+  ## the second argument to threads sets the offset of cores
+  model &lt;-<span class="st"> </span><span class="kw">lsSVM</span>(Y~., data, <span class="dt">threads=</span><span class="kw">c</span>(threads,threads*(i<span class="dv">-1</span>)) )
+  ## finally return the serialized solution
+  <span class="kw">serialize.liquidSVM</span>(model)
+})
+for(i in <span class="dv">1</span>:workers){
+  ## get the solution in the master session
+  model &lt;-<span class="st"> </span><span class="kw">unserialize.liquidSVM</span>(obj[[i]])
+  <span class="kw">print</span>(<span class="kw">errors</span>(<span class="kw">test</span>(model,sml$test)))
+}
+<span class="co">#&gt; val_error</span>
+<span class="co">#&gt;   0.00542</span>
+<span class="co">#&gt;  val_error</span>
+<span class="co">#&gt;   0.00583</span></code></pre></div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

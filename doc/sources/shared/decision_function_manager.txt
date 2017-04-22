@@ -1,0 +1,162 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// The main purpose of this header file is to provide the template class 
+// Tdecision_function_manager, which has the following purposes:
+// - organize different decision functions obtained from folds/cells/working_sets
+//   during training and selection.
+// - provide a frame for the implementation of an evaluation-phase for these 
+//   different decision functions that can leverage on calculations that need to
+//   be done for several of the decision functions. An example of such calculations
+//   is the computation of a kernel value kernel(x_train, x_test).
+// - implement a voting/averaging scheme over folds/cells/working_sets once the 
+//   decision functions have been evaluated.
+// 
+// 
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// The class Tvote_control is a helper class that is used to describe the employed voting 
+// scheme using the numerical constants described in the enum statement.
+// 
+// 
+// bool weighted_folds
+// Flag that decides whether or not the decision_functions for each fold on a cell are 
+// weighted according to their validation error.
+// 
+// bool loss_weights_are_set
+// Flag that indicates, whether the weights of the loss function are set by the user or not.
+// 
+// unsigned scenario
+// One of the values of VOTE_SCENARIOS are allowed. The meaning of these values are:
+// VOTE_CLASSIFICATION		Decides the label by a majority vote whenever predictions of
+// 							several decision functions are involved. For the the different
+// 							decision functions corresponding to folds on a cell, this vote
+// 							my be weighted, see above. As a consequence, the predicitons are
+//							one of the labels.
+// VOTE_REGRESSION			Similarly to VOTE_CLASSIFICATION, but the decision is found by
+// 							the average of the predictions, instead. Thus, the final predicitons
+// 							are real-valued.
+// VOTE_NPL					Similarly to VOTE_CLASSIFICATION, but considers positive and
+// 							negative errors, separately.
+// 
+// int npl_class
+// The class the Neyman-Pearson constraint is enforced on. 
+// 
+// 
+// 
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// 
+// Decription of the class Tdecision_function_manager
+// 
+// Tdecision_function_manager stores one decision function for each task, cell, and fold. 
+// The tasks and cells are managed by Tworking_set_manager, the number of folds on each
+// cell are fixed. Thus, for properly working, Tdecision_function_manager needs a 
+// Tworking_set_manager, the number of folds, and the involved training set. There are two 
+// ways to provide this information: either by the constructor or by read_from_file().
+// The latter also restores the decision_functions. 
+// 
+// 
+// Tdecision_function_manager()
+// Creates an empty decision_function_manager. 
+// 
+// Tdecision_function_manager(...)
+// Creates a decision_function_manager that has information with respect to tasks, cells, and folds.
+// Note that it only has empty decision functions, which can, however, be replaced by meaningful
+// decision functions using the member function replace_decision_function(...).
+// 
+// write_to_file(...)
+// Write all relevant information to the file with pointer FP.
+// 
+// read_from_file(...)
+// Restores the decision_function_manager from the information read from the file pointed to.
+// 
+// push_back(...)
+// Joins the two involved decision_function_managers. If the new decision_function_manager is empty
+// or has a different number of folds, the program is aborted with an error message. The same is
+// true, if the information in the new_decision_function_manager is inconsistent.
+// 
+// replace_decision_function(...)
+// Replaces the stored decision_function at the described position by the new one.
+// 
+// size()
+// Returns the total number of decision_functions.
+// 
+// number_of_all_tasks()
+// Returns the total number of task. This number is either the number of tasks stored in 
+// decision function manager, or one more. The latter is the case for multi-clss classification
+// and bootsprap. This information is passed to decision_function_manager by
+// working_set_manager.get_working_set_control().learning_scenario
+// The additional task, which is task 0, is created by combining some of the other tasks.
+// 
+// get_working_set_manager()
+// Returns the working_set_manager stored and used in decision_function_manager.
+// 
+// make_predictions(...)
+// Predicts the labels for the test dataset using the vote schemes determined by vote_control.
+// parallel_control controls the number of threads and GPUs employed for the computation.
+// The function calls the following functions:
+// - setup(...) and setup_internal(...),    which prepare the decision_function_manager for making predictions
+// - thread_entry(),     which itself calls 
+//   make_evaluations()  for each thread and then combines the resulting evaluations of the decision_functions
+// 
+// get_predictions_for_test_sample(...)
+// Returns the predictions made for test_sample with number i. The program aborts with an error message, if
+// the sample number is too large.
+// 
+// compute_errors(...)
+// Computes the errors made by the predicitons. If no predicitons have been made, the program aborts with
+// an error message. If the flag use_weights_from_training is set, then the positive and negative error weights 
+// stored in the decision functions during training are used, otherwise, the weights of loss_control are used.
+// The flag has no effect for NPL and multi-class classification.
+// 
+// construct(...)
+// Function called by the corresponding constructor.
+// 
+// decision_function_number(...)
+// Returns the position of the decision function on the task/cell/fold combination used
+// in the vector weights[...].
+// 
+// evaluation_position(...)
+// Returns the position of the evaluation for the test sample and the decision function number
+// computed by the functionn decision_function_number(...) in the vector evaluations[...].
+// 
+// cell_number_test/train
+// These multi-dimensional vectors contain the cell numbers of each data sample from the corresponding 
+// data set. For each task and sample, these cell numbers can be accessed by [task, sample_number, ...]. 
+// 
+// init()
+// Initializes internal variables with default values.
+// 
+// check_integrity()
+// Checks integrity of Tdecision_function_manager and aborts program with an error message if the 
+// integrity is violated.
+// 
+// compute_weights()
+// Computes the weights for all decision functions on a cell. This function is only called by setup(...)
+// 
+// reserve(...)
+// Reserves and initializes some internal variables. This function is called by construct(...) and 
+// read_from_file(...)
+// 
+// setup(...)
+// Prepares the decision_function_manager for making predictions and calls setup_internal(...).
+// 
+//**********************************************************************************************************************************

@@ -1,0 +1,40 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header file provides a couple of functions that create random subsets.
+// The seeds are used as in random_generator.h
+//  
+// 
+// 
+// id_permutation(...)
+// Returns a vector of the form 0,1,...,size-1
+// 
+// random_permutation(...)
+// Returns a random permutation of the set 0,1,...,size-1.
+// 
+// random_subset(...)
+// Returns a random subset of <set> with size <subset_size>.
+// 
+// random_multiset(...)
+// Returns a random multi-subset of <set> with size <subset_size>,
+// i.e. in contrast to random_subset(...), the returned vector may
+// have repeating entries.
+// 
+//**********************************************************************************************************************************

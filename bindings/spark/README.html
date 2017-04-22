@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+</head>
+<body>
+<h1 id="liquidsvm-on-spark">liquidSVM on Spark</h1>
+<p>We provide a simple version of liquidSVM that also can be executed on any Spark Cluster. By this also much larger data sets can be attacked - we used it for a data set with 30 million samples and 631 features on up to 11 workers.</p>
+<blockquote>
+<p><strong>NOTE</strong> This is a preview, stay tuned for a better interface and more documentation!</p>
+</blockquote>
+<p>We tested it on Spark versions 1.6.1 and 2.1.0. It is only supported on Linux. Generalisation to macOS should be straitforward. Windows should not be impossible to achieve.</p>
+<h2 id="quick-start">Quick start</h2>
+<p>Download Spark from <a href="http://spark.apache.org/downloads.html" class="uri">http://spark.apache.org/downloads.html</a>, e.g. <code>spark-2.1.0-bin-hadoop2.7.tgz</code>, and unpack it. We assume that henceforth <code>$SPARK_HOME</code> points to that directory. We also assume that <code>$JAVA_HOME</code> is correctly set.</p>
+<blockquote>
+<p><strong>Suggestion</strong> To avoid too much information, copy conf/log4j.properties.template to conf/log4j.properties and change in the latter the line</p>
+<p><code>log4j.rootCategory=INFO, console</code></p>
+<p>to</p>
+<p><code>log4j.rootCategory=WARN, console</code></p>
+</blockquote>
+<p>Download <a href="http://www.isa.uni-stuttgart.de/software/spark/liquidSVM-spark.zip" class="uri">http://www.isa.uni-stuttgart.de/software/spark/liquidSVM-spark.zip</a>, unpack it and change into that directory. First do the following to compile and to use the library:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">make</span> lib
+<span class="kw">export</span> <span class="ot">LD_LIBRARY_PATH=</span>.:<span class="ot">$LD_LIBRARY_PATH</span></code></pre></div>
+<p>Then issue:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ot">$SPARK_HOME</span><span class="kw">/bin/spark-submit</span> --master local[2] \
+  --class de.uni_stuttgart.isa.liquidsvm.spark.App \
+  liquidSVM-spark.jar covtype.10000</code></pre></div>
+<p>This will start a local Spark environment with as many executors as processors and train and test the <code>covtype.10000</code> in that directory. You can use any other liquidData. If Spark is configured with Hadoop you also can give such urls.</p>
+<p>While the job runs go to <a href="http://localhost:4040/" class="uri">http://localhost:4040/</a> and monitor how the work progresses.</p>
+<p>You also can use the interactive Spark-shell. Currently, this works for local only using at most the number of physical cores for executors, say 2:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ot">$SPARK_HOME</span><span class="kw">/bin/spark-shell</span> --master local[2] --jars liquidSVM-spark.jar</code></pre></div>
+<p>and then you can do the following:</p>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> de.<span class="fu">uni_stuttgart</span>.<span class="fu">isa</span>.<span class="fu">liquidsvm</span>.<span class="fu">_</span>
+<span class="kw">import</span> de.<span class="fu">uni_stuttgart</span>.<span class="fu">isa</span>.<span class="fu">liquidsvm</span>.<span class="fu">spark</span>.<span class="fu">_</span>
+
+<span class="kw">val</span> data = MyUtil2.<span class="fu">loadData</span>(<span class="st">&quot;covtype.10000.train.csv&quot;</span>)
+<span class="kw">val</span> test = MyUtil2.<span class="fu">loadData</span>(<span class="st">&quot;covtype.10000.test.csv&quot;</span>)
+
+<span class="kw">var</span> config = <span class="kw">new</span> <span class="fu">Config</span>().<span class="fu">scenario</span>(<span class="st">&quot;MC&quot;</span>).<span class="fu">threads</span>(<span class="dv">1</span>).<span class="fu">set</span>(<span class="st">&quot;VORONOI&quot;</span>,<span class="st">&quot;6 2000&quot;</span>)
+<span class="kw">val</span> d = <span class="kw">new</span> <span class="fu">DistributedSVM</span>(<span class="st">&quot;MC&quot;</span>,data, SUBSET_SIZE=<span class="dv">50000</span>, CELL_SIZE=<span class="dv">5000</span>, config=config)
+<span class="kw">var</span> trainTestP = d.<span class="fu">createTrainAndTest</span>(test)
+<span class="kw">var</span> result = d.<span class="fu">trainAndPredict</span>(trainTestP=trainTestP,threads=<span class="dv">1</span>,num_hosts=<span class="dv">1</span>,spacing=<span class="dv">1</span>)
+<span class="kw">val</span> err = result.<span class="fu">filter</span>{<span class="kw">case</span> (x,y) =&gt; x != <span class="fu">y</span>(<span class="dv">0</span>)}.<span class="fu">count</span> / result.<span class="fu">count</span>.<span class="fu">toDouble</span>
+
+<span class="co">// and now realise the training</span>
+<span class="fu">println</span>(err)</code></pre></div>
+<p>or equivalently:</p>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala">:load example.<span class="fu">scala</span></code></pre></div>
+<blockquote>
+<p><strong>Note</strong> At the moment <code>--master local[n]</code> crashes if n is bigger than the number of physical cores! <code>--master local[*]</code> gives usually the number of logical cores, which is therefore problematic. The above examples are all with <code>--master local[2]</code> because nowadays most computers have at least 2 physical cores.</p>
+</blockquote>
+<h2 id="installation-of-native-library-tested-only-for-yarn">Installation of native library (tested only for YARN)</h2>
+<p>The core routines of liquidSVM are written in C++ hence there has to be our native JNI-library made available to all workers.</p>
+<h3 id="copy-on-the-fly">Copy on the fly</h3>
+<p>To sometimes use liquidSVM on Spark it is most easy you can let Spark distribute it on the fly (if <code>libliquidsvm.so</code> is in the current directory):</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ot">$(</span><span class="kw">SPARK_HOME</span><span class="ot">)</span><span class="kw">/bin/spark-submit</span> \
+  --conf spark.executor.extraLibraryPath=. --conf spark.driver.extraLibraryPath=. --files libliquidsvm.so
+  <span class="kw">...</span></code></pre></div>
+<h3 id="local-install">Local Install</h3>
+<p>If you will use liquidSVM more often maybe install the bindings locally.</p>
+<p>We assume that the machines are homogeneous and every one has a directory $LOCAL_LIB, e.g. /usr/local/lib/ or /export/user/lib/. It also can be a shared NFS- or AFS-directory.</p>
+<ol style="list-style-type: decimal">
+<li>put the libliquidsvm.so into all those $LOCAL_LIB directories</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">for</span> <span class="kw">node</span> in master slave1 slave2<span class="kw">;</span> <span class="kw">do</span>
+  <span class="kw">scp</span> libliquidsvm.so <span class="ot">$node</span>:<span class="ot">$LOCAL_LIB</span>/
+<span class="kw">done</span></code></pre></div>
+<p>or the one if it is shared:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cp</span> libliquidsvm.so <span class="ot">$node</span>:<span class="ot">$LOCAL_LIB</span>/</code></pre></div>
+<p>If your machines are of different types you also can</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">for</span> <span class="kw">node</span> in master slave1 slave2<span class="kw">;</span> <span class="kw">do</span>
+  <span class="kw">ssh</span> <span class="ot">$node</span> cd <span class="ot">$(</span><span class="kw">SIMONSSVM_HOME</span><span class="ot">)</span>/bindings/java <span class="kw">&amp;&amp;</span> <span class="kw">make</span> local-lib LOCAL=<span class="ot">$LOCAL_LIB</span>
+<span class="kw">done</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>add <span class="math inline">$LOCAL_LIB to the java.library.path for driver and workers. It seems that `$</span>LD_LIBRARY_PATH<code>is inherited, but it might be wise to put it into</code>$SPARK_HOME/conf/spark-defaults.conf`.</li>
+</ol>
+<p>On our machines I have <code>$LOCAL_LIB=/export/user/thomann/lib</code> and hence I set:</p>
+<pre><code>spark.driver.extraLibraryPath    /export/user/thomann/lib:/home/b/thomann/hd/hadoop/lib/native
+spark.executor.extraLibraryPath  /export/user/thomann/lib:/home/b/thomann/hd/hadoop/lib/native</code></pre>
+<p>Since I have <code>$HADOOP_HOME=/home/b/thomann/hd/hadoop</code> I there also include the native libraries for HADOOP.</p>
+<p>One also could add this on the command line:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">spark-shell</span> \
+--conf spark.driver.extraLibraryPath /export/user/thomann/lib:/home/b/thomann/hd/hadoop/lib/native \
+--conf spark.executor.extraLibraryPath /export/user/thomann/lib:/home/b/thomann/hd/hadoop/lib/native\
+...</code></pre></div>
+<h2 id="configuration">Configuration</h2>
+<p>Configuring memory management can become the most difficult part when working with liquidSVM for Spark. This is already for pure JVM operations known to be challenging. However, in our case also there is also the additional problem of C++ memory management. This is controlled by the <code>spark.yarn.executor.memoryOverhead</code> configuration on YARN, which we used.</p>
+<p>We made the observation that it is beneficient to split every worker node into several executors. Then one has to be carful to split the available memory by the number of executors per node.</p>
+<p>The executor memory needs to accomodate the data for all the cells in that executor (controlled by <code>spark.executor.memory</code>). But it also needs to have enough memory saved for the C++ structures (controlled by <code>spark.yarn.executor.memoryOverhead</code>). If the latter cannot be made big enough, consider using <code>config.set(&quot;FORGET_TRAIN_SOLUTIONS&quot;,&quot;1&quot;)</code> which needs a little more time in the select phase to retrain the solutions.</p>
+<h3 id="worked-example">Worked example</h3>
+<p>Here are some examples in <code>$SPARK_HOME/conf/spark-defaults.conf</code> on our cluster. Every machine consists of two NUMA-nodes, each having 6 physical cores and 128GB memory.</p>
+<p>For the driver and in general we use:</p>
+<pre><code>spark.driver.memory              175g
+spark.driver.maxResultSize       25g
+spark.memory.fraction            0.875
+spark.network.timeout            120s</code></pre>
+<p>For 2 executors per node:</p>
+<pre><code>spark.executor.memory            100g
+spark.yarn.executor.memoryOverhead  96000</code></pre>
+<p>For 4 executors per node</p>
+<pre><code>spark.executor.memory            30g
+spark.yarn.executor.memoryOverhead  36000</code></pre>
+<p>For 12 executors per node</p>
+<pre><code>spark.executor.memory            14g
+spark.yarn.executor.memoryOverhead  6000</code></pre>
+</body>
+</html>

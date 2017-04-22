@@ -1,0 +1,46 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header file provides a couple of standartized routines
+// for displaying messages at the command line.
+// 
+// 
+// flush_info(...)
+// Displays information. The command works identically to printf, but 
+// immediately flushes the output buffer. The optional <level> can be 
+// used to suppress printing: If <level> is greater then the current value 
+// of the global variable info_mode, nothing is printed.
+// 
+// flush_warn(...)
+// Displays a warning with "Warning ..." in front. The command works 
+// identically to printf, but immediately flushes the output buffer. 
+// The parameter <level> can be used to suppress printing: If <level> 
+// is greater then the current value of the global variable warn_mode, 
+// nothing is printed.
+// 
+// flush_exit(...)
+// Displays error message with "ERROR <error_code>" in front. The command 
+// works identically to printf, but exits the program with <error_code>.
+
+// dump(...)
+// Some routines for quick'n dirty debugging. They all flush the output
+// buffer immediately.
+// 
+//**********************************************************************************************************************************

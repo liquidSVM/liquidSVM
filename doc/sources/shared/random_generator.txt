@@ -1,0 +1,41 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header file provides two functions for controlling the initialization
+// of the random generator.
+// 
+// 
+// 
+// fix_random_seed(...)
+// Sets <random_seed> by the internal timer if <random_seed> is smaller than 0.
+// Otherwise, it leaves <random_seed> unchanged. For "real" random numbers the
+// seed should thus be smaller than 0, while seeds greater than or equal to zero 
+// lead to repeatable random numbers.
+// 
+// 
+// init_random_generator(...)
+// Initializes the random generator by the 
+// seed = fix_random_seed(random_seed) + <extra_seed>.
+// The extra_seed can be used to avoid identical random numbers in the case of 
+// <random_seed> smaller than zero, which may occur, if the routine is called
+// without sufficient time passed (this may be caused by multiple calls to the 
+// surrounding C++ program, e.g. by a bash script.
+// 
+//**********************************************************************************************************************************

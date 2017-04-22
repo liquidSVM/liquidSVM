@@ -1,0 +1,50 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// The class Tparallel_control is used to control the behavior of 
+// Tthread_manager.
+// 
+// 
+// read_from_file(...) 
+// Reads the information of Tparallel_control from the specified file.
+// 
+// write_to_file(...) 
+// Writes the information of Tparallel_control to the specified file.
+// 
+// set_to_single_threaded(...)
+// If adaptive_shrink == true, a new object of type Tparallel_control with
+// team_size = 1
+// GPUs = min(1, GPUs of current object)
+// is returned, otherwise a copy of the current object is returned. This
+// function allows to use a single threaded version if the problem is 
+// too small to benefit from multiple threads. The decision is determined
+// by the value of adaptive_shrink.
+// 
+// requested_team_size
+// Number of threads that should be used. If requested_team_size <= 0
+// then #physical_processors + requested_team_size many threads are 
+// requested.
+// 
+// GPUs
+// If GPUs > 0, the each thread gets a connection to a GPU, otherwise 
+// no connection is etsablished. 
+// WARNING: The meaning of this may change in the future.
+// 
+//**********************************************************************************************************************************

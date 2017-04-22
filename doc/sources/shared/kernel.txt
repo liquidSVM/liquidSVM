@@ -1,0 +1,133 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+// 
+// This class provides a kernel matrix for both training and validation.
+// The i-th row of the matrix contains the kernel values of the i-th 
+// row sample with all the columns samples.
+// For validation, the row data set is supposed to be the training data set, 
+// while the column data set is supposed to be the validation data set.
+// 
+// Several ways to store the matrix are supported:
+// - LINE_BY_LINE: Memory for each row is allocated individually
+// - BLOCK: The entire matrix is stored contiguously. 
+// - CACHE: Only parts of the matrix are stored in a cache.
+// - EMPY:  The matrix is not stored at all.
+// 
+// In addition, it is possible to store a pre-kernel matrix, e.g.,
+// the matrix of (squared) pairwise distances. This may speed up
+// the computation significantly, e.g. for RBF kernels. Unlike the 
+// Gram matrix, this pre-kernel matrix is stored in triangular form,
+// if the row and col data sets viewed to be identical by the flag
+// Tkernel_control::same_data_sets.
+// 
+// The computation is supposed to be done by threads controlled by
+// Tthread_manager. Alternatively, it can be done by (several) GPUs.
+// If GPUs are used, then the (pre)-kernel matrix can be left on the 
+// GPU memory or transferred back on the motherboard's RAM. The 
+// behaviour is controlled by the flags Tkernel_control::kernel_store_on_GPU 
+// and Tkernel_control::pre_kernel_store_on_GPU.
+// 
+// Limitations:
+// - Currently, the cache only works with a single thread, since without 
+//   a multi-threaded solver but a multi-threaded solver-initialization, 
+//   it is unclear what the best multi-threaded cache design would be.
+// - Similarly, the cache only works for the train matrix. 
+// - If GPUs are used the kernel matrix needs to fit into the GPU(s) 
+//   memory (if equally shared). 
+// - If the kernel_matrix is left on the GPU, then no kNN_list is 
+//   generated. In any case, the memory model is set to EMPTY or BLOCK.
+// 
+// Usage:
+// The class should be used in the following way.
+// - Call reserve(...) in a non-threaded environment
+// - Start a multi-threaded environment using Tthread_manager_active
+// - Call load(...). This also computes the pre-kernel matrix, if 
+//   this option was enabled in kernel_control.
+// - Now, every call of assign(...) computes a new kernel matrix and stores
+//   it according to the above memory model specified in kernel_control.
+// - Once assign(...) is called, access to the kernel matrix is given by 
+//   the functions row(...) and entry(...).
+// - After the multi-threaded environment call clear() to 
+//   deallocate resources.
+// 
+// 
+// clear()
+// Deletes all information and deallocates memory.
+// 
+// reserve()
+// Prepares for multi-threaded use and allocates memory accorind to the 
+// memory model specified in kernel_control
+// 
+// load(...)
+// Stores the data sets into the object and prepares everything for 
+// computing the kernel matrix: If a pre-kernel matrix is used, it 
+// is computed now, and/or if GPUs are used, the datasets are uploaded to
+// the GPUs.
+// 
+// assign(...)
+// Computes the kernel matrix according to the memory model. This is a 
+// necessary step, before the matrix can be accessed by row(...) and
+// entry(...).
+// 
+// get_col_set_size()/get_row_set_size()
+// Returns the size of the corresponding data set
+// 
+// get_col_labels_ALGD()/get_row_labels_ALGD()
+// Returns a pointer to an aligned memory segment containg the labels
+// of the corresponding dataset. The size of the segment is a multiple
+// of the cacheline size. If the dataset is empty, NULL is returned.
+// 
+// row(...)
+// Returns a pointer to an aligned memory segement containing the i-th
+// row of the kernel matrix. The size of the segment is a multiple
+// of the cacheline size. If start_column and end_column are specified,
+// then it is only guaranteed, that entries for the columns in between
+// are computed. This version, which is not available for GPUs, allows 
+// online computation of the matrix for multiple threads.
+// 
+// clear_cache_stats()
+// Clears the internally held access statistics of the cache.
+// 
+// get_cache_stats(...)
+// Returns the internally held access statistics of the cache.
+// 
+// get_kNN_list()
+// Returns a vector whose i-th entry contains the indices of the k samples 
+// that are nearest to the i-th sample, if col_data_set == row_data_set, 
+// otherwise, the vector is empty. The vector is filled by the first call 
+// of assign(...), if  Tkernel_control::same_data_sets == true. 
+// The distances are currently computed with the help of the metric induced 
+// by the kernel, where it is assumed that the kernel is constant on the 
+// diagonal, and the order of the distances does not change for varying gamma. 
+// Warning: Does not work properly if the matrix is stored on the GPU
+// and aborts the program with an error message if the kernel is cached.
+// 
+// get_kNNs(...)
+// Similar to get_kNN_list(), but only returns the kNNs for the specified row.
+// This function also works with cached kernels.
+// 
+// all_kNN_assigned()
+// Returns true if and only if the entire kNN-list has been computed.
+// 
+// get_kernel_control_GPU()
+// Returns, for the calling thread, a corresponding Tkernel_control_GPU object 
+// that stores all relevant information about the matrix on the GPU.
+// 
+//**********************************************************************************************************************************

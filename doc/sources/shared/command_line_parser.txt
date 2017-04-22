@@ -1,0 +1,87 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+// 
+// 
+// The class Tcommand_line_parser is a base class for the command line interface.
+// It provides a few public functions and data structures and many protected
+// functions that allow an efficient programmning of inheritating classes for
+// a particular purpose. The following options are provided by Tcommand_line_parser:
+// -h
+// -d
+// -GPU
+// -L
+// -r
+// -T
+// 
+// 
+// setup(...)
+// Loads the arrays argc and argv provided by <stdio.h> into the class.
+// 
+// parse(...)
+// Parses the next tokens from the command line with respect to the options 
+// specified in the string. For example, parse("-d-h") looks for the options
+// -d and -h. If the next token is one of these, the optional arguments are
+// read and stored in the corresponding public data structures, and true is 
+// returned. Otherwise, false is returned. In case of a syntax error in the 
+// command line, the program aborts with an error message describing the problem.
+// This function can be used as a first call in parse functions of derived 
+// classes.
+// 
+// copyright() 
+// Displays a copyright notice.
+// 
+// demoversion()
+// Displays a message that excuses for missing options due to the fact that
+// the current version is only a demo. Then is aborts.
+// 
+// make_consistent()
+// This function ensures that the stored valued are consistent before they are returned.
+// 
+// exit_with_help(...)
+// Displays an error meassage that may depend on the error_code and which gives helping
+// hints to correctly use the command line interface. Then the program aborts.
+// 
+// display_...(...)
+// Displays certain information for the help system.
+// 
+// get_next...(...)
+// Parses next token, checks whether it falls into the specified (by name of function and
+// limit parameters) range of values. If so, the value is returned, otherwise, exit_with_help
+// is called with the specified error code.
+// 
+// check_parameter_list_size()
+// If the parameter_list is of size 1, then the program aborts with a help message
+// displaying all available options.
+// 
+// next_parameter_is_number()
+// Returns true if next parameter is a number. This is useful to detect optional arguments.
+// 
+// bool full_help
+// Flag that controls whether a short or long help message is displayed.
+// 
+// bool loss_set & loss_weights_set
+// Flags that indicate whether the loss function option -L has been detected in the 
+// command line and whether its optional weight arguments have been used.
+// 
+// string command_name
+// String that contains the name of the program, the derived class from Tcommand_line_parser
+// is for. This information is needed for the help messages.
+// 
+//**********************************************************************************************************************************

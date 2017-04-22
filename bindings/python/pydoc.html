@@ -1,0 +1,1240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module __init__</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>__init__</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/thomapp/liquidSVM/bindings/python/liquidSVM/__init__.py">/home/thomapp/liquidSVM/bindings/python/liquidSVM/__init__.py</a></font></td></tr></table>
+    <p><tt>liquidSVM&nbsp;for&nbsp;Python<br>
+&nbsp;<br>
+liquidSVM&nbsp;is&nbsp;a&nbsp;package&nbsp;written&nbsp;in&nbsp;C++&nbsp;that<br>
+provides&nbsp;<a href="#SVM">SVM</a>-type&nbsp;solvers&nbsp;for&nbsp;various&nbsp;classification&nbsp;and&nbsp;regression&nbsp;tasks.<br>
+Because&nbsp;of&nbsp;a&nbsp;fully&nbsp;integrated&nbsp;hyper-parameter&nbsp;selection,&nbsp;very&nbsp;carefully&nbsp;implemented&nbsp;solvers,<br>
+multi-threading&nbsp;and&nbsp;GPU&nbsp;support,<br>
+and&nbsp;several&nbsp;built-in&nbsp;data&nbsp;decomposition&nbsp;strategies&nbsp;&nbsp;it&nbsp;provides&nbsp;unprecedented&nbsp;speed<br>
+for&nbsp;small&nbsp;training&nbsp;sizes&nbsp;as&nbsp;well&nbsp;as&nbsp;for&nbsp;data&nbsp;sets&nbsp;of&nbsp;tens&nbsp;of&nbsp;millions&nbsp;of&nbsp;samples.<br>
+&nbsp;<br>
+To&nbsp;install&nbsp;use<br>
+&nbsp;<br>
+&gt;&nbsp;pip&nbsp;install&nbsp;--user&nbsp;--upgrade&nbsp;liquidSVM<br>
+&nbsp;<br>
+Then&nbsp;you&nbsp;can&nbsp;use&nbsp;it&nbsp;like:<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;from&nbsp;liquidSVM&nbsp;import&nbsp;*<br>
+&gt;&gt;&gt;&nbsp;model&nbsp;=&nbsp;<a href="#mcSVM">mcSVM</a>(iris,&nbsp;iris_labs,&nbsp;display=1,threads=2)<br>
+&gt;&gt;&gt;&nbsp;result,&nbsp;err&nbsp;=&nbsp;model.test(iris,&nbsp;iris_labs)<br>
+&gt;&gt;&gt;&nbsp;result&nbsp;=&nbsp;model.predict(iris)<br>
+&nbsp;<br>
+For&nbsp;more&nbsp;information&nbsp;see&nbsp;the&nbsp;README&nbsp;and&nbsp;the&nbsp;demo&nbsp;notebook.<br>
+&nbsp;<br>
+@author:&nbsp;Ingo&nbsp;Steinwart&nbsp;and&nbsp;Philipp&nbsp;Thomann</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="ctypes.html">ctypes</a><br>
+<a href="glob.html">glob</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="numpy.ctypeslib.html">numpy.ctypeslib</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="pkg_resources.html">pkg_resources</a><br>
+</td><td width="25%" valign=top><a href="sysconfig.html">sysconfig</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="__init__.html#LiquidData">LiquidData</a>
+</font></dt><dt><font face="helvetica, arial"><a href="__init__.html#SVM">SVM</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="__init__.html#exSVM">exSVM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="__init__.html#lsSVM">lsSVM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="__init__.html#mcSVM">mcSVM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="__init__.html#nplSVM">nplSVM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="__init__.html#qtSVM">qtSVM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="__init__.html#rocSVM">rocSVM</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LiquidData">class <strong>LiquidData</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;helps&nbsp;to&nbsp;organize&nbsp;train/test&nbsp;splits&nbsp;and&nbsp;targets.&nbsp;It&nbsp;has&nbsp;a&nbsp;train&nbsp;and&nbsp;a&nbsp;test&nbsp;attribute,&nbsp;of&nbsp;which&nbsp;each<br>
+has&nbsp;a&nbsp;data,&nbsp;target,&nbsp;and&nbsp;DESCR&nbsp;attribte&nbsp;as&nbsp;known&nbsp;from&nbsp;sklearn.&nbsp;This&nbsp;looks&nbsp;at&nbsp;several&nbsp;locations&nbsp;to&nbsp;find&nbsp;a<br>
+name.train.csv&nbsp;and&nbsp;name.test.csv.&nbsp;If&nbsp;it&nbsp;does&nbsp;then&nbsp;it&nbsp;loads&nbsp;or&nbsp;downloads&nbsp;it,&nbsp;parses&nbsp;it,&nbsp;and&nbsp;returns&nbsp;an<br>
+liquidData-<a href="builtins.html#object">object</a>.&nbsp;The&nbsp;files&nbsp;also&nbsp;can&nbsp;be&nbsp;gzipped&nbsp;having&nbsp;names&nbsp;name.train.csv.gz&nbsp;and&nbsp;name.test.csv.gz.<br>
+&nbsp;<br>
+Included&nbsp;in&nbsp;the&nbsp;package&nbsp;are&nbsp;'banana-bc',&nbsp;'banana-mc',&nbsp;'covtype.1000',&nbsp;and&nbsp;'reg-1d'.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;base&nbsp;name&nbsp;of&nbsp;a&nbsp;train/test&nbsp;splitted&nbsp;data&nbsp;set&nbsp;to&nbsp;load.<br>
+&nbsp;<br>
+Attributes<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;data&nbsp;sets<br>
+train&nbsp;:&nbsp;Bunch<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;training&nbsp;data&nbsp;set.<br>
+test&nbsp;:&nbsp;Bunch<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;test&nbsp;set&nbsp;including&nbsp;labels<br>
+loc&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;location&nbsp;where&nbsp;the&nbsp;data&nbsp;was&nbsp;found<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="LiquidData-__init__"><strong>__init__</strong></a>(self, name)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="LiquidData-fromData"><strong>fromData</strong></a>(self, train_x, train_y, test_x, test_y)</dt><dd><tt>Creates&nbsp;a&nbsp;<a href="#LiquidData">LiquidData</a>&nbsp;from&nbsp;given&nbsp;`np.array`s<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+train_x&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Train&nbsp;features.<br>
+train_y&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Train&nbsp;labels<br>
+test_x&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Test&nbsp;features.<br>
+test_y&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Test&nbsp;labels.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+<a href="#LiquidData">LiquidData</a></tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SVM">class <strong>SVM</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;base&nbsp;class&nbsp;for&nbsp;all&nbsp;<a href="#SVM">SVM</a>&nbsp;learning&nbsp;scenarios.<br>
+This&nbsp;should&nbsp;usually&nbsp;not&nbsp;be&nbsp;used&nbsp;directly.<br>
+&nbsp;<br>
+If&nbsp;no&nbsp;scenario&nbsp;is&nbsp;specified,&nbsp;it&nbsp;will&nbsp;be&nbsp;set&nbsp;to&nbsp;LS.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+data&nbsp;:&nbsp;np.array&nbsp;or&nbsp;<a href="#LiquidData">LiquidData</a>&nbsp;or&nbsp;Bunch&nbsp;or&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;data&nbsp;to&nbsp;train&nbsp;on.&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;`np.array`&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`labs`&nbsp;have&nbsp;to&nbsp;be&nbsp;provided&nbsp;as&nbsp;well.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;instance&nbsp;of&nbsp;`<a href="#LiquidData">LiquidData</a>`&nbsp;then&nbsp;data.train.data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;data.train.target&nbsp;will&nbsp;be&nbsp;used&nbsp;and&nbsp;data.test&nbsp;will&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;automagically&nbsp;be&nbsp;tested&nbsp;after&nbsp;training&nbsp;and&nbsp;selection.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;a&nbsp;`str`&nbsp;then&nbsp;`<a href="#LiquidData">LiquidData</a>(data)`&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;a&nbsp;Bunch,&nbsp;then&nbsp;`data.data`&nbsp;and&nbsp;`data.target`&nbsp;will&nbsp;be&nbsp;used.<br>
+labs&nbsp;:&nbsp;np.array&nbsp;(1-dim)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;labels.&nbsp;If&nbsp;this&nbsp;is&nbsp;`None`&nbsp;then&nbsp;the&nbsp;labels<br>
+&nbsp;&nbsp;&nbsp;&nbsp;have&nbsp;to&nbsp;be&nbsp;provided&nbsp;in&nbsp;the&nbsp;`data`&nbsp;argument.<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Configuration&nbsp;arguments,&nbsp;can&nbsp;be&nbsp;`threads=1`,&nbsp;`display=1`,&nbsp;`grid_choice=1`,&nbsp;etc.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+&nbsp;<br>
+Attributes<br>
+----------<br>
+cookie&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;internal&nbsp;cookie&nbsp;of&nbsp;the&nbsp;C++&nbsp;<a href="#SVM">SVM</a><br>
+lastResult&nbsp;:&nbsp;(np.array&nbsp;,&nbsp;np.array)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;after&nbsp;each&nbsp;`test`&nbsp;the&nbsp;result&nbsp;and&nbsp;errors&nbsp;will&nbsp;be&nbsp;kept&nbsp;here.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SVM-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SVM-__init__"><strong>__init__</strong></a>(self, data, labs=None, **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="SVM-clean"><strong>clean</strong></a>(self)</dt><dd><tt>Force&nbsp;to&nbsp;release&nbsp;internal&nbsp;C++&nbsp;memory.&nbsp;After&nbsp;that,&nbsp;this&nbsp;<a href="#SVM">SVM</a>&nbsp;cannot&nbsp;be&nbsp;used&nbsp;any&nbsp;more.</tt></dd></dl>
+
+<dl><dt><a name="SVM-configLine"><strong>configLine</strong></a>(self, stage)</dt><dd><tt>Internal&nbsp;function&nbsp;to&nbsp;get&nbsp;the&nbsp;command-line&nbsp;like&nbsp;parameters&nbsp;for&nbsp;the&nbsp;different&nbsp;stages.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+stage&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str</tt></dd></dl>
+
+<dl><dt><a name="SVM-get"><strong>get</strong></a>(self, name)</dt><dd><tt>Gets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------</tt></dd></dl>
+
+<dl><dt><a name="SVM-predict"><strong>predict</strong></a>(self, test_data, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;features&nbsp;for&nbsp;which&nbsp;prediction&nbsp;should&nbsp;be&nbsp;estimated.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Passed&nbsp;to&nbsp;`liquidSVM.test`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;predictions&nbsp;for&nbsp;every&nbsp;test&nbsp;sample.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;It&nbsp;has&nbsp;the&nbsp;same&nbsp;number&nbsp;of&nbsp;rows&nbsp;as&nbsp;`test_data`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="SVM-select"><strong>select</strong></a>(self, **kwargs)</dt><dd><tt>Selects&nbsp;the&nbsp;best&nbsp;of&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells..<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-select&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.selectArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;selected&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<dl><dt><a name="SVM-set"><strong>set</strong></a>(self, name, value)</dt><dd><tt>Sets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+value&nbsp;:&nbsp;any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;will&nbsp;be&nbsp;converted&nbsp;into&nbsp;a&nbsp;str,&nbsp;joining&nbsp;by&nbsp;spaces&nbsp;if&nbsp;needed.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+self</tt></dd></dl>
+
+<dl><dt><a name="SVM-test"><strong>test</strong></a>(self, test_data, test_labs=None, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`&nbsp;and&nbsp;if&nbsp;applicable&nbsp;compares&nbsp;to&nbsp;test_labs.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array&nbsp;or&nbsp;<a href="#LiquidData">LiquidData</a>&nbsp;or&nbsp;Bunch<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;data&nbsp;to&nbsp;predict&nbsp;for.&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;`np.array`&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`labs`&nbsp;have&nbsp;to&nbsp;be&nbsp;provided&nbsp;as&nbsp;well.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;instance&nbsp;of&nbsp;`<a href="#LiquidData">LiquidData</a>`&nbsp;then&nbsp;data.test.data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;data.test.target&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;a&nbsp;Bunch,&nbsp;then&nbsp;`data.data`&nbsp;and&nbsp;`data.target`&nbsp;will&nbsp;be&nbsp;used.<br>
+test_labs&nbsp;:&nbsp;np.array&nbsp;(1-dim)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;ground&nbsp;truth&nbsp;labels.&nbsp;If&nbsp;this&nbsp;is&nbsp;`None`&nbsp;and&nbsp;the&nbsp;labels<br>
+&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;not&nbsp;provided&nbsp;in&nbsp;the&nbsp;`data`&nbsp;argument&nbsp;then&nbsp;only&nbsp;prediction&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;performed.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;None)<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;These&nbsp;only&nbsp;should&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-test&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.testArgs`<br>
+&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(&nbsp;np.array&nbsp;,&nbsp;np.array)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;first&nbsp;return&nbsp;argument&nbsp;is&nbsp;an&nbsp;array&nbsp;of&nbsp;the&nbsp;results.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;second&nbsp;return&nbsp;argument&nbsp;gives&nbsp;the&nbsp;errors&nbsp;if&nbsp;labels&nbsp;were&nbsp;provided,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;is&nbsp;empty&nbsp;else.&nbsp;The&nbsp;number&nbsp;of&nbsp;rows&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="SVM-train"><strong>train</strong></a>(self, **kwargs)</dt><dd><tt>Trains&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells/hyper-parameters.<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-train&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.trainArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="exSVM">class <strong>exSVM</strong></a>(<a href="__init__.html#SVM">SVM</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;performs&nbsp;non-parametric,&nbsp;asymmetric&nbsp;least&nbsp;squares&nbsp;regression&nbsp;using&nbsp;SVMs.&nbsp;The&nbsp;tested&nbsp;estimators&nbsp;are<br>
+therefore&nbsp;estimating&nbsp;the&nbsp;conditional&nbsp;tau-e;xpectiles&nbsp;of&nbsp;Y&nbsp;given&nbsp;X.&nbsp;By&nbsp;default,&nbsp;estimators&nbsp;for&nbsp;five&nbsp;different&nbsp;tau<br>
+values&nbsp;are&nbsp;computed.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+weights&nbsp;:&nbsp;arr&nbsp;of&nbsp;doubles<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;list&nbsp;of&nbsp;expectiles&nbsp;that&nbsp;should&nbsp;be&nbsp;estimated.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;[0.05,0.1,0.5,0.9,0.95])<br>
+&nbsp;<br>
+others:&nbsp;see&nbsp;`?<a href="#SVM">SVM</a>`&nbsp;and&nbsp;`?doc.configuration`<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="__init__.html#exSVM">exSVM</a></dd>
+<dd><a href="__init__.html#SVM">SVM</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="exSVM-__init__"><strong>__init__</strong></a>(self, data, labs=None, weights=[0.05, 0.1, 0.5, 0.9, 0.95], **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="exSVM-select"><strong>select</strong></a>(self, **kwargs)</dt><dd><tt>Selects&nbsp;the&nbsp;best&nbsp;of&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells..<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-select&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.selectArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;selected&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><a name="exSVM-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="exSVM-clean"><strong>clean</strong></a>(self)</dt><dd><tt>Force&nbsp;to&nbsp;release&nbsp;internal&nbsp;C++&nbsp;memory.&nbsp;After&nbsp;that,&nbsp;this&nbsp;<a href="#SVM">SVM</a>&nbsp;cannot&nbsp;be&nbsp;used&nbsp;any&nbsp;more.</tt></dd></dl>
+
+<dl><dt><a name="exSVM-configLine"><strong>configLine</strong></a>(self, stage)</dt><dd><tt>Internal&nbsp;function&nbsp;to&nbsp;get&nbsp;the&nbsp;command-line&nbsp;like&nbsp;parameters&nbsp;for&nbsp;the&nbsp;different&nbsp;stages.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+stage&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str</tt></dd></dl>
+
+<dl><dt><a name="exSVM-get"><strong>get</strong></a>(self, name)</dt><dd><tt>Gets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------</tt></dd></dl>
+
+<dl><dt><a name="exSVM-predict"><strong>predict</strong></a>(self, test_data, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;features&nbsp;for&nbsp;which&nbsp;prediction&nbsp;should&nbsp;be&nbsp;estimated.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Passed&nbsp;to&nbsp;`liquidSVM.test`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;predictions&nbsp;for&nbsp;every&nbsp;test&nbsp;sample.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;It&nbsp;has&nbsp;the&nbsp;same&nbsp;number&nbsp;of&nbsp;rows&nbsp;as&nbsp;`test_data`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="exSVM-set"><strong>set</strong></a>(self, name, value)</dt><dd><tt>Sets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+value&nbsp;:&nbsp;any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;will&nbsp;be&nbsp;converted&nbsp;into&nbsp;a&nbsp;str,&nbsp;joining&nbsp;by&nbsp;spaces&nbsp;if&nbsp;needed.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+self</tt></dd></dl>
+
+<dl><dt><a name="exSVM-test"><strong>test</strong></a>(self, test_data, test_labs=None, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`&nbsp;and&nbsp;if&nbsp;applicable&nbsp;compares&nbsp;to&nbsp;test_labs.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array&nbsp;or&nbsp;<a href="#LiquidData">LiquidData</a>&nbsp;or&nbsp;Bunch<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;data&nbsp;to&nbsp;predict&nbsp;for.&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;`np.array`&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`labs`&nbsp;have&nbsp;to&nbsp;be&nbsp;provided&nbsp;as&nbsp;well.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;instance&nbsp;of&nbsp;`<a href="#LiquidData">LiquidData</a>`&nbsp;then&nbsp;data.test.data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;data.test.target&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;a&nbsp;Bunch,&nbsp;then&nbsp;`data.data`&nbsp;and&nbsp;`data.target`&nbsp;will&nbsp;be&nbsp;used.<br>
+test_labs&nbsp;:&nbsp;np.array&nbsp;(1-dim)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;ground&nbsp;truth&nbsp;labels.&nbsp;If&nbsp;this&nbsp;is&nbsp;`None`&nbsp;and&nbsp;the&nbsp;labels<br>
+&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;not&nbsp;provided&nbsp;in&nbsp;the&nbsp;`data`&nbsp;argument&nbsp;then&nbsp;only&nbsp;prediction&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;performed.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;None)<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;These&nbsp;only&nbsp;should&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-test&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.testArgs`<br>
+&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(&nbsp;np.array&nbsp;,&nbsp;np.array)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;first&nbsp;return&nbsp;argument&nbsp;is&nbsp;an&nbsp;array&nbsp;of&nbsp;the&nbsp;results.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;second&nbsp;return&nbsp;argument&nbsp;gives&nbsp;the&nbsp;errors&nbsp;if&nbsp;labels&nbsp;were&nbsp;provided,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;is&nbsp;empty&nbsp;else.&nbsp;The&nbsp;number&nbsp;of&nbsp;rows&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="exSVM-train"><strong>train</strong></a>(self, **kwargs)</dt><dd><tt>Trains&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells/hyper-parameters.<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-train&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.trainArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="lsSVM">class <strong>lsSVM</strong></a>(<a href="__init__.html#SVM">SVM</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;performs&nbsp;non-parametric&nbsp;least&nbsp;squares&nbsp;regression&nbsp;using&nbsp;SVMs.<br>
+The&nbsp;tested&nbsp;estimators&nbsp;are&nbsp;therefore&nbsp;estimating&nbsp;the&nbsp;conditional&nbsp;means&nbsp;of&nbsp;Y&nbsp;given&nbsp;X.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+see&nbsp;`?<a href="#SVM">SVM</a>`&nbsp;and&nbsp;`?doc.configuration`<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="__init__.html#lsSVM">lsSVM</a></dd>
+<dd><a href="__init__.html#SVM">SVM</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="lsSVM-__init__"><strong>__init__</strong></a>(self, data, labs=None, **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><a name="lsSVM-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="lsSVM-clean"><strong>clean</strong></a>(self)</dt><dd><tt>Force&nbsp;to&nbsp;release&nbsp;internal&nbsp;C++&nbsp;memory.&nbsp;After&nbsp;that,&nbsp;this&nbsp;<a href="#SVM">SVM</a>&nbsp;cannot&nbsp;be&nbsp;used&nbsp;any&nbsp;more.</tt></dd></dl>
+
+<dl><dt><a name="lsSVM-configLine"><strong>configLine</strong></a>(self, stage)</dt><dd><tt>Internal&nbsp;function&nbsp;to&nbsp;get&nbsp;the&nbsp;command-line&nbsp;like&nbsp;parameters&nbsp;for&nbsp;the&nbsp;different&nbsp;stages.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+stage&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str</tt></dd></dl>
+
+<dl><dt><a name="lsSVM-get"><strong>get</strong></a>(self, name)</dt><dd><tt>Gets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------</tt></dd></dl>
+
+<dl><dt><a name="lsSVM-predict"><strong>predict</strong></a>(self, test_data, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;features&nbsp;for&nbsp;which&nbsp;prediction&nbsp;should&nbsp;be&nbsp;estimated.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Passed&nbsp;to&nbsp;`liquidSVM.test`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;predictions&nbsp;for&nbsp;every&nbsp;test&nbsp;sample.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;It&nbsp;has&nbsp;the&nbsp;same&nbsp;number&nbsp;of&nbsp;rows&nbsp;as&nbsp;`test_data`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="lsSVM-select"><strong>select</strong></a>(self, **kwargs)</dt><dd><tt>Selects&nbsp;the&nbsp;best&nbsp;of&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells..<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-select&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.selectArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;selected&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<dl><dt><a name="lsSVM-set"><strong>set</strong></a>(self, name, value)</dt><dd><tt>Sets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+value&nbsp;:&nbsp;any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;will&nbsp;be&nbsp;converted&nbsp;into&nbsp;a&nbsp;str,&nbsp;joining&nbsp;by&nbsp;spaces&nbsp;if&nbsp;needed.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+self</tt></dd></dl>
+
+<dl><dt><a name="lsSVM-test"><strong>test</strong></a>(self, test_data, test_labs=None, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`&nbsp;and&nbsp;if&nbsp;applicable&nbsp;compares&nbsp;to&nbsp;test_labs.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array&nbsp;or&nbsp;<a href="#LiquidData">LiquidData</a>&nbsp;or&nbsp;Bunch<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;data&nbsp;to&nbsp;predict&nbsp;for.&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;`np.array`&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`labs`&nbsp;have&nbsp;to&nbsp;be&nbsp;provided&nbsp;as&nbsp;well.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;instance&nbsp;of&nbsp;`<a href="#LiquidData">LiquidData</a>`&nbsp;then&nbsp;data.test.data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;data.test.target&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;a&nbsp;Bunch,&nbsp;then&nbsp;`data.data`&nbsp;and&nbsp;`data.target`&nbsp;will&nbsp;be&nbsp;used.<br>
+test_labs&nbsp;:&nbsp;np.array&nbsp;(1-dim)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;ground&nbsp;truth&nbsp;labels.&nbsp;If&nbsp;this&nbsp;is&nbsp;`None`&nbsp;and&nbsp;the&nbsp;labels<br>
+&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;not&nbsp;provided&nbsp;in&nbsp;the&nbsp;`data`&nbsp;argument&nbsp;then&nbsp;only&nbsp;prediction&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;performed.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;None)<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;These&nbsp;only&nbsp;should&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-test&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.testArgs`<br>
+&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(&nbsp;np.array&nbsp;,&nbsp;np.array)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;first&nbsp;return&nbsp;argument&nbsp;is&nbsp;an&nbsp;array&nbsp;of&nbsp;the&nbsp;results.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;second&nbsp;return&nbsp;argument&nbsp;gives&nbsp;the&nbsp;errors&nbsp;if&nbsp;labels&nbsp;were&nbsp;provided,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;is&nbsp;empty&nbsp;else.&nbsp;The&nbsp;number&nbsp;of&nbsp;rows&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="lsSVM-train"><strong>train</strong></a>(self, **kwargs)</dt><dd><tt>Trains&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells/hyper-parameters.<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-train&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.trainArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="mcSVM">class <strong>mcSVM</strong></a>(<a href="__init__.html#SVM">SVM</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;is&nbsp;intended&nbsp;for&nbsp;both&nbsp;binary&nbsp;and&nbsp;multiclass&nbsp;classification.<br>
+The&nbsp;binary&nbsp;classification&nbsp;is&nbsp;treated&nbsp;by&nbsp;an&nbsp;<a href="#SVM">SVM</a>&nbsp;solver&nbsp;for&nbsp;the&nbsp;classical&nbsp;hinge&nbsp;loss,&nbsp;and<br>
+for&nbsp;the&nbsp;multiclass&nbsp;case,&nbsp;one-verus-all&nbsp;and&nbsp;all-versus-all&nbsp;reductions&nbsp;to&nbsp;binary&nbsp;classification<br>
+for&nbsp;the&nbsp;hinge&nbsp;and&nbsp;the&nbsp;least&nbsp;squares&nbsp;loss&nbsp;are&nbsp;provided.<br>
+The&nbsp;error&nbsp;of&nbsp;the&nbsp;very&nbsp;first&nbsp;task&nbsp;is&nbsp;the&nbsp;overall&nbsp;classification&nbsp;error.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+mcType&nbsp;:&nbsp;str&nbsp;or&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;multi-class&nbsp;classification&nbsp;scheme:&nbsp;"AvA_hinge","OvA_ls","OvA_hinge",&nbsp;or&nbsp;"AvA_ls".<br>
+&nbsp;<br>
+others:&nbsp;see&nbsp;`?<a href="#SVM">SVM</a>`&nbsp;and&nbsp;`?doc.configuration`<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="__init__.html#mcSVM">mcSVM</a></dd>
+<dd><a href="__init__.html#SVM">SVM</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="mcSVM-__init__"><strong>__init__</strong></a>(self, data, labs=None, mcType='AvA_hinge', **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><a name="mcSVM-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="mcSVM-clean"><strong>clean</strong></a>(self)</dt><dd><tt>Force&nbsp;to&nbsp;release&nbsp;internal&nbsp;C++&nbsp;memory.&nbsp;After&nbsp;that,&nbsp;this&nbsp;<a href="#SVM">SVM</a>&nbsp;cannot&nbsp;be&nbsp;used&nbsp;any&nbsp;more.</tt></dd></dl>
+
+<dl><dt><a name="mcSVM-configLine"><strong>configLine</strong></a>(self, stage)</dt><dd><tt>Internal&nbsp;function&nbsp;to&nbsp;get&nbsp;the&nbsp;command-line&nbsp;like&nbsp;parameters&nbsp;for&nbsp;the&nbsp;different&nbsp;stages.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+stage&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str</tt></dd></dl>
+
+<dl><dt><a name="mcSVM-get"><strong>get</strong></a>(self, name)</dt><dd><tt>Gets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------</tt></dd></dl>
+
+<dl><dt><a name="mcSVM-predict"><strong>predict</strong></a>(self, test_data, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;features&nbsp;for&nbsp;which&nbsp;prediction&nbsp;should&nbsp;be&nbsp;estimated.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Passed&nbsp;to&nbsp;`liquidSVM.test`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;predictions&nbsp;for&nbsp;every&nbsp;test&nbsp;sample.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;It&nbsp;has&nbsp;the&nbsp;same&nbsp;number&nbsp;of&nbsp;rows&nbsp;as&nbsp;`test_data`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="mcSVM-select"><strong>select</strong></a>(self, **kwargs)</dt><dd><tt>Selects&nbsp;the&nbsp;best&nbsp;of&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells..<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-select&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.selectArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;selected&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<dl><dt><a name="mcSVM-set"><strong>set</strong></a>(self, name, value)</dt><dd><tt>Sets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+value&nbsp;:&nbsp;any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;will&nbsp;be&nbsp;converted&nbsp;into&nbsp;a&nbsp;str,&nbsp;joining&nbsp;by&nbsp;spaces&nbsp;if&nbsp;needed.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+self</tt></dd></dl>
+
+<dl><dt><a name="mcSVM-test"><strong>test</strong></a>(self, test_data, test_labs=None, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`&nbsp;and&nbsp;if&nbsp;applicable&nbsp;compares&nbsp;to&nbsp;test_labs.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array&nbsp;or&nbsp;<a href="#LiquidData">LiquidData</a>&nbsp;or&nbsp;Bunch<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;data&nbsp;to&nbsp;predict&nbsp;for.&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;`np.array`&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`labs`&nbsp;have&nbsp;to&nbsp;be&nbsp;provided&nbsp;as&nbsp;well.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;instance&nbsp;of&nbsp;`<a href="#LiquidData">LiquidData</a>`&nbsp;then&nbsp;data.test.data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;data.test.target&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;a&nbsp;Bunch,&nbsp;then&nbsp;`data.data`&nbsp;and&nbsp;`data.target`&nbsp;will&nbsp;be&nbsp;used.<br>
+test_labs&nbsp;:&nbsp;np.array&nbsp;(1-dim)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;ground&nbsp;truth&nbsp;labels.&nbsp;If&nbsp;this&nbsp;is&nbsp;`None`&nbsp;and&nbsp;the&nbsp;labels<br>
+&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;not&nbsp;provided&nbsp;in&nbsp;the&nbsp;`data`&nbsp;argument&nbsp;then&nbsp;only&nbsp;prediction&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;performed.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;None)<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;These&nbsp;only&nbsp;should&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-test&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.testArgs`<br>
+&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(&nbsp;np.array&nbsp;,&nbsp;np.array)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;first&nbsp;return&nbsp;argument&nbsp;is&nbsp;an&nbsp;array&nbsp;of&nbsp;the&nbsp;results.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;second&nbsp;return&nbsp;argument&nbsp;gives&nbsp;the&nbsp;errors&nbsp;if&nbsp;labels&nbsp;were&nbsp;provided,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;is&nbsp;empty&nbsp;else.&nbsp;The&nbsp;number&nbsp;of&nbsp;rows&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="mcSVM-train"><strong>train</strong></a>(self, **kwargs)</dt><dd><tt>Trains&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells/hyper-parameters.<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-train&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.trainArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="nplSVM">class <strong>nplSVM</strong></a>(<a href="__init__.html#SVM">SVM</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;provides&nbsp;binary&nbsp;classifiers&nbsp;that&nbsp;satisfy&nbsp;a&nbsp;predefined&nbsp;error&nbsp;rate&nbsp;on&nbsp;one&nbsp;type&nbsp;of&nbsp;error&nbsp;and&nbsp;that<br>
+simlutaneously&nbsp;minimize&nbsp;the&nbsp;other&nbsp;type&nbsp;of&nbsp;error.&nbsp;For&nbsp;convenience&nbsp;some&nbsp;points&nbsp;on&nbsp;the&nbsp;ROC&nbsp;curve&nbsp;around&nbsp;the<br>
+predefined&nbsp;error&nbsp;rate&nbsp;are&nbsp;returned.&nbsp;nplNPL&nbsp;performs&nbsp;Neyman-Pearson-Learning&nbsp;for&nbsp;classification.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+constraint&nbsp;:&nbsp;double<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;constraint&nbsp;around&nbsp;which&nbsp;different&nbsp;values&nbsp;should&nbsp;be&nbsp;found.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;0.05)<br>
+constraintFactors&nbsp;:&nbsp;arr&nbsp;of&nbsp;doubles<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;factors&nbsp;to&nbsp;multiply&nbsp;`constraint`&nbsp;with.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;[1/2,2/3,1,3/2,2])<br>
+&nbsp;<br>
+others:&nbsp;see&nbsp;`?<a href="#SVM">SVM</a>`&nbsp;and&nbsp;`?doc.configuration`<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="__init__.html#nplSVM">nplSVM</a></dd>
+<dd><a href="__init__.html#SVM">SVM</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="nplSVM-__init__"><strong>__init__</strong></a>(self, data, labs=None, nplClass=1, constraint=0.05, constraintFactors=[0.5, 0.6666666666666666, 1, 1.5, 2], **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="nplSVM-select"><strong>select</strong></a>(self, **kwargs)</dt><dd><tt>Selects&nbsp;the&nbsp;best&nbsp;of&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells..<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-select&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.selectArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;selected&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><a name="nplSVM-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="nplSVM-clean"><strong>clean</strong></a>(self)</dt><dd><tt>Force&nbsp;to&nbsp;release&nbsp;internal&nbsp;C++&nbsp;memory.&nbsp;After&nbsp;that,&nbsp;this&nbsp;<a href="#SVM">SVM</a>&nbsp;cannot&nbsp;be&nbsp;used&nbsp;any&nbsp;more.</tt></dd></dl>
+
+<dl><dt><a name="nplSVM-configLine"><strong>configLine</strong></a>(self, stage)</dt><dd><tt>Internal&nbsp;function&nbsp;to&nbsp;get&nbsp;the&nbsp;command-line&nbsp;like&nbsp;parameters&nbsp;for&nbsp;the&nbsp;different&nbsp;stages.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+stage&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str</tt></dd></dl>
+
+<dl><dt><a name="nplSVM-get"><strong>get</strong></a>(self, name)</dt><dd><tt>Gets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------</tt></dd></dl>
+
+<dl><dt><a name="nplSVM-predict"><strong>predict</strong></a>(self, test_data, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;features&nbsp;for&nbsp;which&nbsp;prediction&nbsp;should&nbsp;be&nbsp;estimated.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Passed&nbsp;to&nbsp;`liquidSVM.test`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;predictions&nbsp;for&nbsp;every&nbsp;test&nbsp;sample.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;It&nbsp;has&nbsp;the&nbsp;same&nbsp;number&nbsp;of&nbsp;rows&nbsp;as&nbsp;`test_data`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="nplSVM-set"><strong>set</strong></a>(self, name, value)</dt><dd><tt>Sets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+value&nbsp;:&nbsp;any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;will&nbsp;be&nbsp;converted&nbsp;into&nbsp;a&nbsp;str,&nbsp;joining&nbsp;by&nbsp;spaces&nbsp;if&nbsp;needed.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+self</tt></dd></dl>
+
+<dl><dt><a name="nplSVM-test"><strong>test</strong></a>(self, test_data, test_labs=None, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`&nbsp;and&nbsp;if&nbsp;applicable&nbsp;compares&nbsp;to&nbsp;test_labs.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array&nbsp;or&nbsp;<a href="#LiquidData">LiquidData</a>&nbsp;or&nbsp;Bunch<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;data&nbsp;to&nbsp;predict&nbsp;for.&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;`np.array`&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`labs`&nbsp;have&nbsp;to&nbsp;be&nbsp;provided&nbsp;as&nbsp;well.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;instance&nbsp;of&nbsp;`<a href="#LiquidData">LiquidData</a>`&nbsp;then&nbsp;data.test.data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;data.test.target&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;a&nbsp;Bunch,&nbsp;then&nbsp;`data.data`&nbsp;and&nbsp;`data.target`&nbsp;will&nbsp;be&nbsp;used.<br>
+test_labs&nbsp;:&nbsp;np.array&nbsp;(1-dim)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;ground&nbsp;truth&nbsp;labels.&nbsp;If&nbsp;this&nbsp;is&nbsp;`None`&nbsp;and&nbsp;the&nbsp;labels<br>
+&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;not&nbsp;provided&nbsp;in&nbsp;the&nbsp;`data`&nbsp;argument&nbsp;then&nbsp;only&nbsp;prediction&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;performed.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;None)<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;These&nbsp;only&nbsp;should&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-test&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.testArgs`<br>
+&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(&nbsp;np.array&nbsp;,&nbsp;np.array)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;first&nbsp;return&nbsp;argument&nbsp;is&nbsp;an&nbsp;array&nbsp;of&nbsp;the&nbsp;results.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;second&nbsp;return&nbsp;argument&nbsp;gives&nbsp;the&nbsp;errors&nbsp;if&nbsp;labels&nbsp;were&nbsp;provided,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;is&nbsp;empty&nbsp;else.&nbsp;The&nbsp;number&nbsp;of&nbsp;rows&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="nplSVM-train"><strong>train</strong></a>(self, **kwargs)</dt><dd><tt>Trains&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells/hyper-parameters.<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-train&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.trainArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="qtSVM">class <strong>qtSVM</strong></a>(<a href="__init__.html#SVM">SVM</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;performs&nbsp;non-parametric&nbsp;and&nbsp;quantile&nbsp;regression&nbsp;using&nbsp;SVMs.&nbsp;The&nbsp;tested&nbsp;estimators&nbsp;are&nbsp;therefore<br>
+estimating&nbsp;the&nbsp;conditional&nbsp;tau-quantiles&nbsp;of&nbsp;Y&nbsp;given&nbsp;X.&nbsp;By&nbsp;default,&nbsp;estimators&nbsp;for&nbsp;five&nbsp;different&nbsp;tau&nbsp;values&nbsp;are<br>
+computed.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+weights&nbsp;:&nbsp;arr&nbsp;of&nbsp;doubles<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;list&nbsp;of&nbsp;quantiles&nbsp;that&nbsp;should&nbsp;be&nbsp;estimated.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;[0.05,0.1,0.5,0.9,0.95])<br>
+&nbsp;<br>
+others:&nbsp;see&nbsp;`?<a href="#SVM">SVM</a>`&nbsp;and&nbsp;`?doc.configuration`<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="__init__.html#qtSVM">qtSVM</a></dd>
+<dd><a href="__init__.html#SVM">SVM</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="qtSVM-__init__"><strong>__init__</strong></a>(self, data, labs=None, weights=[0.05, 0.1, 0.5, 0.9, 0.95], **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="qtSVM-select"><strong>select</strong></a>(self, **kwargs)</dt><dd><tt>Selects&nbsp;the&nbsp;best&nbsp;of&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells..<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-select&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.selectArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;selected&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><a name="qtSVM-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="qtSVM-clean"><strong>clean</strong></a>(self)</dt><dd><tt>Force&nbsp;to&nbsp;release&nbsp;internal&nbsp;C++&nbsp;memory.&nbsp;After&nbsp;that,&nbsp;this&nbsp;<a href="#SVM">SVM</a>&nbsp;cannot&nbsp;be&nbsp;used&nbsp;any&nbsp;more.</tt></dd></dl>
+
+<dl><dt><a name="qtSVM-configLine"><strong>configLine</strong></a>(self, stage)</dt><dd><tt>Internal&nbsp;function&nbsp;to&nbsp;get&nbsp;the&nbsp;command-line&nbsp;like&nbsp;parameters&nbsp;for&nbsp;the&nbsp;different&nbsp;stages.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+stage&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str</tt></dd></dl>
+
+<dl><dt><a name="qtSVM-get"><strong>get</strong></a>(self, name)</dt><dd><tt>Gets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------</tt></dd></dl>
+
+<dl><dt><a name="qtSVM-predict"><strong>predict</strong></a>(self, test_data, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;features&nbsp;for&nbsp;which&nbsp;prediction&nbsp;should&nbsp;be&nbsp;estimated.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Passed&nbsp;to&nbsp;`liquidSVM.test`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;predictions&nbsp;for&nbsp;every&nbsp;test&nbsp;sample.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;It&nbsp;has&nbsp;the&nbsp;same&nbsp;number&nbsp;of&nbsp;rows&nbsp;as&nbsp;`test_data`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="qtSVM-set"><strong>set</strong></a>(self, name, value)</dt><dd><tt>Sets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+value&nbsp;:&nbsp;any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;will&nbsp;be&nbsp;converted&nbsp;into&nbsp;a&nbsp;str,&nbsp;joining&nbsp;by&nbsp;spaces&nbsp;if&nbsp;needed.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+self</tt></dd></dl>
+
+<dl><dt><a name="qtSVM-test"><strong>test</strong></a>(self, test_data, test_labs=None, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`&nbsp;and&nbsp;if&nbsp;applicable&nbsp;compares&nbsp;to&nbsp;test_labs.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array&nbsp;or&nbsp;<a href="#LiquidData">LiquidData</a>&nbsp;or&nbsp;Bunch<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;data&nbsp;to&nbsp;predict&nbsp;for.&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;`np.array`&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`labs`&nbsp;have&nbsp;to&nbsp;be&nbsp;provided&nbsp;as&nbsp;well.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;instance&nbsp;of&nbsp;`<a href="#LiquidData">LiquidData</a>`&nbsp;then&nbsp;data.test.data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;data.test.target&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;a&nbsp;Bunch,&nbsp;then&nbsp;`data.data`&nbsp;and&nbsp;`data.target`&nbsp;will&nbsp;be&nbsp;used.<br>
+test_labs&nbsp;:&nbsp;np.array&nbsp;(1-dim)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;ground&nbsp;truth&nbsp;labels.&nbsp;If&nbsp;this&nbsp;is&nbsp;`None`&nbsp;and&nbsp;the&nbsp;labels<br>
+&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;not&nbsp;provided&nbsp;in&nbsp;the&nbsp;`data`&nbsp;argument&nbsp;then&nbsp;only&nbsp;prediction&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;performed.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;None)<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;These&nbsp;only&nbsp;should&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-test&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.testArgs`<br>
+&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(&nbsp;np.array&nbsp;,&nbsp;np.array)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;first&nbsp;return&nbsp;argument&nbsp;is&nbsp;an&nbsp;array&nbsp;of&nbsp;the&nbsp;results.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;second&nbsp;return&nbsp;argument&nbsp;gives&nbsp;the&nbsp;errors&nbsp;if&nbsp;labels&nbsp;were&nbsp;provided,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;is&nbsp;empty&nbsp;else.&nbsp;The&nbsp;number&nbsp;of&nbsp;rows&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="qtSVM-train"><strong>train</strong></a>(self, **kwargs)</dt><dd><tt>Trains&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells/hyper-parameters.<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-train&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.trainArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="rocSVM">class <strong>rocSVM</strong></a>(<a href="__init__.html#SVM">SVM</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;provides&nbsp;several&nbsp;points&nbsp;on&nbsp;the&nbsp;ROC&nbsp;curve&nbsp;by&nbsp;solving&nbsp;multiple&nbsp;weighted&nbsp;binary&nbsp;classification&nbsp;problems.<br>
+It&nbsp;is&nbsp;only&nbsp;suitable&nbsp;to&nbsp;binary&nbsp;classification&nbsp;data.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+weightsteps&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;weights&nbsp;that&nbsp;should&nbsp;be&nbsp;used.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;9)<br>
+&nbsp;<br>
+others:&nbsp;see&nbsp;`?<a href="#SVM">SVM</a>`&nbsp;and&nbsp;`?doc.configuration`<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="__init__.html#rocSVM">rocSVM</a></dd>
+<dd><a href="__init__.html#SVM">SVM</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="rocSVM-__init__"><strong>__init__</strong></a>(self, data, labs=None, weightsteps=9, **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="rocSVM-select"><strong>select</strong></a>(self, **kwargs)</dt><dd><tt>Selects&nbsp;the&nbsp;best&nbsp;of&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells..<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-select&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.selectArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;selected&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><a name="rocSVM-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="rocSVM-clean"><strong>clean</strong></a>(self)</dt><dd><tt>Force&nbsp;to&nbsp;release&nbsp;internal&nbsp;C++&nbsp;memory.&nbsp;After&nbsp;that,&nbsp;this&nbsp;<a href="#SVM">SVM</a>&nbsp;cannot&nbsp;be&nbsp;used&nbsp;any&nbsp;more.</tt></dd></dl>
+
+<dl><dt><a name="rocSVM-configLine"><strong>configLine</strong></a>(self, stage)</dt><dd><tt>Internal&nbsp;function&nbsp;to&nbsp;get&nbsp;the&nbsp;command-line&nbsp;like&nbsp;parameters&nbsp;for&nbsp;the&nbsp;different&nbsp;stages.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+stage&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str</tt></dd></dl>
+
+<dl><dt><a name="rocSVM-get"><strong>get</strong></a>(self, name)</dt><dd><tt>Gets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------</tt></dd></dl>
+
+<dl><dt><a name="rocSVM-predict"><strong>predict</strong></a>(self, test_data, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;features&nbsp;for&nbsp;which&nbsp;prediction&nbsp;should&nbsp;be&nbsp;estimated.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Passed&nbsp;to&nbsp;`liquidSVM.test`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;predictions&nbsp;for&nbsp;every&nbsp;test&nbsp;sample.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;It&nbsp;has&nbsp;the&nbsp;same&nbsp;number&nbsp;of&nbsp;rows&nbsp;as&nbsp;`test_data`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="rocSVM-set"><strong>set</strong></a>(self, name, value)</dt><dd><tt>Sets&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;liquidSVM-configuration&nbsp;parameter<br>
+For&nbsp;more&nbsp;information&nbsp;see:&nbsp;`?doc.configuration`<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+value&nbsp;:&nbsp;any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;will&nbsp;be&nbsp;converted&nbsp;into&nbsp;a&nbsp;str,&nbsp;joining&nbsp;by&nbsp;spaces&nbsp;if&nbsp;needed.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+self</tt></dd></dl>
+
+<dl><dt><a name="rocSVM-test"><strong>test</strong></a>(self, test_data, test_labs=None, **kwargs)</dt><dd><tt>Predicts&nbsp;labels&nbsp;for&nbsp;`test_data`&nbsp;and&nbsp;if&nbsp;applicable&nbsp;compares&nbsp;to&nbsp;test_labs.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+test_data&nbsp;:&nbsp;np.array&nbsp;or&nbsp;<a href="#LiquidData">LiquidData</a>&nbsp;or&nbsp;Bunch<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;data&nbsp;to&nbsp;predict&nbsp;for.&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;`np.array`&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`labs`&nbsp;have&nbsp;to&nbsp;be&nbsp;provided&nbsp;as&nbsp;well.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;an&nbsp;instance&nbsp;of&nbsp;`<a href="#LiquidData">LiquidData</a>`&nbsp;then&nbsp;data.test.data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;data.test.target&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;a&nbsp;Bunch,&nbsp;then&nbsp;`data.data`&nbsp;and&nbsp;`data.target`&nbsp;will&nbsp;be&nbsp;used.<br>
+test_labs&nbsp;:&nbsp;np.array&nbsp;(1-dim)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;ground&nbsp;truth&nbsp;labels.&nbsp;If&nbsp;this&nbsp;is&nbsp;`None`&nbsp;and&nbsp;the&nbsp;labels<br>
+&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;not&nbsp;provided&nbsp;in&nbsp;the&nbsp;`data`&nbsp;argument&nbsp;then&nbsp;only&nbsp;prediction&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;performed.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(Default&nbsp;value&nbsp;=&nbsp;None)<br>
+**kwargs&nbsp;:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;These&nbsp;only&nbsp;should&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-test&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.testArgs`<br>
+&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(&nbsp;np.array&nbsp;,&nbsp;np.array)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;first&nbsp;return&nbsp;argument&nbsp;is&nbsp;an&nbsp;array&nbsp;of&nbsp;the&nbsp;results.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;number&nbsp;of&nbsp;columns&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;second&nbsp;return&nbsp;argument&nbsp;gives&nbsp;the&nbsp;errors&nbsp;if&nbsp;labels&nbsp;were&nbsp;provided,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;is&nbsp;empty&nbsp;else.&nbsp;The&nbsp;number&nbsp;of&nbsp;rows&nbsp;depends&nbsp;on&nbsp;the&nbsp;learning&nbsp;scenario.</tt></dd></dl>
+
+<dl><dt><a name="rocSVM-train"><strong>train</strong></a>(self, **kwargs)</dt><dd><tt>Trains&nbsp;all&nbsp;SVMs&nbsp;for&nbsp;all&nbsp;tasks/cells/hyper-parameters.<br>
+This&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;by&nbsp;experts.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+**kwargs&nbsp;:dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;command-line&nbsp;parameters&nbsp;of&nbsp;svm-train&nbsp;can&nbsp;be&nbsp;given&nbsp;here<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;dictionary&nbsp;form,&nbsp;e.g.&nbsp;`d=1`&nbsp;instead&nbsp;of&nbsp;`-d&nbsp;1`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;detailed&nbsp;information&nbsp;see:&nbsp;`?doc.trainArgs`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+np.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;validation&nbsp;errors&nbsp;and&nbsp;technical&nbsp;details&nbsp;of&nbsp;the&nbsp;training&nbsp;phase</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="__init__.html#SVM">SVM</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['SVM', 'lsSVM', 'mcSVM', 'qtSVM', 'exSVM', 'nplSVM', 'rocSVM', 'iris', 'iris_labs', 'LiquidData', 'doc']<br>
+<strong>__warningregistry__</strong> = {'version': 8, ('SO is deprecated, use EXT_SUFFIX', &lt;class 'DeprecationWarning'&gt;, 69): True}<br>
+<strong>iris</strong> = array([[ 5.1,  4.9,  4.7,  4.6],
+       [ 5. ,  ...3,  2.5,  2.3],
+       [ 1.9,  2. ,  2.3,  1.8]])<br>
+<strong>iris_labs</strong> = array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...3, 3,
+       3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3])</td></tr></table>
+</body></html>

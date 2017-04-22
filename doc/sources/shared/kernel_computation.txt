@@ -1,0 +1,35 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header provides a few functions related to kernel matrices 
+// that can be executed on CUDA GPUs. 
+// 
+//
+// compute_kernel_matrix(...)
+// Computes the kernel matrix on the GPU according to the information stored in 
+// the Tkernel_control_GPU object. It is assumed that memory has been properly 
+// allocated and the pre-kernel-matrix has been computed.
+// 
+// compute_pre_kernel_matrix(...)
+// Computes the pre-kernel-matrix on the GPU according to the information stored in 
+// the Tkernel_control_GPU object. It is assumed that memory has been properly 
+// allocated and the dataset have been uploaded.
+//
+//**********************************************************************************************************************************

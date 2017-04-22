@@ -1,0 +1,33 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header file provides a couple of functions that transform 
+// C-strings to numbers and numbers to C++-strings. 
+// 
+// 
+// The returned boolean value indicates whether the transformation 
+// was successful, i.e. whether the string could be transformed to a 
+// number of the specified type. The optional <min> and <max> additionally
+// include a check whether <number> is in the interval [<min>, <max>]:
+// If this is not the case, the function returns a false.
+// The ..._no..._limits variants perform the same check with (half) open
+// intervals, instead.
+// 
+//**********************************************************************************************************************************

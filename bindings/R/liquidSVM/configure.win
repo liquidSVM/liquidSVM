@@ -1,0 +1,17 @@
+#!/bin/bash
+
+## NEEDS TO BE THERE IN WINDOWS -- not anymore
+#CXX_FLAGS="-fpermissive -Wno-pragmas $CXX_FLAGS"
+
+export TARGET=generic
+export OUT=src/Makevars.win
+
+
+## Maybe at some point we will be able to use CUDA on Windows:
+
+#CUDA_SDK = "C:/ProgramData/NVIDIA Corporation/NVIDIA GPU Computing SDK 5.5/C"   # Path to cuda SDK install
+#CUDA_DIR = "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v5.5"           # Path to cuda toolkit install
+
+echo Using LIQUIDSVM_CONFIGURE_ARGS: $LIQUIDSVM_CONFIGURE_ARGS
+
+sh configure $LIQUIDSVM_CONFIGURE_ARGS

@@ -1,0 +1,285 @@
+---
+title: "liquidSVM: Documentation for R"
+author: "Philipp Thomann & Ingo Steinwart"
+date: "`r Sys.Date()`"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+    highlight: espresso
+    theme: journal
+vignette: >
+  %\VignetteIndexEntry{liquidSVM Documentation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+library(liquidSVM)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", eval=T)
+set.seed(123)
+
+options(digits=3)
+
+myOwnCache <- function(name, envir=parent.frame(),vignette_dir="."){
+  filename <- paste0(vignette_dir,'/demo_cache/',name,".R")
+  if(exists(name, envir=envir)){
+    dput(get(name, envir=envir), file=filename)
+  }else if(file.exists(filename)){
+    #message("Loading")
+    assign(name,dget(filename),envir=envir)
+  }else{
+    warning(paste0("Did not have or load ",name))
+  }
+}
+
+```
+
+To see a demonstration of the capabilities of liquidSVM from an R viewpoint,
+please look at the [demo](demo.html).
+
+> *Disclaimer:* liquidSVM and the R-bindings are in general quite stable and well tested by several people.
+> However, use in production is at your own risk.
+> 
+> If you run into problems please check first the documentation for more details,
+> or report the bug to the maintainer.
+
+
+# Installation
+
+There are several options to install the package.
+
+## Download and Install using R
+
+The most convenient way is to
+use the standard install to get it from CRAN:
+
+```r
+install.packages("liquidSVM")
+```
+
+You can also use our repository:
+
+```r
+install.packages("liquidSVM", repos="http://www.isa.uni-stuttgart.de/software/R")
+```
+
+Remark that in R a package can be installed either as source
+or binary
+
+Source (default on Linux Systems): 
+  : Allows for optimization to the system and liquidSVM can benefit a lot from these optimizations.
+    The drawback is that this needs a C++ compiler. This is usually okay on Linux-systems,
+    but on Windows one has to install [https://cran.r-project.org/bin/windows/Rtools/](Rtools),
+    and on MacOS X [https://itunes.apple.com/de/app/xcode/id497799835?mt=12](Xcode in MacApp Store)
+    ([https://developer.apple.com/download/](Xcode also for older MacOS versions).)
+    
+Binary (default on Windows and MacOS X):
+  : compiled versions are provided, so you do not need compilers.
+    However, these are optimized for generic processors (e.g. they do not use AVX),
+    and hence you might do much better on your machine if you compile it yourself.
+
+You can change the default behaviour of `install.packages(...)`
+under Windows/MacOS by using the parameter `type="source"`.
+
+> The binaries in our repository are only compiled using R version 3.*. If you use another
+> version, they might not work and you have to try source installation (`type="source"`).
+> 
+> Note: on  MacOS X there can be an issue with binary package installation.
+> If you get the error `tar: Failed to set default locale` then consult
+>
+> https://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html#Internationalization-of-the-R_002eapp
+
+## Install a downloaded package
+
+Download the source or binary package from http://www.isa.uni-stuttgart.de/software/.
+On the command line use:
+```
+R CMD INSTALL path-to-package/liquidSVM_1.0.1.tar.gz
+# Windows
+Rcmd INSTALL path-to-package/liquidSVM_1.0.1.zip
+# MacOS X using Termninal
+R CMD INSTALL path-to-package/liquidSVM_1.0.1.tgz
+```
+or in a running R session:
+```r
+install.packages("path-to-package/liquidSVM_1.0.1.tar.gz",repos=NULL)
+# Windows binary
+install.packages("path-to-package/liquidSVM_1.0.1.zip",repos=NULL)
+# MacOS X binary
+install.packages("path-to-package/liquidSVM_1.0.1.tgz",repos=NULL)
+```
+You can use also the means of any R-IDE.
+E.g. in RStudio go to the menu
+
+```
+Tools > Install packages...
+```
+
+Then set `install from` to `package archive file (.tar.gz or .tgz)` and choose your package
+and install the package.
+
+
+## Advanced Configuration Options with Source Install
+
+liquidSVM can be configured for different uses of available hardware.
+We provide the following configurations:
+
+`native`
+  : compiles for the current system, e.g. uses AVX or even AVX2 if available. This uses `g++/clang++ -march=native -O3`.
+
+`generic`
+  : compiles for a wide range of currently deployed CPUs (uses SSE). This uses `g++/clang++ -mtune=generic -O3`.
+    Our binary packages are compiled with this configuration.
+
+`default`
+  : compiles using the default values provided by R.
+
+`debug`
+  : compiles with debugging enabled.
+
+`empty`
+  : gives no default compile arguments.
+
+Additional compiler flags can be provided as well. On the command line,
+here are some examples:
+```
+R CMD INSTALL --configure-args=native path-to-package/liquidSVM_1.0.1.tar.gz
+R CMD INSTALL --configure-args=generic path-to-package/liquidSVM_1.0.1.tar.gz
+R CMD INSTALL --configure-args="empty -march=core2 -O3" path-to-package/liquidSVM_1.0.1.tar.gz
+```
+or in a running R session:
+```r
+install.packages("liquidSVM",configure.args="native")
+install.packages("liquidSVM",configure.args="generic")
+install.packages("liquidSVM",configure.args="empty -march=core2 -O3")
+```
+Under MacOS you have to add the paramter `type="source"` in order to trigger compilation.
+
+> **Hint:** to see whether liquidSVM got compiled with SSE and/or AVX use:
+> ```{r}
+compilationInfo()
+```
+
+
+
+### Windows configuration
+
+On **Windows** unfortunately neither `--configure-args` nor `configure.args` have any effect.
+We enable compilation configuration by reading the environment variable `LIQUIDSVM_CONFIGURE_ARGS`
+and using it in the same way as the configure args on the other platforms (see above).
+So on the Windows command line use
+```
+set LIQUIDSVM_CONFIGURE_ARGS=native
+R CMD INSTALL path-to-package/liquidSVM_1.0.1.tar.gz
+
+set LIQUIDSVM_CONFIGURE_ARGS=empty -march=core2 -O3
+R CMD INSTALL path-to-package/liquidSVM_1.0.1.tar.gz
+```
+Remark that no quotation has to be used.
+It is not tested whether paths with spaces will work in this setting.
+
+If you wish to install from within R you can specify the environment variable as well:
+```r
+Sys.setenv(LIQUIDSVM_CONFIGURE_ARGS="native")
+install.packages("liquidSVM")
+
+Sys.setenv(LIQUIDSVM_CONFIGURE_ARGS="empty -march=core2 -O3")
+install.packages("liquidSVM")
+```
+
+If you have [https://cran.r-project.org/bin/windows/Rtools/](Rtools) installed then
+you should definitely try to use `native`, because on Windows we use `generic` as the default configuration even for source installs.
+
+
+### Common Problems
+
+* **MacOS X**: It seems that in some cases `clang++ -march=native` does not activate AVX even if it is available.
+    Hence if you know it is available, use `configure.args="native -mavx"` or even `configure.args="native -mavx2"`.
+* **Windows**: On one machine `set LIQUIDSVM_CONFIGURE_ARGS=native` compiled but crashed on
+    execution: the compiler thought that FusedMultiplyAdd was available but it was not.
+    The solution was to `set LIQUIDSVM_CONFIGURE_ARGS=native -mno-fma`
+
+For GCC it can help to use `g++ -Q --help=target -march=native ...` to figure out which options
+trigger what optimizations. For both GCC and clang you can also print the compilation headers by
+`g++ -march=native ... -dM -E - < /dev/null | egrep "SSE|AVX"`.
+
+
+
+## CUDA
+
+liquidSVM also is able to calculate the kernel on a GPU if it is compiled with CUDA-support.
+Since there is a  big overhead in moving the kernel matrix from the GPU memory,
+this is most useful for problems with many feature-dimensions (see [demo](demo.html#CUDA))
+
+To activate CUDA support you have to specify its location (usually `/usr/local/cuda`)
+as a parameter to the configure arguments:
+```
+R CMD INSTALL --configure-args="native /my/path/to/cuda" path-to-package/liquidSVM_1.0.1.tar.gz
+```
+or again in R
+```r
+install.packages('liquidSVM',configure.args="native /my/path/to/cuda")
+```
+
+> Note that due to lack of testing machines this is known to work only on some Linux machines.
+> The above instructions will probably not work on Windows!
+
+If you have compiled with CUDA-support, you can activate it for a computation by using `svm(..., GPUs=1)`:
+
+
+# Configuration parameters
+
+
+The uses of `svm(...)`, `lsSVM(...)`, `mcSVM(...)`, etc. can be configured
+using the following parameters.
+
+```{r child="md/global-and-grid.md", eval=T}
+```
+
+
+
+# Known Issues / Common Problems
+
+*   Ctrl-C / Interrupt is tricky. It works most of the time, but it can fail.
+    If you get weird results or errors save your models and restart the R session.
+
+*   CUDA has not been tested neither on Windows nor on macOS.
+*   32-bit has been seen to work but is not supported.
+
+## Using external parallelization
+liquidSVM does its own threading - hence do not parallelize on top of that, unless
+you know what you are doing. Hence just give the parameter `threads=n` or let
+the default use all of your physical cores.
+
+If you really want to do it yourself you have to serialze the solutions.
+Furthermore you have to be carefule to assign disjoint cores
+else they will fight for the same core:
+```{r eval=F}
+library(parallel)
+## how big should the cluster be
+workers <- 2
+cl <- makeCluster(workers)
+## how many threads should each worker use
+threads <- 2
+
+sml <- liquidData('reg-1d')
+clusterExport(cl, c("sml","threads","workers"))
+obj <- parLapply(cl, 1:workers, function(i) {
+  library(liquidSVM)
+  ## to make it interesting use disjoint parts of sml$train
+  data <- sml$train[ seq(i,nrow(sml$train),workers) , ]
+  ## the second argument to threads sets the offset of cores
+  model <- lsSVM(Y~., data, threads=c(threads,threads*(i-1)) )
+  ## finally return the serialized solution
+  serialize.liquidSVM(model)
+})
+for(i in 1:workers){
+  ## get the solution in the master session
+  model <- unserialize.liquidSVM(obj[[i]])
+  print(errors(test(model,sml$test)))
+}
+#> val_error
+#>   0.00542
+#>  val_error
+#>   0.00583
+```

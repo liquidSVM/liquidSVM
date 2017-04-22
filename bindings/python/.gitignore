@@ -1,0 +1,9 @@
+*.egg-info
+*.pyc
+dist
+build
+src/common
+src/sources
+index.html
+.ipynb_checkpoints/
+www.isa.uni-stuttgart.de/

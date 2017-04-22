@@ -1,0 +1,76 @@
+liquidSVM: A Fast and Versatile SVM Package
+
+Description
+
+Support vector machines (SVMs) and related kernel-based learning
+algorithms are a well-known class of machine learning algorithms, for
+non-parametric classification and regression.
+liquidSVM is an implementation of SVMs whose key features are:
+fully integrated hyper-parameter selection,
+extreme speed on both small and large data sets,
+full flexibility for experts, and
+inclusion of a variety of different learning scenarios:
+multi-class classification, ROC, and Neyman-Pearson learning, and
+least-squares, quantile, and expectile regression.
+
+liquidSVM is licensed under AGPL 3.0
+
+
+
+mc-svm.sh
+
+This routine is intended for both binary and multiclass
+classification. The binary classification is treated by
+an SVM solver for the classical hinge loss, and for the
+multiclass case, one-verus-all and all-versus-all reductions
+to binary classification for the hinge and the least
+squares loss are provided. The error of the very first
+task is the overall classification error.
+
+
+roc-svm.sh
+
+This routine provides several points on the ROC curve by
+solving multiple weighted binary classification problems.
+It is only suitable to binary classification data.
+
+
+npl-svm.sh
+
+This routine provides binary classifiers that satisfy a 
+predefined error rate on one type of error and that 
+simlutaneously minimize the other type of error. For 
+convenience some points on the ROC curve around the 
+predefined error rate are returned.
+
+
+ls-svm.sh
+
+This routine performs non-parametric least squares regression
+using SVMs. The tested estimators are therefore estimating 
+the conditional means of Y given X.
+
+
+ex-svm.sh
+
+This routine performs non-parametric, asymmetric least squares 
+regression using SVMs. The tested estimators are therefore estimating 
+the conditional tau-expectiles of Y given X. By default, estimators
+for five different tau values are computed.
+
+
+qt-svm.sh
+
+This routine performs non-parametric and quantile regression using SVMs. 
+The tested estimators are therefore estimating the conditional tau-quantiles 
+of Y given X. By default, estimators for five different tau values 
+are computed.
+
+
+bs-svm.sh
+
+This routine performs bootstrap for binary classification data.
+The very first error is the average classification error.
+
+
+

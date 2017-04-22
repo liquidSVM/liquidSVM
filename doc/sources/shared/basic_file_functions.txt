@@ -1,0 +1,48 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header file provides a couple of standartized IO-routines.
+// 
+// 
+// If a file is opened by open_file(), then some rudimentary error checks
+// are performed and an automatic book keeping of filenames is included.
+// The latter is helpful for the file_read() function, which also performs
+// some error checking and exits with an error message pointing to the 
+// affected filename in case of an error. Finally, if the filename is 
+// empty, then a NULL pointer is returned. Corresponding calls 
+// 	file_write(NULL, ...)
+// 	close_file(NULL)
+// have no effect. This convention avoid lengthy checks in situations
+// in which writing information to a file is optional.
+// 
+// 
+// exit_on_file_error(...)
+// Provide a more meaningful error message than flush_exit() does.
+// 
+// get_filetype(...)
+// Returns a number in FILETYPES depending on which type the filename
+// belongs to.
+// 
+// check_<filetype>_filename(...)
+// These routines exit with an error message, if the filename does not 
+// follow the naming conventions the for a file of type <filetype>.
+// 
+// 
+//**********************************************************************************************************************************

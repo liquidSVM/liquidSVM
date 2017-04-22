@@ -1,0 +1,55 @@
+
+<?xml version='1.0' encoding="utf-8"?>
+<toc version="2.0">
+<tocitem">Classes:
+<tocitem target="html\LiquidSVM_Data_Doc.html">LiquidSVM_Data
+<tocitem">Methodes:
+<tocitem target="html\LiquidSVM_Data_checkValidResponseCol_Doc.html">checkValidResponseCol</tocitem>
+<tocitem target="html\LiquidSVM_Data_checkValidSource_Doc.html">checkValidSource</tocitem>
+<tocitem target="html\LiquidSVM_Data_constructor_Doc.html">constructor</tocitem>
+</tocitem>
+</tocitem>
+<tocitem target="html\LiquidSVM_DataFile_Doc.html">LiquidSVM_DataFile
+<tocitem">Methodes:
+<tocitem target="html\LiquidSVM_DataFile_constructor_Doc.html">constructor</tocitem>
+<tocitem target="html\LiquidSVM_DataFile_fileName_Doc.html">fileName</tocitem>
+</tocitem>
+</tocitem>
+<tocitem target="html\LiquidSVM_DataSourceHandle_Doc.html">LiquidSVM_DataSourceHandle
+<tocitem">Methodes:
+<tocitem target="html\LiquidSVM_DataSourceHandle_addToFileList_Doc.html">addToFileList</tocitem>
+<tocitem target="html\LiquidSVM_DataSourceHandle_checkValidType_Doc.html">checkValidType</tocitem>
+<tocitem target="html\LiquidSVM_DataSourceHandle_constructor_Doc.html">constructor</tocitem>
+<tocitem target="html\LiquidSVM_DataSourceHandle_getAllDataFiles_Doc.html">getAllDataFiles</tocitem>
+<tocitem target="html\LiquidSVM_DataSourceHandle_getDataByIndex_Doc.html">getDataByIndex</tocitem>
+<tocitem target="html\LiquidSVM_DataSourceHandle_getLiquidData_Doc.html">getLiquidData</tocitem>
+<tocitem target="html\LiquidSVM_DataSourceHandle_isempty_Doc.html">isempty</tocitem>
+</tocitem>
+</tocitem>
+<tocitem target="html\LiquidSVM_Model_Doc.html">LiquidSVM_Model
+<tocitem">Methodes:
+<tocitem target="html\LiquidSVM_Model_autoTrainSelect_Doc.html">autoTrainSelect</tocitem>
+<tocitem target="html\LiquidSVM_Model_checkTrainFeatures_Doc.html">checkTrainFeatures</tocitem>
+<tocitem target="html\LiquidSVM_Model_checkTrainLabels_Doc.html">checkTrainLabels</tocitem>
+<tocitem target="html\LiquidSVM_Model_constructor_Doc.html">constructor</tocitem>
+<tocitem target="html\LiquidSVM_Model_cover_Doc.html">cover</tocitem>
+<tocitem target="html\LiquidSVM_Model_delete_Doc.html">delete</tocitem>
+<tocitem target="html\LiquidSVM_Model_getNum_Doc.html">getNum</tocitem>
+<tocitem target="html\LiquidSVM_Model_get_Doc.html">get</tocitem>
+<tocitem target="html\LiquidSVM_Model_loadobj_Doc.html">loadobj</tocitem>
+<tocitem target="html\LiquidSVM_Model_parseVarargin_Doc.html">parseVarargin</tocitem>
+<tocitem target="html\LiquidSVM_Model_predict_Doc.html">predict</tocitem>
+<tocitem target="html\LiquidSVM_Model_saveobj_Doc.html">saveobj</tocitem>
+<tocitem target="html\LiquidSVM_Model_select_Doc.html">select</tocitem>
+<tocitem target="html\LiquidSVM_Model_set_Doc.html">set</tocitem>
+<tocitem target="html\LiquidSVM_Model_solution_Doc.html">solution</tocitem>
+<tocitem target="html\LiquidSVM_Model_test_Doc.html">test</tocitem>
+<tocitem target="html\LiquidSVM_Model_train_Doc.html">train</tocitem>
+</tocitem>
+</tocitem>
+<tocitem target="html\LiquidSVM_exSVM_Doc.html">LiquidSVM_exSVM
+<tocitem">Methodes:
+<tocitem target="html\LiquidSVM_exSVM_constructor_Doc.html">constructor</tocitem>
+<tocitem target="html\LiquidSVM_exSVM_select_Doc.html">select</tocitem>
+</tocitem>
+</tocitem>

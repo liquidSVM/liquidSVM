@@ -1,0 +1,93 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//  
+// This header provides the class Tgrid that stores information gathered during training and training_validation
+// as well as possible solutions. 
+// 
+// template types requirements:
+// Tsolution_type needs to be have at least the interface of Tsolution
+// Ttrain_val_info_type needs to be have at least the interface of Ttrain_val_info
+// 
+// Tgrid(...)
+// Constructs a copy of the specified grid.
+// 
+// clear()
+// Clears all information stored in the object and sets its sizes to 0.
+// 
+// size()
+// Returns the overall number of stored objects of type Ttrain_val_info_type.
+// 
+// resize(...)
+// Resizes the object by with values given in Tgrid_control.
+// 
+// reduce_gammas(...)
+// Eliminates all entries whose gamma value is not at one of the
+// positions specified in the index_list.
+// 
+// reduce_weights(...)
+// Eliminates all entries whose weight values are not at one of the
+// positions specified in the index_list.
+// 
+// reduce_lambdas(...)
+// Eliminates all entries whose lambda value is not at one of the
+// positions specified in the index_list.
+// 
+// write_to_file(...) 
+// Writes the information of the object to the specified files.
+// 
+// read_from_file(...)
+// Reads the informaton of the specified files into the object.
+// 
+// operator =
+// Copies the object on the right to the object on the left.
+// 
+// operator +
+// Mutually adds all objects of type Ttrain_val_info_type stored in 
+// both grids. If the sizes of both grids are different, only objects
+// that are contained in both grids are added.
+// 
+// operator *
+// Multiplies all objects of type Ttrain_val_info_type stored in 
+// the grid by scalar.
+// 
+// summarize()
+// Returns the sum of all objects of type Ttrain_val_info_type stored in the grid.
+// 
+// apply_mask()
+// Applies the specified mask to all objects of type Ttrain_val_info_type stored in the grid.
+// 
+// get_best_entry(...)
+// Returns the first position, at which the smallest object of type Ttrain_val_info_type is found.
+// 
+// get_entry_with_best_val_error(...)
+// Returns the first position, at which the object of type Ttrain_val_info_type that 
+// has the smallest validation error is found.
+// 
+// get_entry_with_best_npl_error(...)
+// Returns the first position, at which the object of type Ttrain_val_info_type that 
+// has the smallest Neyman-Pearson validation error is found. Here, the npl_class is the 
+// class for which the constraint needs to be satisfied.
+// 
+// 
+// LIMITATIONS
+// Currently, only grid structures of cubic form are supported by read_from_file() and resize(...).
+// This should be addressed in the future. Such a change will change Tgrid_control as well.
+// 
+//**********************************************************************************************************************************

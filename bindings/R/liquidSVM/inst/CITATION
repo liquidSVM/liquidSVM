@@ -1,0 +1,10 @@
+bibentry(bibtype = "Article",
+  title = "{liquidSVM}: A Fast and Versatile SVM package",
+  author = c(person("Ingo", "Steinwart"),
+             person("Philipp", "Thomann")),
+  year = 2017,
+  journal = "{ArXiv e-prints 1702.06899}",
+  primaryClass = "stat.ML",
+  month = "feb",
+  url = "http://www.isa.uni-stuttgart.de/software"
+)

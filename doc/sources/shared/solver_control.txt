@@ -1,0 +1,99 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header files provides a generic class and some constants for 
+// controlling the behavior of a generic solver.
+// 
+// 
+// Constants
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// SOLVER_INIT_DEFAULT;
+// Constant, which tells the solver to use its generic initializatio
+// method.
+// 
+// NO_CLIPPING = 0.0
+// Value for Tsolver_control::clipp_value for which the solver does
+// not clipp.
+// 
+// ADAPTIVE_CLIPPING 
+// Value for Tsolver_control::clipp_value for which the smallest possible
+// value for clipping is used.
+// 
+// SOLVER_INIT_FORWARD
+// Tells the solver that cross validation is perfomed with decreasing lambda.
+// 
+// SOLVER_INIT_BACKWARD
+// Tells the solver that cross validation is perfomed with increasing lambda.
+//
+// SOLVER_INIT_NO_DIRECTION
+// Tells the solver that there is no order for traversing the lambdas in the
+// cross validation.
+// 
+// 
+// Tsolver_control
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 
+// read_from_file(...) / write_to_file(...)
+// Reads information of Tsolver_control from file or writes this information
+// to a file.
+// 
+// set_clipping(..)
+// If global_clipp_value == ADAPTIVE_CLIPPING, then clipp_value is set to 
+// max_abs_label, otherwise it is set to global_clipp_value. The program 
+// aborts with an error message if clipping is activated and max_abs_label
+// is larger than the set clipp_value.
+// 
+// cold_start / warm_start
+// Tells the solver, which cold start or warm start option it should use.
+// 
+// init_direction
+// Tells the solver in which way the cross validation runs through the lambdas.
+// The value should be in {SOLVER_INIT_FORWARD, SOLVER_INIT_BACKWARD, SOLVER_INIT_NO_DIRECTION}.
+// 
+// stop_eps
+// Tells the solver, at which value a possible optimization should be terminated.
+// 
+// solver_type
+// Tells the CV_manager, which solver it should use.
+// 
+// save_solution
+// Tells the solver, whether it should save the solution it found.
+// 
+// clipp_value
+// Tells the solver at which value it should clipp the prediction.
+// 
+// global_clipp_value
+// Entry for set_clipping(...), see above.
+// 
+// fixed_loss
+// Tells the solver, if the loss function used for computing the 
+// training and validation error depends on the weights of the CV-grid
+// or not. This is a useful flag since sometimes the weights of 
+// the loss function and the CV-grid do not need to be equal, e.g.
+// because of corrections for 'imbalanced' or 'not representative' datasets.
+// 
+// loss_control
+// Tells the solver, which loss function it should use.
+// 
+// kernel_control_train / kernel_control_val
+// Tells the solver how to use the kernel for training and validation.
+// 
+//**********************************************************************************************************************************

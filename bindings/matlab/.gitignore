@@ -1,0 +1,10 @@
+*.mexa64
+*~
+*.mex
+*.oct
+COPYING
+index.html
+liquidSVM-octave.zip
+liquidSVM.mltbx
+src
+svmModel1.mat

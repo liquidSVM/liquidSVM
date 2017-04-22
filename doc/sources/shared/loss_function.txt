@@ -1,0 +1,51 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// The file provides various concepts for loss functions.
+// 
+// 
+// LOSS_TYPES
+// Names for the currently implemented loss functions in 
+// Tloss_function.
+// 
+// 
+// sign(...)
+// Returns the sign of x, with the convention that sign(0):= 1.
+// 
+// classification_loss(...)
+// Standard binary classification loss.
+// 
+// neg_classification_loss(...)
+// Standard binary classification loss if y <= 0, otherwise 0.
+// 
+// pos_classification_loss(...)
+// Standard binary classification loss if y >= 0, otherwise 0.
+// 
+// Tloss_control
+// Class that describes the different types of losses implemented in 
+// Tloss_function.
+// 
+// Tloss_function
+// Implements a loss function based on the information stored in Tloss_control.
+// Its weights can be changed by set_weights(...). The initialized loss can be 
+// evaluate for a label y and a prediction t by the function evaluate(...).
+// 
+// 
+//**********************************************************************************************************************************

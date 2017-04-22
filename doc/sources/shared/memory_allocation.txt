@@ -1,0 +1,66 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header provides several functions for allocating and deallocating 
+// memory for arrays. The _ALGD-versions of the (re)allocate functions 
+// allocate memory blocks, which are aligned to the cacheline size of 
+// the processor and whose size is a multiple of the cacheline size.
+// The versions with unsigned size may abort the program with an error
+// message, if the required size is larger than the largest number of 
+// type unsigned.
+// 
+// 
+// get_used_memory_in_KB()
+// Returns the memory (in KB) used by the entire process. Currently this
+// is only implemented for the Linux version since it is mainly a debugging
+// tool.
+// 
+// my_alloc(...) / my_alloc_ALGD(...)
+// Allocates memory for <size> number of objects of type <Template_type>
+// and stores the beginning of the memory block in pointer. If size == 0, 
+// the pointer is set to NULL. The optional used_size in the _ALGD version
+// returns the value allocated_memory_ALGD(...).
+// Example Usage:
+// double* array;
+// my_allocate(&array, 1000);
+// 
+// my_dealloc(...) / my_dealloc_ALGD(...)
+// Deallocates memory the pointer points at. If it points at NULL,
+// then no action is taken.
+// 
+// my_dealloc_return_to_OS(...)
+// Deallocates memory and makes sure it is returned to the OS. Currently
+// this guarantee is only implemented in Linux and only applies to somewhat
+// large memory segments. In all other OS, a simple free() is called.
+// 
+// my_realloc(...) / my_realloc_ALGD(...)
+// First deallocates the memory before allocating it with the functions 
+// above.
+// 
+// allocated_memory_ALGD(...) / allocated_memory_in_bytes_ALGD(...)
+// The first function returns the number of objects for which memory will 
+// be allocated. The value is, in general, larger than <size> since
+// the allocated memory is a multiple of the cacheline size. The second
+// function returns allocated_memory_ALGD(...) * sizeof(Template_type). 
+// 
+// (re)alloc_and_copy_ALGD(...)
+// First (re)allocates memory and then copies the content of vec to it.
+// 
+//**********************************************************************************************************************************

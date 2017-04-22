@@ -1,0 +1,275 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>LiquidSVM_Data_constructor_Doc</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-04-06"><meta name="DC.source" content="LiquidSVM_Data_constructor_Doc.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">LiquidSVM_Data (Constructor)</a></li><li><a href="#2">Syntax</a></li><li><a href="#3">Description</a></li><li><a href="#4">Input Arguments</a></li><li><a href="#5">optional</a></li><li><a href="#16">Output:</a></li><li><a href="#17">Example:</a></li><li><a href="#24">See also</a></li></ul></div><h2>LiquidSVM_Data (Constructor)<a name="1"></a></h2><p>Constructor of the class LiquidSVM_Data</p><h2>Syntax<a name="2"></a></h2><pre class="language-matlab">liquidDataObj = LiquidSVM_Data(key,value);
+</pre><h2>Description<a name="3"></a></h2><h2>Input Arguments<a name="4"></a></h2><h2>optional<a name="5"></a></h2><p><b>key:</b> <tt>'name'</tt> <b>value:</b> character string of the name of the dataset one is looking for. Default: <tt>''</tt></p><p><b>key:</b> <tt>'source'</tt> <b>value:</b> Eighter a character string or an object of class LiquidSVM_DataSourceHandle. It's defining the search paths in which the dataset is loaded from.</p><p>Default:</p><pre class="language-matlab">|defaultDataSources{1} = LiquidSVM_DataSourceHandle(fullfile(<span class="string">'..'</span>,<span class="string">'..'</span>,<span class="string">'data'</span>),<span class="string">'local'</span>);|
+|defaultDataSources{2} = LiquidSVM_DataSourceHandle(fullfile(<span class="string">'..'</span>,<span class="string">'data'</span>),<span class="string">'local'</span>);|
+|defaultDataSources{3} = LiquidSVM_DataSourceHandle(fullfile(<span class="string">'data'</span>),<span class="string">'local'</span>);|
+|defaultDataSources{4} = LiquidSVM_DataSourceHandle(pwd,<span class="string">'local'</span>);|
+|defaultDataSources{5} = LiquidSVM_DataSourceHandle(<span class="string">'http://www.isa.uni-stuttgart.de/liquidData'</span>,<span class="string">'url'</span>);|
+</pre><p><b>key:</b> <tt>'data'</tt> <b>value:</b> Double Matrix which is eighter eighter be taken as trainData or splitted ijnto train and testdata according to input parameter 'split' and 'ratio' Default: <tt>[]</tt></p><p><b>key:</b> <tt>'split'</tt> <b>value:</b> Character string defining how a given 'data' is handeled. Supported values is 'random' and 'non'. Default: <tt>'non'</tt></p><p><b>key:</b> <tt>'ratio'</tt> <b>value:</b> Numeric value Defining which ration the data is splitted into train and test sets if 'split' is not 'non' If e.g. split='random' and 'ratio'= 9 than 90 percent of the data is taken as trainData and 10 as testData. Default is 2, meaning half of the data is for training, the other half for testing. Default: <tt>2</tt></p><p><b>key:</b> <tt>'responseCol'</tt> <b>value:</b> Integer value defining which cloum of the data is taken to be the respose variable Default: <tt>1</tt></p><p><b>key:</b> <tt>'trainData'</tt> <b>value:</b> Double Matrix which is taken as trainData Default: <tt>[]</tt></p><p><b>key:</b> <tt>'testData'</tt> <b>value:</b> Double Matrix which is taken as testData Default: <tt>[]</tt></p><h2>Output:<a name="16"></a></h2><p><tt>liquidDataObj</tt> a new object of class LiquidSVM_Data</p><h2>Example:<a name="17"></a></h2><p>Most straigt forward way (just provide train data)</p><pre class="codeinput"> myTrainData = [[rand(100,1)&gt;.8;rand(100,1)&gt;.2],[rand(100,3)+.5;rand(100,3)-.5]];
+ myRandomLiquidSVM_Data = LiquidSVM_Data(<span class="string">'trainData'</span>,myTrainData)
+ <span class="comment">% which is the same as</span>
+ myRandomData = LiquidSVM_Data(<span class="string">'data'</span>,myTrainData,<span class="string">'split'</span>,<span class="string">'non'</span>)
+</pre><pre class="codeoutput">
+myRandomLiquidSVM_Data = 
+
+  LiquidSVM_Data with properties:
+
+           name: []
+         header: 0
+      trainData: [200x4 double]
+       testData: []
+    responseCol: 1
+
+
+myRandomData = 
+
+  LiquidSVM_Data with properties:
+
+           name: []
+         header: 0
+      trainData: [200x4 double]
+       testData: []
+    responseCol: 1
+
+</pre><p>Provide train and test data</p><pre class="codeinput"> myTestData = [[rand(100,1)&gt;.8;rand(100,1)&gt;.2],[rand(100,3)+.5;rand(100,3)-.5]];
+ myRandomLiquidSVM_Data = LiquidSVM_Data(<span class="string">'trainData'</span>,myTrainData,<span class="string">'testData'</span>,myTestData)
+</pre><pre class="codeoutput">
+myRandomLiquidSVM_Data = 
+
+  LiquidSVM_Data with properties:
+
+           name: []
+         header: 0
+      trainData: [200x4 double]
+       testData: [200x4 double]
+    responseCol: 1
+
+</pre><p>Provide train and test data by splitting one dataset in half</p><pre class="codeinput"> myData = [[rand(100,1)&gt;.8;rand(100,1)&gt;.2],[rand(100,3)+.5;rand(100,3)-.5]];
+ myRandomLiquidSVM_Data = LiquidSVM_Data(<span class="string">'data'</span>,myData,<span class="string">'split'</span>,<span class="string">'random'</span>)
+</pre><pre class="codeoutput">
+myRandomLiquidSVM_Data = 
+
+  LiquidSVM_Data with properties:
+
+           name: []
+         header: 0
+      trainData: [100x4 double]
+       testData: [100x4 double]
+    responseCol: 1
+
+</pre><p>Provide train and test data by splitting one dataset in specified ratio</p><pre class="codeinput"> myData = [[rand(100,1)&gt;.8;rand(100,1)&gt;.2],[rand(100,3)+.5;rand(100,3)-.5]];
+ myRandomLiquidSVM_Data = LiquidSVM_Data(<span class="string">'data'</span>,myData,<span class="string">'split'</span>,<span class="string">'random'</span>,<span class="string">'ratio'</span>,9)
+</pre><pre class="codeoutput">
+myRandomLiquidSVM_Data = 
+
+  LiquidSVM_Data with properties:
+
+           name: []
+         header: 0
+      trainData: [178x4 double]
+       testData: [22x4 double]
+    responseCol: 1
+
+</pre><p>Provide train and test data by specifing name of the data set and loading the data from default source</p><pre class="codeinput"> myRandomLiquidSVM_Data = LiquidSVM_Data(<span class="string">'name'</span>,<span class="string">'crime'</span>)
+</pre><pre class="codeoutput">
+myRandomLiquidSVM_Data = 
+
+  LiquidSVM_Data with properties:
+
+           name: 'crime'
+         header: 0
+      trainData: [441x24 double]
+       testData: [189x24 double]
+    responseCol: 1
+
+</pre><p>Provide train and test data by loading data from specified source |myRandomLiquidSVM_Data = LiquidSVM_Data('name','crime','source','http://www.isa.uni-stuttgart.de/liquidData') | this is the same as:</p><pre class="codeinput"> myDataSource = LiquidSVM_DataSourceHandle(<span class="string">'http://www.isa.uni-stuttgart.de/liquidData'</span>,<span class="string">'url'</span>)
+ myRandomLiquidSVM_Data = myDataSource.getLiquidData(<span class="string">'crime'</span>)
+</pre><pre class="codeoutput">
+myDataSource = 
+
+  LiquidSVM_DataSourceHandle with properties:
+
+        type: 'url'
+      source: 'http://www.isa.uni-stuttgart.de/liquidData'
+    fileList: [1x36 LiquidSVM_DataFile]
+
+
+myRandomLiquidSVM_Data = 
+
+  LiquidSVM_Data with properties:
+
+           name: 'crime'
+         header: 0
+      trainData: [441x24 double]
+       testData: [189x24 double]
+    responseCol: 1
+
+</pre><h2>See also<a name="24"></a></h2><p>LiquidSVM_DataFile, LiquidSVM_Data</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+ %% LiquidSVM_Data (Constructor)
+ % Constructor of the class LiquidSVM_Data
+ %% Syntax
+ %   liquidDataObj = LiquidSVM_Data(key,value);
+ %% Description
+ %
+ %% Input Arguments
+ %% optional
+ % *key:* |'name'|
+ % *value:* character string of the name of the dataset one is
+ % looking for.
+ % Default: |''|
+ %%
+ % *key:* |'source'|
+ % *value:* Eighter a character string or an object of class
+ % LiquidSVM_DataSourceHandle. It's defining the search paths in which
+ % the dataset is loaded from.
+ %%
+ % Default:
+ %%
+ %   |defaultDataSources{1} = LiquidSVM_DataSourceHandle(fullfile('..','..','data'),'local');|
+ %   |defaultDataSources{2} = LiquidSVM_DataSourceHandle(fullfile('..','data'),'local');|
+ %   |defaultDataSources{3} = LiquidSVM_DataSourceHandle(fullfile('data'),'local');|
+ %   |defaultDataSources{4} = LiquidSVM_DataSourceHandle(pwd,'local');|
+ %   |defaultDataSources{5} = LiquidSVM_DataSourceHandle('http://www.isa.uni-stuttgart.de/liquidData','url');|
+ %%
+ % *key:* |'data'|
+ % *value:* Double Matrix which is eighter eighter be taken as
+ % trainData or splitted ijnto train and testdata according to
+ % input parameter 'split' and 'ratio'
+ % Default: |[]|
+ %%
+ % *key:* |'split'|
+ % *value:* Character string defining how a given 'data' is
+ % handeled. Supported values is 'random' and 'non'.
+ % Default: |'non'|
+ %%
+ % *key:* |'ratio'|
+ % *value:* Numeric value Defining which ration the data is
+ % splitted into train and test sets if 'split' is not 'non'
+ % If e.g. split='random' and 'ratio'= 9 than 90 percent of the
+ % data is taken as trainData and 10 as testData. Default is 2,
+ % meaning half of the data is for training, the other half for
+ % testing.
+ % Default: |2|
+ %%
+ % *key:* |'responseCol'|
+ % *value:* Integer value defining which cloum of the data
+ % is taken to be the respose variable
+ % Default: |1|
+ %%
+ % *key:* |'trainData'|
+ % *value:* Double Matrix which is taken as
+ % trainData
+ % Default: |[]|
+ %%
+ % *key:* |'testData'|
+ % *value:* Double Matrix which is taken as
+ % testData
+ % Default: |[]|
+ %%
+ %
+ %% Output:
+ % |liquidDataObj| a new object of class LiquidSVM_Data
+ %
+ %% Example:
+ %%
+ % Most straigt forward way (just provide train data)
+ myTrainData = [[rand(100,1)>.8;rand(100,1)>.2],[rand(100,3)+.5;rand(100,3)-.5]];
+ myRandomLiquidSVM_Data = LiquidSVM_Data('trainData',myTrainData)
+ % which is the same as
+ myRandomData = LiquidSVM_Data('data',myTrainData,'split','non')
+ %%
+ % Provide train and test data
+ myTestData = [[rand(100,1)>.8;rand(100,1)>.2],[rand(100,3)+.5;rand(100,3)-.5]];
+ myRandomLiquidSVM_Data = LiquidSVM_Data('trainData',myTrainData,'testData',myTestData)
+ %%
+ % Provide train and test data by splitting one dataset in half
+ myData = [[rand(100,1)>.8;rand(100,1)>.2],[rand(100,3)+.5;rand(100,3)-.5]];
+ myRandomLiquidSVM_Data = LiquidSVM_Data('data',myData,'split','random')
+ %%
+ % Provide train and test data by splitting one dataset in specified
+ % ratio
+ myData = [[rand(100,1)>.8;rand(100,1)>.2],[rand(100,3)+.5;rand(100,3)-.5]];
+ myRandomLiquidSVM_Data = LiquidSVM_Data('data',myData,'split','random','ratio',9)
+ %%
+ % Provide train and test data by specifing name of the data set and
+ % loading the data from default source
+ myRandomLiquidSVM_Data = LiquidSVM_Data('name','crime')
+ %%
+ % Provide train and test data by loading data from specified source
+ % |myRandomLiquidSVM_Data = LiquidSVM_Data('name','crime','source','http://www.isa.uni-stuttgart.de/liquidData') |
+ % this is the same as:
+ myDataSource = LiquidSVM_DataSourceHandle('http://www.isa.uni-stuttgart.de/liquidData','url')
+ myRandomLiquidSVM_Data = myDataSource.getLiquidData('crime')
+ %% See also
+ % LiquidSVM_DataFile, LiquidSVM_Data
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,28 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// The header file provides three functions for timing the run time.
+// All three functions are currently based on the LINUX function
+// clock_gettime(...) called with the values 
+// CLOCK_MONOTONIC, CLOCK_THREAD_CPUTIME_ID, or CLOCK_PROCESS_CPUTIME_ID.
+// In all cases, the return value is the current time in seconds minus 
+// the parameter value time.
+// 
+//**********************************************************************************************************************************

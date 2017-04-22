@@ -1,0 +1,43 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+// 
+// 
+// The class Tordered_index_set implements a sort of multi-map of fixed length, where 
+// the indices contained are ordered according to their attached <value> in an 
+// increasing or decreasing way. The insert operation is O(size), 
+// which for large sizes is pretty bad. However, for small sizes, e.g. size = 10, 
+// it is significantly faster than the multi-map container of the STL.
+// 
+// 
+// 
+// clear(...)
+// Removes all entries and sets ordering
+// 
+// resize(...)
+// Same functionality as for standard vectors.
+// 
+// insert(...)
+// Inserts <new_index> according to the specified ordering. If the resulting 
+// index set is larger than size, the most right (largest if increasing) element is removed.
+// 
+// operator [] 
+// Gives read access to the i-th index saved in the index vector.
+// 
+//**********************************************************************************************************************************

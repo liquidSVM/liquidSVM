@@ -1,0 +1,136 @@
+Requirements:
+=============
+
+- A somewhat recent C/C++ compiler, see the list below for tested compiler/operating 
+  system combinations.
+  
+- Linux: 
+    - The bash shell needs to be installed (this is often the default shell, anyway).
+    
+- Windows:
+    - A 64bit version of Windows 
+    - Optional: Visual Studio 2015, if you are going to recompile the programs for
+      increased speed.
+
+
+So far the package has been successfully compiled on the following operating systems:
+
+
+NAME            VERSION             COMPILER
+
+Debian          7                   GCC/G++ 4.7.2
+Debian          7                   GCC/G++ 4.9.0
+Debian          8.7                 clang++ 3.5.0 (by `make CPPC=clang++`)
+
+Ubuntu          12.05.05            GCC/G++ 4.6.2
+Kubuntu         14.04               GCC/G++ 4.8.2
+
+Fedora          22                  GCC/G++ 5.1.1
+
+OS X            10.10.3             Apple LLVM 7.0.2
+
+Windows         8.1 Enterprise      Visual Studio 2015
+Windows         8.1                 GCC/G++ 4.9.3 (MinGW/Rtools 3.4)
+                       
+
+Various other combinations may also be fine ...
+
+
+
+
+Installation:
+=============
+
+Linux/OS X
+----------
+
+Please make sure that you have a recent version of gcc/g++ (Linux) or llvm/clang (OS X) 
+is installed. Then follow these steps:
+
+1. Download and save the file liquidSVM.tar.gz into the folder you wish to install 
+   the package. 
+
+2. Open a terminal window and switch to the folder liquidSVM.tar.gz has been saved to. 
+
+3. Unpack liquidSVM.tar.gz file by typing 
+      tar xzf liquidSVM.tar.gz
+      
+4. Compile the package by typing 
+      cd liquidSVM
+      make all
+      
+5. If the compilation was successful then you can test the installation by typing
+      ./run-demo.sh
+   If the installation was successful, you should see a couple of training and testing 
+   runs as well as a very short introduction to the package. 
+   
+6. Move the datasets you wish to work on into the folder liquidSVM/data.   
+   
+7. [Optional] You may wish to add the two sub-folders 
+      scripts
+      bin 
+   to your $PATH variable. Please consult the documentation of your operating system for
+   the required steps.
+
+   
+Windows
+-------
+   
+1. Download and save the file liquidSVM.zip into the folder you wish to install 
+   the package. To obtain maximal speed, choose the instruction set to be as best 
+   as possible for your system.
+   
+   All CPUs produced in the last 10 years support sse2. Most modern systems should
+   at least support AVX, and some even AVX2. If you are not sure what your CPU supports
+   just try them out.
+
+2. Open Explorer and extract liquidSVM.zip. 
+   
+3. Open a terminal window and switch to the folder liquidSVM. Then test the installation
+   by typing 
+      run-demo.bat
+   If the installation was successful, you should see a couple of training and testing 
+   runs as well as a very short introduction to the package. 
+   If the demo seems to hang during the first example, then your anti-virus software may
+   be the reason. We experienced this problem a couple of times and resolved it by deactivating
+   the automatic scan of started programs. 
+
+4. Move the datasets you wish to work on into the folder liquidSVM/data.   
+   
+5a.  [Optional] If you wish to compile the executables from scratch, start Visual Studio
+   and load the file ./liquidSVM.sln. Then, in Visual Studio choose the 'release' 
+   configuration and keep the x64 platform as the code does not compile under Windows for 
+   32bit platforms. Then compile the three svm-xxx projects separately. If you are also 
+   interested in the few additional commandline tools, compile them, too. Note that for these
+   no particular instruction set is pre-configured.
+   
+
+5b.  [Optional] Compiling with MinGW/Rtools [Optional] 
+   
+    i. Download and install Rtools from:
+
+       https://cran.r-project.org/bin/windows/Rtools/Rtools34.exe
+
+       We assume that it is installed in directory %RTOOLS% (e.g. C:\Rtools).
+
+    ii. On the command line in the liquidSVM directory and with the path as above do
+
+	  path=%RTOOLS%\bin;%RTOOLS%\mingw_64\bin;%path%
+	  make
+
+    NOTE:
+    * The make will give some warnings (uname and/or chmod are not known; some
+      uninitialized values...): it should be fine to ignore those.
+    * In the instructions we set the path temporarily to include the Rtools. After that it
+      is not used anymore, so you do not have to put it permanently into your PATH (it does
+      not hurt to have it there though).
+
+
+
+
+
+
+
+
+
+

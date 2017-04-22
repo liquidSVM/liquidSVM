@@ -1,0 +1,67 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+// 
+// 
+// This header file provides some additional tools for dealing with vectors
+// of the C++ STL.
+// 
+// 
+// push_back_mem_safe(...)
+// push_back that first checks, whether enough memory is available. If not,
+// the program aborts with an error message pointing to this problem. 
+// 
+// convert_to_vector(...)
+// Returns a vector containing the elements of the array.
+// 
+// argmax(...)
+// Returns the smallest index at which the maximal value in the vector is attained.
+// start_index and length can be used to specify a subset of the indices that are 
+// considered. If length is negative, then all indices from start_index on are considered.
+// For positive length, all indices up to min(start_index + length, vec.size())
+// are considered. The template_type is assumed to have an order relation be defined.
+// 
+// argmin(...)
+// Analogous functionality as argmax(...)
+// 
+// find(...)
+// Returns the indices i, for which we have vec[i] == value.
+//
+// mean/variance/quantile/expectile(...)
+// Returns the unweighted average/variance/quantile/expectile of the elements in the vector. start_index and length
+// have the same meaning as in argmin(...) and argmax(...). The template_type is assumed to be convertable
+// to double. In the case of quantile(), the lower and upper limits of the quantile interval are returned. 
+// 
+// is_categorial(...)
+// Returns a list of the integral values contained in the specified range of vec, if all these values are
+// integral, otherwise, an empty vector is returned.
+// 
+// merge_sort_up(...) & merge_sort_down(...)
+// Sorts the vector of values in an increasing / decreasing order with the help of the
+// merge sort algorithm. If the optional indices are provided, they are permuted 
+// according to the permutation applied the vector of values.
+// 
+// create_map(...)
+// Creates a map with the keys taken from the specified range in vec[] and the values are the first indices
+// in vec[] at which the the keys are observed.
+// 
+// apply_permutation(...)
+// Applies the permutation to the vector.
+// 
+//**********************************************************************************************************************************

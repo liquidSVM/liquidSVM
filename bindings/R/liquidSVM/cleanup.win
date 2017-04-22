@@ -1,0 +1,2 @@
+
+if [ -r src/Makevars.win ] ; then rm src/Makevars.win ; fi

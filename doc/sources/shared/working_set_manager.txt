@@ -1,0 +1,136 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//  
+// This header provides the class Tworking_set_manager that manages splits of datasets, 
+// for example, to deal with multiclass classification, boot-strap, and speed-up strategies.
+// The splitting is performed in two tiers:
+// - splitting the whole dataset into tasks, e.g. for multiclass classification and boot-strap.
+// - splitting each task into cells, e.g. for speed up. This splitting is performed
+//   for each task individually.
+// 
+// 
+// Tworking_set_manager(...)
+// Constructs an object and initializes according to working_set_ctrl and the dataset.
+// 
+// clear()
+// Clears all information.
+// 
+// write_to_file(...)
+// Writes all information of the object to the specified file.
+// 
+// read_from_file(...)
+// Reads relevant information from the specified file and initializes the object
+// with the help of this information and the specified dataset. It is assumed that
+// the dataset is the same as the one used when the information was written to the file.
+// No complete check of this information is conducted.
+// 
+// push_back(...)
+// Adds the information of the specified object of Tworking_set_manager to the current
+// object. If both objects are based on a different dataset the program is aborted with 
+// an error message.
+// 
+// build_working_set(...)
+// Returns the dataset that corresponds to the specified task and cell. If the specified task
+// or cell does not exist, the program aborts with an error message. In particular, this happens
+// neither the constructor (... dataset) nor read_from_file(...) has been called. The returned
+// dataset owns its samples.
+// 
+// number_of_tasks()
+// Returns the number of tasks of the working_set_manager.
+// 
+// number_of_cells(...)
+// Returns the number of cells of the specified task.
+// If the specified task does not exist, the program aborts with an error message.
+// 
+// cells_of_sample(...)
+// Returns cells of the specified task that contain the sample.
+// If the specified task does not exist, the program aborts with an error message.
+// 
+// total_number_of_working_sets()
+// Returns the total number of working sets, i.e. the totoal number of cells.
+// 
+// working_set_number(...)
+// Returns the position of the specified cell, in the following, ordered list:
+// 1st cell of 1st task, 2nd cell of 1st task,  ..., 1st cell of 2nd task, ...
+// If the specified task or cell does not exist, the program aborts with an error message.
+// 
+// average_working_set_size(...)
+// Returns the average taken over all sizes of all working sets.
+// 
+// cover_of_task(...)
+// Returns the subset_info that describes the cover data set of the specified task.
+// If the specified task does not exist, the program aborts with an error message.
+// 
+// working_set_of_task(...)
+// Returns the subset_info of the dataset that corresponds to the specified task.
+// If the specified task does not exist, the program aborts with an error message.
+// 
+// working_set_of_cell(...)
+// Returns the subset_info of the dataset that corresponds to the specified cell
+// If the specified task or cell does not exist, the program aborts with an error message.
+// 
+// get_working_set_control()
+// Returns the Tworking_set_control object used in the Tworking_set_manager object.
+// 
+// check_working_set_method()
+// Checks, whether the specified working_set_method fits to the dataset. If not,
+// the working_set_method is modified and a warning message is shown. This function
+// is called by assign(...).
+// Currently, this applies to binary classification / multiclass classification.
+// 
+// compute_working_set_numbers(...)
+// Computes the position returned by working_set_number(...).
+// 
+// assign_cell(...)
+// Creates the cells of the specified task with the help of the provided working_set that
+// belongs to the specified task.
+// 
+// load_dataset(...)
+// Saves the dataset to the internal dataset and computes the internal vector <Tdataset> cover_datasets
+// from the internal vector <Tsubset_info> covers. The vector cover_datasets is used to speed up
+// function cells_of_sample(...).
+// 
+// push_back(new_task_subset_info)
+// Adds a new task consisting of the dataset described by new_task_subset_info. 
+// 
+// assign(...)
+// Stores the specified Tworking_set_control object and dataset and computes the task and cell 
+// assignments.
+// 
+// change_label_for_classification(...)
+// Changes the labels of the specified working_set that belongs to the specified task.
+// No check, whether the working_set does indeed belong to the task is performed.
+// 
+// check_task(...) / check_cell(...)
+// Checks, whether the specified task (and cell) do exist. If not, the program is aborted with
+// an error message.
+// 
+// create_random_chunk_affiliation(...)
+// Creates information describing a random partition with number_of_chunks many cells of a set 
+// of size = working_set_size
+// 
+// create_voronoi_subset_affiliation(...)
+// Creates a Voronoi partition of working_set using cover_datasets[task].
+// 
+// assign_from_cell_affiliation(...)
+// Uses cell affiliation information to create the partition of the specified task and saves this 
+// information in ws_of_task_and_cell.
+// 
+//**********************************************************************************************************************************

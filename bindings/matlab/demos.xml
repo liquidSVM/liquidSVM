@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<demos>
+    <name>liquidSVM Examples</name>
+    <type>toolbox</type>
+    <icon>HelpIcon.DEMOS</icon>
+    <description>Some examples to demonstrate the capabilities of liquidSVM</description>
+    <website><a href="http://www.isa.uni-stuttgart.de/software/matlab">liquidSVM</a></website>
+
+    <demosection>
+        <label>Learning Scenarios</label>
+        <demoitem>
+            <label>Learning Scenarios Demo</label>
+            <type>M-file</type>
+            <source>demo_svm</source>
+        </demoitem>
+    </demosection>
+
+</demos>

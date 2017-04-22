@@ -1,0 +1,121 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+//
+// This header provides the class Ttrain_val_info that stores common
+// information collected during training a learning method. In addition,
+// several operators make it possible to compare different training
+// runs and to arithmetically combine the information.
+//  
+// 
+// Ttrain_val_info(init_type)
+// Creates a new object and initializes it with neutral values unless
+// init_type has the value IGNORE_VALUE or WORST_VALUES, in which case the validation 
+// error values are either set to IGNORE_VALUE or the largest possible error values.
+// 
+// read_from_file(...)
+// Reads the information from the specified file into the object.
+// 
+// write_to_file(...)
+// Writes the information stored in the object to the specified file.
+// 
+// display(...)
+// Prints the information stored in the object to the standard output
+// device. The way the information is printed is controlled by the values of 
+// display_mode, weight_display_mode, and info_level. Here info_level can take 
+// one of the values specified by INFO_LEVELS in flush_print.h and (weight_)display_mode
+// one of the values specified in (WEIGHT_)DISPLAY_MODE_TYPES. The only effect of 
+// info_mode is that it reduces the value of display_mode from TRAIN_INFO_DISPLAY_FORMAT_REGULAR
+// to TRAIN_INFO_DISPLAY_FORMAT_SHORT if info_mode < INFO_3. The meaning of the 
+// different values of (WEIGHT_)DISPLAY_MODE_TYPES is described below.
+// 
+// clear()
+// Sets all values of the object to neutral values. For errors the neutral 
+// value is NOT_EVALUATED, for all other values it is 0.
+// 
+// apply_mask(...)
+// Applies the validation errors of the mask to those of the object.
+// If for one of these errors we have: 
+// 0.0 <= mask < object, then all errors in the object are set to IGNORE_VALUE
+// otherwise, if we have:
+// mask < 0, then this error value of the object is set to the value of mask.
+// Consequence: The object only keeps its error values, if all non-negative 
+// error values of mask are >= the corresponding error values of the object.
+// The mask thus acts as a filter, that sorts out Ttrain_val_info objects
+// whose error values are too large.
+// 
+// operator =
+// Copies the values of the right object into the object on the left.
+// 
+// operator +
+// Adds all values except gamma, neg_weight, pos_weight, and lambda of the 
+// two involved objects. Besides standard arithmetic, the following rules are
+// obeyed:
+// x + IGNORE_VALUE = IGNORE_VALUE + x = IGNORE_VALUE
+// x + NOT_EVALUATED = NOT_EVALUATED + x = NOT_EVALUATED
+// The values of gamma, neg_weight, pos_weight, and lambda  are taken from the 
+// left object.
+// 
+// operator *
+// Multiplies all values except gamma, neg_weight, pos_weight, and lambda of the 
+// object by the specified value. The following rules are obeyed:
+// x * IGNORE_VALUE = IGNORE_VALUE
+// x * NOT_EVALUATED = NOT_EVALUATED
+// 
+// operator ==
+// Compares the values of val_error, neg_val_error, and pos_val_error of the 
+// involved objects. The following rules (in this order) are obeyed for each type of error:
+// two NOT_EVALUATED gives true, otherwise false
+// one IGNORE_VALUE gives true
+// 
+// operator <
+// Compares (in this lexigraphical order) the values of val_error, neg_val_error, and pos_val_error 
+// of the involved objects. The following ordering rule is obeyed: x = IGNORE_VALUE < NOT_EVALUATED, i.e
+// 
+// x\y NE  I  y
+// NE  =   >  >
+// I   <   =  =
+// x   <   =  (x<y)?
+// 
+// 
+// DISPLAY_MODE_TYPES 
+// 
+// TRAIN_INFO_DISPLAY_FORMAT_SHORT
+// Only the most important information (hyper-paramaters, training and validation error,
+// used time) is printed
+// 
+// TRAIN_INFO_DISPLAY_FORMAT_REGULAR
+// All available information is printed.
+// 
+// TRAIN_INFO_DISPLAY_FORMAT_SUMMARIZED
+// Only information about used resources that can be added is displayed.
+// 
+// 
+// WEIGHT_DISPLAY_MODE_TYPES
+// 
+// DISPLAY_NO_WEIGHTS
+// No weights and no weighted errors are displayed.
+// 
+// DISPLAY_WEIGHTS_NO_ERROR
+// Display weights but no weighted errors.
+// 
+// DISPLAY_WEIGHTS_AND_ERROR
+// Display weights and weighted errors.
+// 
+//**********************************************************************************************************************************

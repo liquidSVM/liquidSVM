@@ -1,0 +1,56 @@
+// Copyright 2015, 2016, 2017 Ingo Steinwart
+//
+// This file is part of liquidSVM.
+//
+// liquidSVM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the 
+// License, or (at your option) any later version.
+//
+// liquidSVM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
+
+
+//**********************************************************************************************************************************
+// 
+// This header provides the template class Tcv_manager, which is responsible for managing the training process
+// over a grid of hyper-parameters and folds managed by Tfoldmanager and an instance of Tgrid. It creates 
+// the kernel matrices and calls the solver in a threaded environment.
+// 
+// clear_threads()
+// The same meaning as for Tthread_manager
+// 
+// train_all_folds(Tcv_control cv_control, const Tsolver_control_type& solver_ctrl, vector < Tgrid<Tsolution_type, Ttrain_val_info_type> >& grids)
+// Performs a CV-training according the information provided by cv_control using a solver of type Tsolver_type controlled
+// by solver_ctrl. The relevant information is returned in the grids vector.
+// 
+// select_all_folds()
+// Picks, according to the information provided by cv_control, the best hyper-parameters and computes the corresponding 
+// solution by retraining. If cv_control.select_method == RETRAIN_ON_EACH_FOLD, then special care is taken, that the 
+// obtained solution equals the one obtained during the original training. The corresponding information gathered during the 
+// retraining phase is returned in select_val_info.
+// 
+// create_solver()
+// This function picks the right solver, of Tsolver_control allows for more than one option. This function thus
+// needs to be implemented for each derived specialization of the template class.
+// 
+// thread_entry()
+// The threaded part of the (re)training phase.
+// 
+// train_on_grid()
+// Performs for a certain grid, i.e. a fixed fold, a training/validation run over the grid of hyper-parameters.
+// 
+// select_on_grid(...)
+// Similar to train_on_grid, but the grid is assumed to have been reduced during the call of select_all_folds()
+// Some information regarding the picked parameters and their validation error is printed for the user.
+//
+// resize_grid_for_select()
+// Reduces the grid according to the hyper-parameter selection strategy described in cv_control. This function is called
+// by select_all_folds() before the threaded environment is started.
+// 
+//**********************************************************************************************************************************
