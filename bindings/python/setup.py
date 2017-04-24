@@ -39,7 +39,7 @@ if sys.platform.startswith("win"):
 	'liquid_svm_init','liquid_svm_train','liquid_svm_select','liquid_svm_test','liquid_svm_clean']
 else:
 	export_symbols = []
-	extra_compile_args += ['-O3','-std=c++0x']
+	extra_compile_args += ['-O3','-std=c++11']
 	if target=="native":
 		extra_compile_args += ['-march=native']
 	elif target=="generic":
