@@ -1,69 +1,22 @@
 Done Changes
-- scenarios
-- invocation without formula (+ make experiment function)
-- CLANG compilation on linux...
-- warn about NAs
-- cover/get-/read-/writeSolution
 
 Priority
-- version 0.9: index.html !!      (DESCRIPTION, documentation.Rmd already have 0.9)
-
-- Ctrl-c
 - documentation of model$...
-
-- autoScale: Immplement/Document. make it somehow default?
 - Sparse Matrix formats
-
-- partition_choice=6 default arguments 6 2000 1 50000 2.0 20 4 (alos in global-and-grid.md) ?
-
-- use model$training_data for read/write solution
-- read/write solution: unittests, documentation-vignette
-- getSolution/getCovert unittests, documentation-vignette
-- better print method for class svm
-
 - Compilation for R version 2.x ?? (--configure-args="native -std=c++11")
 - Compilation problem with LD_LIBRARY_PATH loaded too late... (clang linux?)
-- command line parser errors: less fatal, but giving whole command line
-
-- Test for least square classification: labels transformed to -1,1
-
-- Comparison to kernlab, svmlight (klaR::svmlight); not in R(?):
-  - SVMTorch
-  - Weka http://www.cs.waikato.ac.nz/ml/weka/
-  - MSVMpack http://www.loria.fr/~lauer/MSVMpack/MSVMpack.html
 
 Bugs @Ingo
-- bin/scale-data no basic documentation or simple example...
-- scripts/npl-svm.sh Problem with variables
-- Help of -w: summary annd first paragraph has <size>, after that it is <weights>
-
-- In OvA kommen manchmal komische Labels vor (ev. wenn die nicht in der Zelle vorhanden sind:
-  Changing label 32 and 3 other labels to 1 and -1 for multi-class type OvA.
 
 Bugs @Philipp
-- columns of result matrix get converted to factors if they can ??
 - command line does not understand 1e-6 which gehts produced by R: as.character
   quickfix: options(scipen=100)  # where 100 is just some big number ;-)
-- Ctrl-C: Problem für thread_manager (ev. die static thread__ variablen?). Zum Test z.B.
-ret <- test(svm(Y~.,co$train, d=1, threads=-1),co$test, d=1,threads=1)
-abbrechen und dann nochmal laufen lassen.
 
 Open Questions
-- incorporate tools into package? Scaling?
-- citation()
-- rename init.liquidSVM
 
 For Version 1.0
-- CRAN
-- Regression Tests on different platforms
 - get "best" lambda, gamma, weights
-- warn if to many params at boundary - maybe do better grid automagically?
-- Serialization
-- RC4-Class
 
 Nice to have:
-- mlr / curry(?) compativility
-- Remove Indirect calls via C in commons/liquidSVM.h ?
+- mlr / curry(?) compatibility
 - Cache for liquidData
-- more options for factors
-- better NA-handling?

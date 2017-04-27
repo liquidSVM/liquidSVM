@@ -8,10 +8,17 @@ if [ "x$CUDA_PATH_DEFAULT" = x ]; then
   : # CUDA_PATH_DEFAULT=/usr/local/cuda
 fi
 
-LIQUID_SVM_CXX1X=`"${R_HOME}/bin/R" CMD config CXX1X`
+## it seems that R 3.1-3.3 have CXX1X and R 3.4 has CXX11 (and deprecates CXX1X)
+if "${R_HOME}/bin/R" CMD config CXX11 > /dev/null ; then
+  LIQUID_SVM_CXX=`"${R_HOME}/bin/R" CMD config CXX11`
+elif "${R_HOME}/bin/R" CMD config CXX1X > /dev/null ; then
+  LIQUID_SVM_CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
+else
+  LIQUID_SVM_CXX=`"${R_HOME}/bin/R" CMD config CXX`
+fi
 
 if [ x$TARGET = x ]; then
-  case `basename $LIQUID_SVM_CXX1X` in
+  case `basename $LIQUID_SVM_CXX` in
   g++ | clang++ )
     if uname -m | grep -iq sparc ; then
       echo Since this is a sparc processor we set TARGET=default
@@ -21,8 +28,9 @@ if [ x$TARGET = x ]; then
     fi
     ;;
   *)
-    echo unknown compiler: $LIQUID_SVM_CXX1X therefore we set TARGET=default
+    echo unknown compiler: $LIQUID_SVM_CXX therefore we set TARGET=default
     TARGET=default
+    ### Now we also should be sure that there is something like -std=c++0x??
     ;;
   esac
   #TARGET=compatible

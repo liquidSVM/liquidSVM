@@ -2,14 +2,8 @@
 
 - Bindings Makefile to make all binaries and maybe easy publish new versions ?
 - Revision / beta / alpha versions?
-- make available on github
-- mailing list
-- homepage -> git
 
 ==== Common ====
-- auto scaling.
-  - -> Bindings.
-- check whether cover/solution is correct
 - Documentation, example
 - Change Ad-hoc matrix formats
 - Sparse Matrix formats
@@ -30,32 +24,21 @@
 ==== MATLAB ====
 
 - Documentation
-- make banana categorical
-- read/write/cover/solution: documentation, testing
-- Constructor with Filename
-- smldata: class, load, download, split
-- with smldata: automagical test
 - make autoTrainSelect optionally disabled
-- more unittest
 - CUDA?
 - check delete[] as in R (and common/main.cpp)
 
 ==== Python ====
 
-- Documentation
 - Sanity check about no training data?
-- read/write: bind, documentation, testing
-- smldata: download, split
+- smldata: split
 - MacOS disable 32bit compilation
 - Windows: case insensitive configuration?
-- unittest
-- scikit-learn compatibility
 - real bindings?
   - cover/solution
 - CUDA: Maybe like https://github.com/AaronParsons/aipy_cuda/blob/master/setup.py ??
 - check delete[] as in R (and common/main.cpp)
 
 ==== Command line utilities ====
-- make them usable from any directory
 - make Configuration possible on command line
 - autoscale?

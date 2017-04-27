@@ -265,7 +265,7 @@ extern "C" double* liquid_svm_select(int cookie, const int argc, char** argv)
   }
 	
 	command_line_parser.select_control.use_stored_solution
-		= (command_line_parser.select_control.select_method==SELECT_ON_EACH_FOLD ||
+		= (command_line_parser.select_control.select_method==SELECT_ON_EACH_FOLD &&
 			getConfig(cookie)->getI("STORE_SOLUTIONS_INTERNALLY", 1) > 0);
 
   try{

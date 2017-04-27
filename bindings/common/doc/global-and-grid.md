@@ -296,7 +296,7 @@ For completeness here are some values that usually get set by the learning scena
   : `LINE_BY_LINE`, `BLOCK`, `CACHE`, `EMPTY`
     
 `FOLDS_KIND`
-  : `FROM_FILE`, `BLOCKS`, `ALTERNATING`, `RANDOM`, `STRATIFIED`, `RANDOM_SUBSET`
+  : `BLOCKS`, `ALTERNATING`, `RANDOM`, `STRATIFIED`, `RANDOM_SUBSET`
     
 `WS_TYPE`
   : `FULL_SET`, `MULTI_CLASS_ALL_VS_ALL`, `MULTI_CLASS_ONE_VS_ALL`, `BOOT_STRAP`

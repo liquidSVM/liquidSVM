@@ -35,7 +35,7 @@ $(PKG_NAME): pack-prepare
 
 pack-src: pack-prepare
 	## these all should be in a directory?
-	zip -r $(SRC_PKG_NAME) *.m mexliquidSVM.cpp liquidSVM.prj data.mat README.txt README.html src COPYING Makefile
+	zip -r $(SRC_PKG_NAME) classes functions *.m mexliquidSVM.cpp liquidSVM.prj data.mat README.txt README.html src COPYING Makefile
 
 pack-prepare: README.txt README.html
 	#cp -pr README.txt $(BUILD_DIR)

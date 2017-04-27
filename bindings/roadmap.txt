@@ -94,19 +94,12 @@ Prio 1
 - check errors
 ~~~~~ Institutional
 Prio 1
-- CRAN
-- MLOSS
 Prio 2
-- Homepage
-- Github
-- Mailing List
 - MLOSS.org
 
 
 
 ==== Bindings-version 1.1 / commandline 1.2? ====
-Feature Complete Fr 2.12.2016
-Release: Fr 15.12.2016
 
 - Bindings Makefile to make all binaries and maybe easy publish new versions ?
 - Revision / beta / alpha versions?
@@ -120,11 +113,8 @@ Release: Fr 15.12.2016
 ~~~~~ R
 Prio 1
 Prio 2
-- unittests for warn if to many params at boundary
-- Regression Tests on different platforms
 - get "best" lambda, gamma, weights
 - summary for NPL
-- Serialization
 - .DollarNames(...) to get configuration parameters into tab completion?
 ~~~~~ MATLAB
 Prio 1
@@ -134,15 +124,11 @@ Prio 1
 Prio 2
 - catch InterruptedException in train/select/test and stop worker threads?
 - CUDA?
-- smldata: download, split
 ~~~~~ Python
 Prio 1
 Prio 2
 
 ~~~~~ Institutional
 Prio 1
-- make available on github
-- mailing list
-- homepage -> git
 
 

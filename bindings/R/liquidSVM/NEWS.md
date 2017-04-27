@@ -4,6 +4,7 @@
 * predict now returns the correct number of columns for expectile, quantile, ...
 * fixed CUDA-compilation issue
 * TARGET defaults to "default" on Sparc
+* fixed PROTECT-issues (thanks to kalibera/rchk!) and switched from CXX1X to CXX11
 
 # liquidSVM v1.0.1 (Release date: 2017-03-01)
 

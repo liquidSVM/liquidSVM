@@ -220,10 +220,11 @@ extern SEXP liquid_svm_R_test(SEXP cookieR, SEXP argsR, SEXP test_sizeP, SEXP te
   rows = (int)error_ret[k++];
   if(rows!=0){
   cols = error_ret[k++];
-  SEXP error_retR = (allocVector(REALSXP, rows * cols));
+  SEXP error_retR = PROTECT(allocVector(REALSXP, rows * cols));
   memcpy(REAL(error_retR), error_ret + k, rows * cols * sizeof(double));
 
   setAttrib(predictionsR, install("error_ret"),error_retR);
+  UNPROTECT(1);
   }
   }
   
@@ -318,7 +319,7 @@ extern SEXP liquid_svm_R_get_solution(SEXP cookieR, SEXP taskR, SEXP cellR, SEXP
   Tsvm_decision_function df = liquid_svm_get_solution(asInteger(cookieR), asInteger(taskR), asInteger(cellR), asInteger(foldR));
   
   //SEXP offsetR = ScalarReal(df.offset);
-  SEXP offsetR = ScalarReal(0);
+  SEXP offsetR = PROTECT(ScalarReal(0));
   
   SEXP svR = PROTECT(allocVector(INTSXP, df.sample_number.size()));
   for(size_t i=0; i<df.sample_number.size(); i++)
@@ -334,7 +335,7 @@ extern SEXP liquid_svm_R_get_solution(SEXP cookieR, SEXP taskR, SEXP cellR, SEXP
   SET_VECTOR_ELT(retR, 0, offsetR);
   SET_VECTOR_ELT(retR, 1, svR);
   SET_VECTOR_ELT(retR, 2, coeffR);
-  UNPROTECT(3);
+  UNPROTECT(4);
   return retR;
 }
 
