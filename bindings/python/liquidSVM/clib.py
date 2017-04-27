@@ -90,7 +90,7 @@ _libliquidSVM.liquid_svm_train.restype  = ct.POINTER(ct.c_double)
 _libliquidSVM.liquid_svm_select.argtypes = [ct.c_int, ct.c_int, ct.POINTER(ct.c_char_p)]
 _libliquidSVM.liquid_svm_select.restype  = ct.POINTER(ct.c_double)
 
-_libliquidSVM.liquid_svm_test.argtypes = [ct.c_int, ct.c_int, ct.POINTER(ct.c_char_p), TdoubleP, ct.c_int, ct.c_int, TdoubleP, ct.POINTER(ct.POINTER(ct.c_double))]
+_libliquidSVM.liquid_svm_test.argtypes = [ct.c_int, ct.c_int, ct.POINTER(ct.c_char_p), TdoubleP, ct.c_int, ct.c_int, ct.POINTER(ct.c_double), ct.POINTER(ct.POINTER(ct.c_double))]
 _libliquidSVM.liquid_svm_test.restype  = ct.POINTER(ct.c_double)
 
 _libliquidSVM.liquid_svm_clean.argtypes = [ct.c_int]

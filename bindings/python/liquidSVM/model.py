@@ -180,7 +180,8 @@ class SVM:
         n = test_data.shape[0]
         dim = test_data.shape[1] if len(test_data.shape)>=2 else 1
         test_data = np.asarray(test_data, dtype=np.double).copy()
-        test_labs = np.asarray(test_labs, dtype=np.double).copy()
+        if not test_labs is None:
+            test_labs = np.asarray(test_labs, dtype=np.double).copy()
         argv = SVM.makeArgs(kwargs, defaultLine=self.configLine(3))
         TypeArgv = ct.c_char_p * len(argv)
         argv_s = TypeArgv(*argv)
@@ -212,7 +213,7 @@ class SVM:
             The number of columns depends on the learning scenario.
         
         """
-        return self.test(test_data, np.zeros(test_data.shape[0]), **kwargs)[0][:,self.predictCols]
+        return self.test(test_data, None, **kwargs)[0][:,self.predictCols]
     
     def get(self, name):
         """Gets the value of a liquidSVM-configuration parameter
