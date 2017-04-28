@@ -47,34 +47,42 @@ extern "C" {
 	#define CLOCK_PROCESS_CPUTIME_ID 0
 #endif
 
+#if defined(MSVISUAL_LEGACY)
+	struct timespec
+	{
+		int    tv_sec;
+		int    tv_nsec;
+	};
+#endif
+
 //**********************************************************************************************************************************
 
 inline void my_clock_gettime(int clk_id, struct timespec *time_measured)
 {
-    #ifdef __MACH__
-        uint64_t time;
-        mach_timebase_info_data_t timebase;
-    
-        mach_timebase_info(&timebase);
-        time = mach_absolute_time();
-    
-        time_measured->tv_sec = double(time / 1000000000) * double(timebase.numer)/double(timebase.denom);
-        time_measured->tv_nsec = double(time % 1000000000) * double(timebase.numer)/double(timebase.denom);
-    #endif
-    
-    
-    #ifdef _WIN32
-        double time;
-    
-        time = double(clock()) / double(CLOCKS_PER_SEC);
-    
-        time_measured->tv_sec = unsigned(floor(time));
-        time_measured->tv_nsec = unsigned((time - floor(time)) * 1000000000.0);
-    #endif
-    
-    #ifdef __linux__
-        clock_gettime(clk_id, time_measured);
-    #endif
+	#ifdef __MACH__
+		uint64_t time;
+		mach_timebase_info_data_t timebase;
+
+		mach_timebase_info(&timebase);
+		time = mach_absolute_time();
+
+		time_measured->tv_sec = double(time / 1000000000) * double(timebase.numer)/double(timebase.denom);
+		time_measured->tv_nsec = double(time % 1000000000) * double(timebase.numer)/double(timebase.denom);
+	#endif
+
+
+	#ifdef _WIN32
+		double time;
+
+		time = double(clock()) / double(CLOCKS_PER_SEC);
+
+		time_measured->tv_sec = unsigned(floor(time));
+		time_measured->tv_nsec = unsigned((time - floor(time)) * 1000000000.0);
+	#endif
+
+	#ifdef __linux__
+		clock_gettime(clk_id, time_measured);
+	#endif
 }
 
 

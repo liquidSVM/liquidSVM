@@ -32,7 +32,9 @@
 #elif defined _WIN32
 	#include <windows.h>
 	#include <process.h>
-	#include <atomic>
+	#if !defined(MSVISUAL_LEGACY)
+		#include <atomic>
+	#endif
 #endif
 
 //**********************************************************************************************************************************

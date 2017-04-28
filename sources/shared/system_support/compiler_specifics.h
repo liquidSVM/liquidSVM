@@ -25,8 +25,11 @@
  
 #if !defined(__GNUC__) || defined(__clang__)
 	#if defined(_MSC_VER) 
-		#if _MSC_VER < 1800
-			#error For liquidSVM the MS Visual C++ compiler needs to be at least version MSVC++ 12.0!
+		#undef MSVISUAL_LEGACY
+		#if _MSC_VER < 1600
+			#error For liquidSVM the MS Visual C++ compiler needs to be at least version MSVC++ 10.0!
+		#elif  _MSC_VER < 1800
+			#define MSVISUAL_LEGACY
 		#endif
 	#elif __cplusplus < 201103L
 		#error For liquidSVM compilers other than GCC require at least C++11 standard activated!
@@ -35,16 +38,30 @@
 
 
 
-// Now decide if TR1 experimental code needs to be used for old 
-// Versions of GCC. Note that for stone-aged versions of GCC there
-// is no TR1 code available, and hence subsequent error messages will
-// occur.
+// Now decide if TR1 experimental code needs to be used for medium-aged 
+// Versions of GCC or if the C++ standard is too old for unordered maps.
  
-#if defined(__GNUC__) && __cplusplus < 201103L 
-	#define USE_TR1_CODE
+#if defined(__GNUC__)
+	#if __cplusplus <= 199711L
+		#undef USE_TR1_CODE
+		#define FALL_BACK_MAP
+	#elif __cplusplus < 201103L 
+		#define USE_TR1_CODE
+		#undef FALL_BACK_MAP
+	#else	
+		#undef USE_TR1_CODE
+		#undef FALL_BACK_MAP
+	#endif	
 #else
 	#undef USE_TR1_CODE
+	#if __cplusplus < 201103L
+		#define FALL_BACK_MAP
+	#else
+		#undef FALL_BACK_MAP
+	#endif
 #endif
+
+
 	
 	
 	

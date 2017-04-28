@@ -29,12 +29,20 @@ using namespace std;
 
 
 #ifdef USE_TR1_CODE
+	#define map_class unordered_map
 	#include <tr1/unordered_map>
 	using namespace std::tr1; 
 #else
-	#include <unordered_map>
+	#ifdef FALL_BACK_MAP
+		#define map_class map
+		#include <map>
+	#else
+		#define map_class unordered_map
+		#include <unordered_map>
+	#endif
 #endif
 
+		
 
 //**********************************************************************************************************************************
 
@@ -69,7 +77,7 @@ class Tcache_lru
 		typedef std::list <Tlist_entry> Tlist;
 		
 		typedef std::pair <unsigned, Tlist::iterator> Thash_map_entry;
-		typedef unordered_map <unsigned, Thash_map_entry> Thash_map;
+		typedef map_class <unsigned, Thash_map_entry> Thash_map;
 		
 		inline bool exists__(unsigned key);
 		inline void update(unsigned key);

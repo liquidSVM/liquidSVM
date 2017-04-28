@@ -20,7 +20,7 @@
 	#define OS_SPECIFICS_H
 
 	
-
+#include "sources/shared/system_support/compiler_specifics.h"
 	
 //**********************************************************************************************************************************
 // Linux and Mac
@@ -94,7 +94,11 @@
 		#define thread__ __thread
 	#else
 		#define sync_add_and_fetch atomic_fetch_add
-		#define atomic_unsigned atomic_uint
+		#if defined(MSVISUAL_LEGACY)
+			#define atomic_unsigned unsigned
+		#else
+			#define atomic_unsigned atomic_uint
+		#endif
 		#define thread__ __declspec(thread)
 	#endif
 	

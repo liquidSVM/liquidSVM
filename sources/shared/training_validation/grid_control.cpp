@@ -35,6 +35,8 @@
 
 Tgrid_control::Tgrid_control()
 {
+	ignore_resize = false;
+	
 	gamma_size = 10;
 	max_gamma = 5.0;
 	min_gamma = 0.2;
@@ -91,6 +93,8 @@ void Tgrid_control::write_to_file(FILE *fp)
 
 void Tgrid_control::read_from_file(FILE *fp)
 {
+	ignore_resize = false;
+	
 	file_read(fp, lambda_size);
 	file_read(fp, min_lambda_unscaled);
 	file_read(fp, max_lambda);

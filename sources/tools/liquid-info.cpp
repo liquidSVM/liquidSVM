@@ -51,6 +51,8 @@ int main(int argc, char **argv)
 	#if defined(__cplusplus)
 		#if __cplusplus == 199711L
 			flush_info(INFO_1, "\nC++ version:     C++98");
+		#elif __cplusplus > 199711L && __cplusplus < 201103L
+			flush_info(INFO_1, "\nC++ version:     C++0x");
 		#elif __cplusplus == 201103L
 			flush_info(INFO_1, "\nC++ version:     C++11");
 		#elif __cplusplus == 201402L

@@ -63,10 +63,14 @@ void Tcv_manager<Tsolution_type, Ttrain_val_info_type, Tsolver_control_type, Tso
 	unsigned f;
 	
 	solver_control = solver_ctrl;
-	
 	Tcv_manager::cv_control = cv_control;
-	Tcv_manager::grids.clear();
-	Tcv_manager::grids.resize(cv_control.fold_manager.folds());
+	if (cv_control.grid_control.ignore_resize == false)
+	{
+		Tcv_manager::grids.clear();
+		Tcv_manager::grids.resize(cv_control.fold_manager.folds());
+	}
+	else
+		Tcv_manager::grids = grids;
 	for(f=0;f<cv_control.fold_manager.folds();f++)
 		Tcv_manager::grids[f].resize(cv_control.grid_control);
 	

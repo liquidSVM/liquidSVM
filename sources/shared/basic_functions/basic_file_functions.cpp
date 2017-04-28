@@ -329,7 +329,7 @@ void file_read(FILE* fp, double& input)
 
 void file_read(FILE* fp, string& input)
 {
-	char c;
+	int c;
 
 	do
 		c = getc(fp);

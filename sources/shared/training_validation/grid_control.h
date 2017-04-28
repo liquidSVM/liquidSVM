@@ -47,6 +47,8 @@ class Tgrid_control
 		double compute_lambda(unsigned position) const;
 		
 		
+		bool ignore_resize;
+		
 		unsigned gamma_size;
 		double max_gamma;
 		double min_gamma;

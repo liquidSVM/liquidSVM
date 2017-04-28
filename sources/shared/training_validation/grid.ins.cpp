@@ -209,26 +209,33 @@ void Tgrid<Tsolution_type, Ttrain_val_info_type>::resize(const Tgrid_control& gr
 	unsigned iw;
 	unsigned il;
 
-	
-	train_val_info.resize(grid_control.gamma_size);
-	solution.resize(grid_control.gamma_size);
-	for (ig=0;ig<grid_control.gamma_size;ig++)
+	if (grid_control.ignore_resize == false)
 	{
-		train_val_info[ig].resize(grid_control.weight_size);
-		solution[ig].resize(grid_control.weight_size);
-		for (iw=0;iw<grid_control.weight_size;iw++)
+		train_val_info.resize(grid_control.gamma_size);
+		solution.resize(grid_control.gamma_size);
+		for (ig=0;ig<grid_control.gamma_size;ig++)
 		{
-			train_val_info[ig][iw].resize(grid_control.lambda_size);
-			solution[ig][iw].resize(grid_control.lambda_size);
-			
-			for (il=0;il<grid_control.lambda_size;il++)
+			train_val_info[ig].resize(grid_control.weight_size);
+			solution[ig].resize(grid_control.weight_size);
+			for (iw=0;iw<grid_control.weight_size;iw++)
 			{
-				train_val_info[ig][iw][il].gamma = grid_control.compute_gamma(ig);
-				grid_control.compute_weights(train_val_info[ig][iw][il].neg_weight, train_val_info[ig][iw][il].pos_weight, iw);
-				train_val_info[ig][iw][il].lambda = grid_control.compute_lambda(il);
+				train_val_info[ig][iw].resize(grid_control.lambda_size);
+				solution[ig][iw].resize(grid_control.lambda_size);
+				
+				for (il=0;il<grid_control.lambda_size;il++)
+				{
+					train_val_info[ig][iw][il].gamma = grid_control.compute_gamma(ig);
+					grid_control.compute_weights(train_val_info[ig][iw][il].neg_weight, train_val_info[ig][iw][il].pos_weight, iw);
+					train_val_info[ig][iw][il].lambda = grid_control.compute_lambda(il);
+				}
 			}
 		}
 	}
+	else
+		for (ig=0;ig<train_val_info.size();ig++)
+			for (iw=0;iw<train_val_info[ig].size();iw++)
+				for (il=0;il<train_val_info[ig][iw].size();il++)
+					train_val_info[ig][iw][il].clear();
 }
 
 //**********************************************************************************************************************************

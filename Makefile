@@ -6,7 +6,11 @@
 #----------- Generalities -----------------------------------------------------------------------------
 # The next line gets the name of the current OS. It will be used later.
 
-OS_NAME= $(shell uname -s)
+ifeq ($(OS),Windows_NT)
+	OS_NAME= win32
+else
+	OS_NAME= $(shell uname -s)
+endif
 
 
 #----------- Target paths and files -----------------------------------------------------------------------------
@@ -38,7 +42,7 @@ NVCC= $(NVCC_PATH)/nvcc
 
 #----------- GCC/C++ related flags -------------------------------------------------------
 
-# Determine g++ version at ISA, studpool, and everywhere else. This is useful, if the OS does 
+# Determine local g++ version at your computer if there is one. This is useful, if the OS does 
 # not provide reasonably new version of gcc, but such a version is installed manually somewhere. 
 # All what needs to be done, is to change the value of LOCAL_CPPC_PATH. If at this path there
 # is no gcc, then the standard g++ will be used.
@@ -54,8 +58,8 @@ INCLUDE_PATH= -I.
 # Set compile options. First check, if version is private development version or an
 # official, public version.
 
-DEVELOP_DIR= ./.dev
-DEVELOP_FLAG= $(strip $(notdir $(wildcard $(DEVELOP_DIR))))
+DEVELOP_FILE= ./.dev
+DEVELOP_FLAG= $(strip $(notdir $(wildcard $(DEVELOP_FILE))))
 DEVELOP_OPT= $(if $(DEVELOP_FLAG), -DOWN_DEVELOP__, -UOWN_DEVELOP__) 
 
 PRO_VERSION_FILES= ./sources/svm/solver/*.pro.h
@@ -64,14 +68,22 @@ PRO_VERSION_OPT= $(if $(PRO_VERSION_FLAG), -DPRO_VERSION__, -UPRO_VERSION__)
 
 
 # Now we check if for an old version of gcc we need to compile without C++11 standard
+# (or even without any c++-standard flag set for stone-age gcc versions)
  
 ifeq ($(CPPC), g++)
 	GCCVERSION= $(shell gcc --version | grep ^gcc | sed 's/^.* //g')
+endif
+
+ifneq ($(GCCVERSION),)
 	GCCNEW= $(shell expr '$(GCCVERSION)' \>= 4.8.0)
+	GCCOLD= $(shell expr '$(GCCVERSION)' \< 4.5.0)
 	ifeq ($(GCCNEW), 1)
 		CPP_VERSION= -std=c++11
 	else
 		CPP_VERSION= -std=c++0x
+	endif
+	ifeq ($(GCCOLD), 1)
+		CPP_VERSION=
 	endif
 else
 	CPP_VERSION= -std=c++11
@@ -81,11 +93,14 @@ endif
 
 # Next, we define the optimization flags etc for gcc
 
-MACHINE_FLAGS= -march=native
+ARM_FILE= ./.arm
+ARM_FLAG= $(strip $(notdir $(wildcard $(ARM_FILE))))
+MACHINE_FLAGS= $(if $(ARM_FLAG), -mcpu=cortex-a53 -mfpu=neon-vfpv4, -march=native) 
 MATH_FLAGS= -ffast-math
-OPT_FLAGS= -O3 -m64 
+OPT_FLAGS= -O3 
 WARN_FLAGS= -Wall
 
+MKDIR_P=mkdir -p
 
 # Now, linking requires different parameters for different OSs
 
@@ -99,7 +114,7 @@ endif
 
 # Finally, we glue everything together
 
-CPP_FLAGS= $(MACHINE_FLAGS) $(PARALLEL_FLAGS) $(SSE_FLAGS) $(MATH_FLAGS) $(OPT_FLAGS) $(CPP_VERSION) $(INCLUDE_PATH) $(LINK_FLAGS) $(WARN_FLAGS) $(DEVELOP_OPT) $(PRO_VERSION_OPT) -DCOMPILE_SEPERATELY__ -DCOMPILE_WITHOUT_EXCEPTIONS__ -DCOMPILE_FOR_COMMAND_LINE__ $(LD_LINKER_FLAGS)
+CPP_FLAGS= $(MACHINE_FLAGS) $(MATH_FLAGS) $(OPT_FLAGS) $(CPP_VERSION) $(INCLUDE_PATH) $(LINK_FLAGS) $(WARN_FLAGS) $(DEVELOP_OPT) $(PRO_VERSION_OPT) -DCOMPILE_SEPERATELY__ -DCOMPILE_WITHOUT_EXCEPTIONS__ -DCOMPILE_FOR_COMMAND_LINE__ $(LD_LINKER_FLAGS)
 
 
 #----------- CUDA-compiler related flags --------------------------------------------------
@@ -189,9 +204,6 @@ CLUSTER_MAINS_NAMES= $(basename $(notdir $(CLUSTER_MAINS)))
 #----------- Combine all objects and set make search paths -------------------------------------------------------
 # Finally, we put everything together.
 
-ALL_OBJECTS_FOR_SVMS= $(SHARED_OBJECTS) $(SVM_OBJECTS) $(CUDA_GLOBAL_OBJECTS) 
-ALL_OBJECTS_FOR_CLUSTER= $(SHARED_OBJECTS) $(CLUSTER_OBJECTS) $(CUDA_GLOBAL_OBJECTS)
-
 vpath %.cpp $(sort $(dir $(SHARED_SOURCES))) $(sort $(dir $(SVM_SOURCES))) $(sort $(dir $(CLUSTER_SOURCES)))
 vpath %.cu $(sort $(dir $(CUDA_SHARED_SOURCES))) $(sort $(dir $(CUDA_SVM_SOURCES)))
 vpath %.h $(sort $(dir $(SHARED_HEADERS))) $(sort $(dir $(SVM_HEADERS))) $(sort $(dir $(CLUSTER_HEADERS)))
@@ -205,7 +217,8 @@ vpath %.h $(sort $(dir $(SHARED_HEADERS))) $(sort $(dir $(SVM_HEADERS))) $(sort 
 
 all: clean svm-all tools
 svm-all: $(SVM_MAINS_NAMES)
-	@find . -type f -name "*.sh" -exec chmod a+x {} \;
+	@if [ "$(OS_NAME)" != "win32" ]; then find . -type f -name "*.sh" -exec chmod a+x {} \; ; fi
+	@$(MKDIR_P) results
 tools: $(TOOLS_NAMES)
 extra:
 	@echo Moving additional python scripts to ./scripts
@@ -225,34 +238,40 @@ info:
 
 #----------- C++ related Target/Sources --------------------------------------------------------------------------------------
 
-$(SVM_MAINS_NAMES): $(SHARED_OBJECTS) $(SVM_OBJECTS) $(CUDA_SHARED_OBJECTS) $(CUDA_SVM_OBJECTS) 
-	@echo Compiling and linking $(notdir $@) 
-	@$(CPPC)  ./sources/svm/main/$@.cpp $(ALL_OBJECTS_FOR_SVMS) $(CUDA_OBJECTS) $(CPP_ALL_FLAGS) -o $(BIN_PATH)/$@
+$(SVM_MAINS_NAMES): $(SHARED_OBJECTS) $(CUDA_SHARED_OBJECTS) $(SVM_OBJECTS) $(CUDA_SVM_OBJECTS)
+	@echo Compiling and linking $(notdir $@)
+	@$(MKDIR_P) $(BIN_PATH)
+	@$(CPPC)  ./sources/svm/main/$@.cpp $(SHARED_OBJECTS) $(CUDA_SHARED_OBJECTS) $(SVM_OBJECTS) $(CUDA_SVM_OBJECTS) $(CPP_ALL_FLAGS) -o $(BIN_PATH)/$@
 
 	
-$(CLUSTER_MAINS_NAMES): $(SHARED_OBJECTS) $(CLUSTER_OBJECTS) $(CUDA_SHARED_OBJECTS)
+$(CLUSTER_MAINS_NAMES): $(SHARED_OBJECTS) $(CUDA_SHARED_OBJECTS) $(CLUSTER_OBJECTS)
 	@echo Compiling and linking $(notdir $@) 
-	@$(CPPC)  ./sources/cluster/main/$@.cpp $(ALL_OBJECTS_FOR_CLUSTER) $(CUDA_OBJECTS) $(CPP_ALL_FLAGS) -o $(BIN_PATH)/$@
+	@$(MKDIR_P) $(BIN_PATH)
+	@$(CPPC)  ./sources/cluster/main/$@.cpp $(SHARED_OBJECTS) $(CUDA_SHARED_OBJECTS) $(CLUSTER_OBJECTS) $(CPP_ALL_FLAGS) -o $(BIN_PATH)/$@
 	
 	
-$(TOOLS_NAMES): $(SHARED_OBJECTS) $(CUDA_SHARED_OBJECTS) $(SVM_OBJECTS) $(CUDA_SVM_OBJECTS)
+$(TOOLS_NAMES): $(SHARED_OBJECTS) $(CUDA_SHARED_OBJECTS) $(SVM_OBJECTS) $(CUDA_SVM_OBJECTS) 
 	@echo Compiling and linking $(notdir $@)
-	@$(CPPC)  ./sources/tools/$@.cpp $(ALL_OBJECTS_FOR_SVMS) $(CUDA_OBJECTS) $(CPP_ALL_FLAGS) -o $(BIN_PATH)/$@
+	@$(MKDIR_P) $(BIN_PATH)
+	@$(CPPC)  ./sources/tools/$@.cpp $(SHARED_OBJECTS) $(CUDA_SHARED_OBJECTS) $(SVM_OBJECTS) $(CUDA_SVM_OBJECTS)  $(CPP_ALL_FLAGS) -o $(BIN_PATH)/$@
 
 
 	
 $(SHARED_OBJECTS): ./sources/shared/object_code/%.o : %.cpp $(SHARED_HEADERS) $(SHARED_INLINE_SOURCES)
 	@echo Creating shared/$(notdir $@)
+	@$(MKDIR_P) $(@D)
 	@$(CPPC) -c ./sources/shared/*/$(patsubst %.o,%.cpp, $(notdir $@)) $(CPP_ALL_FLAGS) -o $@
 
 	
 $(SVM_OBJECTS): ./sources/svm/object_code/%.o : %.cpp $(SHARED_HEADERS) $(SHARED_INLINE_SOURCES) $(SVM_HEADERS) $(SVM_INLINE_SOURCES)
 	@echo Creating svm/$(notdir $@)
+	@$(MKDIR_P) $(@D)
 	@$(CPPC) -c ./sources/svm/*/$(patsubst %.o,%.cpp, $(notdir $@)) $(CPP_ALL_FLAGS) -o $@
 
 	
 $(CLUSTER_OBJECTS): ./sources/cluster/object_code/%.o : %.cpp $(SHARED_HEADERS) $(SHARED_INLINE_SOURCES) $(CLUSTER_HEADERS) $(CLUSTER_INLINE_SOURCES)
 	@echo Creating cluster/$(notdir $@)
+	@$(MKDIR_P) $(@D)
 	@$(CPPC) -c ./sources/cluster/*/$(patsubst %.o,%.cpp, $(notdir $@)) $(CPP_ALL_FLAGS) -o $@
 
 	
@@ -261,6 +280,7 @@ $(CLUSTER_OBJECTS): ./sources/cluster/object_code/%.o : %.cpp $(SHARED_HEADERS) 
 $(CUDA_SHARED_OBJECTS): ./sources/shared/object_code/%.o : %.cu $(CUDA_SHARED_HEADERS) $(SHARED_HEADERS) $(SHARED_INLINE_SOURCES)
 ifneq ($(NVCC_EXIST_FLAG),)
 	@echo $(notdir $(NVCC)): creating $(notdir $@)
+	@$(MKDIR_P) $(@D)
 	@$(NVCC) $(CPP_CUDA_INCLUDE_FLAGS) $(NVCCFLAGS) -c ./sources/shared/*/$(patsubst %.o,%.cu, $(notdir $@)) -o $@
 else
 	@echo Cannot compile $@ with $(notdir $(NVCC))
@@ -270,6 +290,7 @@ endif
 $(CUDA_SVM_OBJECTS): ./sources/svm/object_code/%.o : %.cu $(CUDA_SVM_HEADERS) $(SHARED_HEADERS) $(SHARED_INLINE_SOURCES) $(SVM_HEADERS) $(SVM_INLINE_SOURCES)
 ifneq ($(NVCC_EXIST_FLAG),)
 	@echo $(notdir $(NVCC)): creating $(notdir $@)
+	@$(MKDIR_P) $(@D)
 	@$(NVCC) $(CPP_CUDA_INCLUDE_FLAGS) $(NVCCFLAGS) -c ./sources/svm/*/$(patsubst %.o,%.cu, $(notdir $@)) -o $@
 else
 	@echo Cannot compile $@ with $(notdir $(NVCC))
@@ -277,9 +298,6 @@ endif
 
 
 
-test:
-	@echo $(PRO_VERSION_OPT)
-	@echo $(CPP_FLAGS)
 
 
 #----------- Target/Sources for cleaning up and packaging ------------------------------------------------------------------------
@@ -315,7 +333,7 @@ cleaner: clean
 	@find . -type f -name "*.prototxt" -exec rm -f {} \;
 
 	
-# The next four commands are for development, only. They will not work in the final version.	
+# The next four commands are for development, only. They will not work in the final public versions.	
 	
 
 help:

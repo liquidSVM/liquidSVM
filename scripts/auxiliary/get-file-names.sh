@@ -36,11 +36,11 @@
 
 if [[ -z $SML_DATA_DIR ]]
 then
-	# We need to chang IFS to colon so we can iterate over locations in data path
+	# We need to change IFS to colon so we can iterate over locations in data path
 	OLD_IFS=$IFS
 	IFS=:
 	for DIR in $SML_DATA_PATH; do
-		if [[ -f "$DIR/$BASE_FILENAME.train.csv" ]] || [[ -f "$DIR/$BASE_FILENAME.train.uci" ]] || [[ -f "$DIR/$BASE_FILENAME.train.lsv" ]]
+		if [[ -f "$DIR/$BASE_FILENAME.train.csv" ]] || [[ -f "$DIR/$BASE_FILENAME.train.uci" ]] || [[ -f "$DIR/$BASE_FILENAME.train.lsv" ]] || [[ -f "$DIR/$BASE_FILENAME.nla" ]]
 		then
 			SML_DATA_DIR="$DIR"
 			break
@@ -72,9 +72,9 @@ fi
 echo Writing result files to folder: $SML_RESULT_DIR 
 
 
-
 # Determine file format of the training and test set.
 
+TRAIN_VAL_TEST=TRUE
 if [[ -f "$SML_DATA_DIR/$BASE_FILENAME.train.csv" ]]
 then
 	EXT=csv
@@ -84,28 +84,64 @@ then
 elif [[ -f "$SML_DATA_DIR/$BASE_FILENAME.train.lsv" ]]
 then
 	EXT=lsv
+elif [[ -f "$SML_DATA_DIR/$BASE_FILENAME.train.nla" ]] && [[ $ALLOW_NLA = TRUE ]]
+then
+	EXT=nla
+elif [[ -f "$SML_DATA_DIR/$BASE_FILENAME.nla" ]] && [[ $ALLOW_NLA = TRUE ]]
+then
+	TRAIN_VAL_TEST=FALSE
+	EXT=nla
+	ALLOWED_EXT="nla"
 fi
+
 
 # Define training and test file names
 
-TRAIN_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.train.$EXT"
-TEST_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.test.$EXT"
-VAL_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.val.$EXT"
+if [[ $TRAIN_VAL_TEST = TRUE ]]
+then
+	TRAIN_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.train.$EXT"
+	TEST_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.test.$EXT"
+	VAL_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.val.$EXT"
+	ALLOWED_EXT="[csv | uci | lsv "
+	if [[ $ALLOW_NLA = TRUE ]]
+	then
+		ALLOWED_EXT=$ALLOWED_EXT"| nla "
+	fi
+	ALLOWED_EXT=$ALLOWED_EXT"]"
+	ALLOWED_TRAIN_EXT=".train."$ALLOWED_EXT
+	ALLOWED_TEST_EXT=".test."$ALLOWED_EXT
+else
+	TRAIN_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.$EXT"
+fi
+
 
 # Check whether files exist
 
 if ! [[ -f "$TRAIN_FILENAME" ]]
 then
 	echo
-	echo "SCRIPT ERROR: Could not determine extension of training file since "$TRAIN_FILENAME"[csv | uci | lsv] does not exist."
+	echo "SCRIPT ERROR: Could not determine extension of training file since" 
+	echo
+	if ! [[ $ALLOW_NLA = TRUE ]]
+	then 
+		echo "   "$BASE_FILENAME$ALLOWED_TRAIN_EXT
+	else
+		echo "   "$BASE_FILENAME$ALLOWED_TRAIN_EXT"   or   "$BASE_FILENAME".nla"
+	fi
+	echo 
+	echo could not be found.
 	echo
 	exit
 fi
 
-if ! [[ -f "$TEST_FILENAME" ]]
+if ! [[ -f "$TEST_FILENAME" ]] && [[ $TRAIN_VAL_TEST = TRUE ]]
 then
 	echo
-	echo "SCRIPT ERROR:  Could not determine extension of test file since "$TEST_FILENAME"[csv | uci | lsv] does not exist."
+	echo "SCRIPT ERROR: Could not determine extension of test file since" 
+	echo
+	echo "   "$BASE_FILENAME$ALLOWED_TEST_EXT
+	echo 
+	echo could not be found.
 	echo
 	exit
 fi
@@ -148,7 +184,6 @@ if [[ -z $DELETE_OLD_LOGS_ETC ]] || [[ $DELETE_OLD_LOGS_ETC == "yes" ]]
 then
 	rm -f "$LOG_TRAIN_FILENAME"
 	rm -f "$AUX_TRAIN_FILENAME"
-
 
 	rm -f "$LOG_SELECT_FILENAME"
 	rm -f "$SOL_SELECT_FILENAME"

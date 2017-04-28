@@ -243,7 +243,14 @@ Tthread_manager_base::Tthread_manager_base()
 				physical_cores = get_CPU_info_from_os("core id");
 				logical_processors = get_CPU_info_from_os("processor"); 
 
-				if ((physical_cores.size() == 0) or (logical_processors.size() == 0))
+	// 				Some versions of Linux do not have core_id entry. Raspian is such a case!
+	// 				For such versions we set the physical cores equal to the logical_processors
+	// 				and hope that everything worls fine.
+				
+				if ((physical_cores.size() == 0) and (logical_processors.size() > 0))
+					physical_cores = logical_processors;
+
+				if ((physical_cores.size() == 0) and (logical_processors.size() == 0))
 				{
 					flush_warn(WARN_ALL, "Could not read CPU information from OS. Continuing with 1 thread.");
 					number_of_logical_processors = 1;
@@ -508,10 +515,10 @@ vector <unsigned> Tthread_manager_base::get_CPU_info_from_os(const char* entry)
 
 	#if defined(POSIX_OS__) && !defined(__MINGW32__)
 		int i;
-		char c;
+		int c;
 		FILE* fp;
 		int io_return;
-		char command[128];
+		char command[256];
 
 		#ifdef __MACH__
 			strcpy(command, "sysctl -a | grep machdep.cpu | grep '");

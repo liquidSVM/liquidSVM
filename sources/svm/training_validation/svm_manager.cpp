@@ -36,6 +36,7 @@
 
 Tsvm_manager::Tsvm_manager()
 {
+	use_old_grid = false;
 	fp_log_train_read = NULL;
 	fp_aux_train_read = NULL;
 	fp_sol_train_read = NULL;
@@ -87,7 +88,8 @@ void Tsvm_manager::clear()
 	working_set_manager.clear();
 	decision_function_manager.clear();
 	
-	current_grids.clear();
+	if (use_old_grid == false)
+		current_grids.clear();
 	list_of_grids.clear();
 	list_of_fold_managers.clear();
 }
@@ -401,7 +403,7 @@ void Tsvm_manager::train(const Ttrain_control& train_control, Tsvm_full_train_in
 
 		close_file(fpauxwrite);
 	}
-	
+
 	
 // Prepare communication with filesystem and the internal storage
 	
@@ -445,7 +447,7 @@ void Tsvm_manager::train(const Ttrain_control& train_control, Tsvm_full_train_in
 		Tsvm_manager::train_control.solver_control.save_solution = train_control.store_solutions_internally;
 	}
 
-	
+
 // 	Call common train routine
 	
 	train_common(svm_full_train_info, false);
@@ -664,7 +666,6 @@ void Tsvm_manager::train_common(Tsvm_full_train_info& svm_full_train_info, bool 
 			parallel_control = train_control.parallel_control.set_to_single_threaded(working_set.size() < 500);
 
 			cv_manager.reserve_threads(parallel_control);
-
 			try
 			{
 				if (select_mode == false)

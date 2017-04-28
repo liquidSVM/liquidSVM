@@ -22,6 +22,11 @@
 	#include <unistd.h>
 #endif
 
+#if defined(SSE2__) && !defined(__MINGW32__) && !defined(MSVISUAL_LEGACY)
+	#define SYNC_WITHOUT_LOCKS
+#else
+	#undef SYNC_WITHOUT_LOCKS
+#endif
 
 //**********************************************************************************************************************************
 
@@ -130,7 +135,7 @@ inline bool Tthread_manager_base::is_last_team_member() const
 inline void Tthread_manager_base::sync_threads()
 {
 	#ifdef THREADING_IMPLEMENTED
-		#if defined(SSE2__) && !defined(__MINGW32__)
+		#if defined(SYNC_WITHOUT_LOCKS)
 			sync_threads_without_locks();
 		#else
 			sync_threads_with_locks();
@@ -144,7 +149,7 @@ inline void Tthread_manager_base::sync_threads()
 inline void Tthread_manager_base::lazy_sync_threads()
 {
 	#ifdef THREADING_IMPLEMENTED
-		#if defined(SSE2__) && !defined(__MINGW32__)
+		#if defined(SYNC_WITHOUT_LOCKS)
 			lazy_sync_threads_without_locks();
 		#else
 			lazy_sync_threads_with_locks();
@@ -158,7 +163,7 @@ inline void Tthread_manager_base::lazy_sync_threads()
 
 inline void Tthread_manager_base::sync_threads_without_locks()
 {
-	#ifdef THREADING_IMPLEMENTED
+	#if defined(THREADING_IMPLEMENTED) && defined(SYNC_WITHOUT_LOCKS)
 	// This barrier is essentially taken from Fig. 1(b) of 
 	// Fang, Zhang, Carter, Cheng, and Parker: "Fast Synchronization on Shared-Memory Multiprocessors: An Architectural Approach"
 	// Journal of Parallel and Distributed Computing 65 (2005), 1158-1170
@@ -196,7 +201,7 @@ inline void Tthread_manager_base::sync_threads_without_locks()
 
 inline void Tthread_manager_base::lazy_sync_threads_without_locks()
 {
-	#ifdef THREADING_IMPLEMENTED
+	#if defined(THREADING_IMPLEMENTED) && defined(SYNC_WITHOUT_LOCKS)
 	// This  barrier is the same as above but with some sleeping during the wait
 		
 		if (team_size > 1)

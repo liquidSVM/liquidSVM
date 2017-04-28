@@ -131,7 +131,7 @@ Tdataset::~Tdataset()
 {
 	flush_info(INFO_PEDANTIC_DEBUG, "\nDestroying an object of type Tdataset of size %d ...", size());
 	clear();
-	flush_info(INFO_PEDANTIC_DEBUG, "\nTdataset destroyed.");
+	flush_info(INFO_PEDANTIC_DEBUG, "    Tdataset object destroyed.");
 }
 
 
