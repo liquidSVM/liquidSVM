@@ -11,7 +11,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
 #
@@ -40,35 +40,36 @@ Furthermore at the moment arguments do not get translated
 @author: Philipp Thomann
 '''
 
-import numpy as np
-from .model import *
+from .model import lsSVM, mcSVM
 
 # import sklearn
 
-__all__ = ['SVR','SVC']
+__all__ = ['SVR', 'SVC']
+
 
 class SVR(lsSVM):
     '''
     This class can be used as a drop-in replacement for sklearn.svm.SVR.
     '''
+
     def __init__(self, **kwargs):
         # do not call super().__init__ just yet...
         self.kwargs = kwargs
-    
+
     def fit(self, X, y):
         super().__init__(X, y, **self.kwargs)
         return self
+
 
 class SVC(mcSVM):
     '''
     This class can be used as a drop-in replacement for sklearn.svm.SVC.
     '''
+
     def __init__(self, **kwargs):
         # do not call super().__init__ just yet...
         self.kwargs = kwargs
-    
+
     def fit(self, X, y):
         super().__init__(X, y, **self.kwargs)
         return self
-
-

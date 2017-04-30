@@ -68,8 +68,7 @@ demo.html: demo.ipynb
 	$(jupyter) nbconvert --to html --template full demo.ipynb
 
 unittest:
-	@echo MAIN_DIR $(MAIN_DIR)
-	$(python) test/testLiquidSVM.py
+	PYTHONPATH=$(PWD) $(python) test/testLiquidSVM.py
 
 pydoc: pydoc.html
 pydoc.html: liquidSVM/__init__.py

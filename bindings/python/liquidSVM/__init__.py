@@ -11,19 +11,18 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
 #
-from pyexpat import model
 '''liquidSVM for Python
 
 liquidSVM is a package written in C++ that
 provides SVM-type solvers for various classification and regression tasks.
-Because of a fully integrated hyper-parameter selection, very carefully implemented solvers,
-multi-threading and GPU support,
-and several built-in data decomposition strategies  it provides unprecedented speed
-for small training sizes as well as for data sets of tens of millions of samples.
+Because of a fully integrated hyper-parameter selection, very carefully
+̋implemented solvers, multi-threading and GPU support, and several built-in
+data decomposition strategies it provides unprecedented speed for small
+training sizes as well as for data sets of tens of millions of samples.
 
 To install use
 
@@ -41,19 +40,14 @@ For more information see the README and the demo notebook.
 @author: Ingo Steinwart and Philipp Thomann
 '''
 
-import numpy as np
-import numpy.ctypeslib as npct
-import ctypes as ct
-import os, sysconfig, glob
-import pkg_resources
+from . import model, liquidData
+from .model import * # noqa
+from .liquidData import * # noqa
 
-from .model import *
-from .liquidData import *
-
-__all__ = model.__all__ + liquidData.__all__+["doc"]
+__all__ = model.__all__ + liquidData.__all__ + ["doc"]
 
 
 if __name__ == '__main__':
     print("Hello to liquidSVM (python)")
 
-    mcSVM('banana-mc',display=1, mcType="OvA_ls")
+    model.mcSVM('banana-mc', display=1, mcType="OvA_ls")
