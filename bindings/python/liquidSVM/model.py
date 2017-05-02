@@ -15,17 +15,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
 #
+'''This module contains all SVM models liquidSVM provides.'''
 
+import ctypes as ct
 import numpy as np
 import numpy.ctypeslib as npct
-import ctypes as ct
 from .clib import _libliquidSVM
-from liquidSVM.liquidData import LiquidData
+from liquidSVM.data import LiquidData
 
 __all__ = ["SVM", "lsSVM", "mcSVM", "qtSVM", "exSVM", "nplSVM", "rocSVM"]
 
 
-class SVM:
+class SVM(object):
     """The base class for all SVM learning scenarios.
     This should usually not be used directly.
 
@@ -53,7 +54,7 @@ class SVM:
     ----------
     cookie : int
         the internal cookie of the C++ SVM
-    lastResult : (np.array , np.array)
+    last_result : (np.array , np.array)
         after each `test` the result and errors will be kept here.
 
 
@@ -64,8 +65,8 @@ class SVM:
             if isinstance(data, str):
                 data = LiquidData(data)
             if isinstance(data, LiquidData):
-                self.autoTestData = data.test
-                data = data.train
+                self.auto_test_data = data.test
+                data = data.train # pylint: disable=redefined-variable-type
             if hasattr(data, 'target') and hasattr(data, 'data'):
                 labs = data.target
                 data = data.data
@@ -75,7 +76,11 @@ class SVM:
         self.dim = data.shape[1] if len(data.shape) >= 2 else 1
         self.data = np.asarray(data, dtype=np.double).copy()
         self.labs = np.asarray(labs, dtype=np.double).copy()
-        self.predictCols = 0
+        self._predict_cols = 0
+
+        self.err_train = None
+        self.err_select = None
+        self.last_result = None
 
         self.cookie = _libliquidSVM.liquid_svm_init(
             self.data, n, self.dim, self.labs)
@@ -109,8 +114,8 @@ class SVM:
             ct.c_int(self.cookie), len(argv), argv_s)
         if not err:
             raise Exception("Problem with training of a liquidSVM model.")
-        self.errTrain = SVM.convertTable(err)
-        return self.errTrain
+        self.err_train = SVM.convertTable(err)
+        return self.err_train
 
     def select(self, **kwargs):
         """Selects the best of all SVMs for all tasks/cells..
@@ -136,10 +141,10 @@ class SVM:
             ct.c_int(self.cookie), len(argv), argv_s)
         if not err:
             raise Exception("Problem with selecting of a liquidSVM model.")
-        self.errSelect = SVM.convertTable(err)
-        if hasattr(self, 'autoTestData'):
-            self.test(self.autoTestData)
-        return self.errSelect
+        self.err_select = SVM.convertTable(err)
+        if hasattr(self, 'auto_test_data'):
+            self.test(self.auto_test_data)
+        return self.err_select
 
     def test(self, test_data, test_labs=None, **kwargs):
         """Predicts labels for `test_data` and if applicable compares to test_labs.
@@ -193,9 +198,9 @@ class SVM:
             argv), argv_s, test_data, n, dim, test_labs, errors_ret)
         if not result:
             raise Exception("Problem with testing of a liquidSVM model.")
-        self.lastResult = SVM.convertTable(
+        self.last_result = SVM.convertTable(
             result), SVM.convertTable(errors_ret.contents)
-        return self.lastResult
+        return self.last_result
 
     def predict(self, test_data, **kwargs):
         """Predicts labels for `test_data`.
@@ -216,7 +221,7 @@ class SVM:
             The number of columns depends on the learning scenario.
 
         """
-        return self.test(test_data, None, **kwargs)[0][:, self.predictCols]
+        return self.test(test_data, None, **kwargs)[0][:, self._predict_cols]
 
     def get(self, name):
         """Gets the value of a liquidSVM-configuration parameter
@@ -251,7 +256,7 @@ class SVM:
 
         """
         if isinstance(value, (list, tuple)):
-            value = " ".join(map(str, value))
+            value = " ".join([str(v) for v in value])
         if isinstance(value, bool):
             value = int(value)
         if name == "useCells":
@@ -389,11 +394,11 @@ class qtSVM(SVM):
 
     """
 
-    def __init__(self, data, labs=None, weights=[0.05, 0.1, 0.5, 0.9, 0.95], **kwargs):
+    def __init__(self, data, labs=None, weights=(0.05, 0.1, 0.5, 0.9, 0.95), **kwargs):
         SVM.__init__(self, data, labs, scenario="QT", **kwargs)
         self.set("WEIGHTS", weights)
         self.weights = weights
-        self.predictCols = range(len(weights))
+        self._predict_cols = range(len(weights))
         self.train()
         self.select()
 
@@ -418,11 +423,11 @@ class exSVM(SVM):
 
     """
 
-    def __init__(self, data, labs=None, weights=[0.05, 0.1, 0.5, 0.9, 0.95], **kwargs):
+    def __init__(self, data, labs=None, weights=(0.05, 0.1, 0.5, 0.9, 0.95), **kwargs):
         SVM.__init__(self, data, labs, scenario="EX", **kwargs)
         self.set("WEIGHTS", weights)
         self.weights = weights
-        self.predictCols = range(len(weights))
+        self._predict_cols = range(len(weights))
         self.train()
         self.select()
 
@@ -449,7 +454,7 @@ class rocSVM(SVM):
         SVM.__init__(self, data, labs, scenario="ROC", **kwargs)
         self.set("WEIGHT_STEPS", weightsteps)
         self.weightsteps = weightsteps
-        self.predictCols = range(weightsteps)
+        self._predict_cols = range(weightsteps)
         self.train()
         self.select()
 
@@ -476,13 +481,13 @@ class nplSVM(SVM):
     others: see `?SVM` and `?doc.configuration`
     """
 
-    def __init__(self, data, labs=None, nplClass=1, constraint=0.05, constraintFactors=[1 / 2, 2 / 3, 1, 3 / 2, 2], **kwargs):
+    def __init__(self, data, labs=None, nplClass=1, constraint=0.05, constraintFactors=(1 / 2, 2 / 3, 1, 3 / 2, 2), **kwargs):
         SVM.__init__(
             self, data, labs, scenario="NPL " + str(nplClass), **kwargs)
         self.nplClass = nplClass
         self.constraint = constraint
         self.constraintFactors = constraintFactors
-        self.predictCols = range(len(constraintFactors))
+        self._predict_cols = range(len(constraintFactors))
         self.train()
         self.select()
 

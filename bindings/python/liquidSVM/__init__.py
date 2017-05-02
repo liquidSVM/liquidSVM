@@ -20,7 +20,7 @@
 liquidSVM is a package written in C++ that
 provides SVM-type solvers for various classification and regression tasks.
 Because of a fully integrated hyper-parameter selection, very carefully
-̋implemented solvers, multi-threading and GPU support, and several built-in
+implemented solvers, multi-threading and GPU support, and several built-in
 data decomposition strategies it provides unprecedented speed for small
 training sizes as well as for data sets of tens of millions of samples.
 
@@ -40,11 +40,14 @@ For more information see the README and the demo notebook.
 @author: Ingo Steinwart and Philipp Thomann
 '''
 
-from . import model, liquidData
+from __future__ import print_function
+from . import model, data
+# pylint: disable=wildcard-import
 from .model import * # noqa
-from .liquidData import * # noqa
+# pylint: disable=wildcard-import
+from .data import * # noqa
 
-__all__ = model.__all__ + liquidData.__all__ + ["doc"]
+__all__ = model.__all__ + data.__all__ + ["doc"]
 
 
 if __name__ == '__main__':

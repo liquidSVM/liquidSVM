@@ -22,12 +22,12 @@ by the use of ctypes.
 @author: Ingo Steinwart and Philipp Thomann
 '''
 
-import numpy as np
-import numpy.ctypeslib as npct
 import ctypes as ct
+import glob
 import os
 import sysconfig
-import glob
+import numpy as np
+import numpy.ctypeslib as npct
 
 __all__ = ['_set_param', '_get_param', '_get_config_line', '_libliquidSVM']
 
@@ -44,7 +44,7 @@ _locations = [_filepath,
               # "/home/thomapp/liquidSVM/bindings/python/venvs/py3/lib/python3.4/site-packages/liquidSVM-0.5-py3.4-linux-x86_64.egg",
               # "/home/thomapp/opt/anaconda/lib/python2.7/site-packages/liquidSVM-0.5-py2.7-linux-x86_64.egg",
               # "/home/thomapp/opt/anaconda/envs/anacondaPy3/lib/python3.6/site-packages/liquidSVM-0.5-py3.6-linux-x86_64.egg"
-              ]
+             ]
 for loc in _locations:
     _libliquidSVM = None
     try:
@@ -73,7 +73,7 @@ else:
 TdoubleP = npct.ndpointer(dtype=np.double)
 
 
-def nullable_from_param(cls, obj):
+def nullable_from_param(cls, obj): # pylint: disable=unused-argument
     '''To pass NULL for some numpy arrays, the workaround is from
     http://stackoverflow.com/questions/32120178
     '''

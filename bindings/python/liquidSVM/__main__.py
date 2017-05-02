@@ -94,7 +94,11 @@ if __name__ == '__main__':
     print("Hello to liquidSVM (python)")
     if len(sys.argv) == 1:
         help()
-    elif sys.argv[1] == 'demo':
+    elif sys.argv[1] == '--demo':
         demo()
+    elif sys.argv[1] == '--doctest':
+        import doctest
+        print("Performing doctest")
+        doctest.testmod(liquidSVM)
     else:
         main(*sys.argv)

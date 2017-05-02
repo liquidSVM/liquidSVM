@@ -19,7 +19,7 @@
 
 Where you would else use sklearn.svm.SVC or SVR you can just
 use ours. First load some data:
->>> import liquidSVM.liquidData as ld
+>>> import liquidSVM.data as ld
 >>> banana = ld.LiquidData('banana-bc')
 Now in sklearn you would do something like
 >>> import sklearn.svm as sk
@@ -52,12 +52,29 @@ class SVR(lsSVM):
     This class can be used as a drop-in replacement for sklearn.svm.SVR.
     '''
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs): # pylint: disable=super-init-not-called
         # do not call super().__init__ just yet...
         self.kwargs = kwargs
 
+    # pylint: disable=invalid-name
     def fit(self, X, y):
-        super().__init__(X, y, **self.kwargs)
+        """Fit the model according to the given training data.
+
+        Parameters
+        ----------
+        X : {array-like}, shape = [n_samples, n_features]
+            Training vector, where n_samples in the number of samples and
+            n_features is the number of features.
+
+        y : array-like, shape = [n_samples]
+            Target vector relative to X
+
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
+        super(SVR, self).__init__(X, y, **self.kwargs)
         return self
 
 
@@ -66,10 +83,27 @@ class SVC(mcSVM):
     This class can be used as a drop-in replacement for sklearn.svm.SVC.
     '''
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs): # pylint: disable=super-init-not-called
         # do not call super().__init__ just yet...
         self.kwargs = kwargs
 
+    # pylint: disable=invalid-name
     def fit(self, X, y):
-        super().__init__(X, y, **self.kwargs)
+        """Fit the model according to the given training data.
+
+        Parameters
+        ----------
+        X : {array-like}, shape = [n_samples, n_features]
+            Training vector, where n_samples in the number of samples and
+            n_features is the number of features.
+
+        y : array-like, shape = [n_samples]
+            Target vector relative to X
+
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
+        super(SVC, self).__init__(X, y, **self.kwargs)
         return self

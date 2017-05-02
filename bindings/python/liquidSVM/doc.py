@@ -1,3 +1,4 @@
+# pylint: skip-file
 ### This file is generated do not edit it by hand!
 
 
