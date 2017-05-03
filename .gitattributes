@@ -1,0 +1,10 @@
+**/doc/* linguist-documentation
+*.txt linguist-documentation
+*.html linguist-documentation
+*.md linguist-documentation
+*.md.R linguist-documentation
+bindings/R/liquidSVM/vignettes linguist-documentation
+*.ipynb linguist-documentation
+
+*.R linguist-language=R
+*.h linguist-language=C++
