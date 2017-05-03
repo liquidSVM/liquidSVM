@@ -162,41 +162,41 @@
 #define clipp_0max_simdd(arg, top) min_simdd(top, pos_part_simdd(arg))
 #define clipp_simdd(arg, bottom, top) max_simdd(bottom, min_simdd(top, arg))
 
-inline simdd__ fuse_mult_add_simdd(simdd__ factor_1_simdd, simdd__ factor_2_simdd, simdd__ addend_simdd);
-inline simdd__ fuse_mult_sub_simdd(simdd__ factor_1_simdd, simdd__ factor_2_simdd, simdd__ subtrahend_simdd);
-inline simdd__ fuse_mult_mult_simdd(simdd__ factor_1_simdd, simdd__ factor_2_simdd, simdd__ factor_3_simdd);
+strict_inline__ simdd__ fuse_mult_add_simdd(simdd__ factor_1_simdd, simdd__ factor_2_simdd, simdd__ addend_simdd);
+strict_inline__ simdd__ fuse_mult_sub_simdd(simdd__ factor_1_simdd, simdd__ factor_2_simdd, simdd__ subtrahend_simdd);
+strict_inline__ simdd__ fuse_mult_mult_simdd(simdd__ factor_1_simdd, simdd__ factor_2_simdd, simdd__ factor_3_simdd);
 
 
-inline double reduce_sums_simdd(simdd__ sum_simdd);
-inline void argmax_simdd(simdd__ arg_simdd, simdd__ value_simdd, unsigned& argmax, double& max);
+strict_inline__ double reduce_sums_simdd(simdd__ sum_simdd);
+strict_inline__ void argmax_simdd(simdd__ arg_simdd, simdd__ value_simdd, unsigned& argmax, double& max);
 
 //**********************************************************************************************************************************
 
 // Instructions on a cacheline
 
-inline void assign_CL(double* vector, double value);
-inline void copy_CL(double* target, double* source);
+strict_inline__ void assign_CL(double* vector, double value);
+strict_inline__ void copy_CL(double* target, double* source);
 
-inline void fuse_mult_sum_CL(double* factor_1, double* factor_2, simdd__& sum_simdd);
-inline void fuse_mult_sum_CL(simdd__ factor_1_simdd, double* factor_2, simdd__& sum_simdd);
+strict_inline__ void fuse_mult_sum_CL(double* factor_1, double* factor_2, simdd__& sum_simdd);
+strict_inline__ void fuse_mult_sum_CL(simdd__ factor_1_simdd, double* factor_2, simdd__& sum_simdd);
 
-inline void sum_CL(simdd__& sum, double* addend);
-inline void add_CL(double* sum, double* addend_1, double* addend_2);
-inline void add_CL(double* sum, simdd__ addend_1_simdd, double* addend_2);
-inline void mult_CL(double* product, double* factor_1, double* factor_2);
-inline void mult_CL(double* product, simdd__ factor_1_simdd, double* factor_2);
+strict_inline__ void sum_CL(simdd__& sum, double* addend);
+strict_inline__ void add_CL(double* sum, double* addend_1, double* addend_2);
+strict_inline__ void add_CL(double* sum, simdd__ addend_1_simdd, double* addend_2);
+strict_inline__ void mult_CL(double* product, double* factor_1, double* factor_2);
+strict_inline__ void mult_CL(double* product, simdd__ factor_1_simdd, double* factor_2);
 
-inline void fuse_mult_add3_CL(double* factor_1, double* factor_2, double* addend);
-inline void fuse_mult_add3_CL(simdd__ factor_1_simdd, double* factor_2, double* addend);
-inline void fuse_mult_add4_CL(double* result, simdd__ factor_1_simdd, double* factor_2, simdd__ addend_simdd);
-inline void fuse_mult_add5_CL(double* result, simdd__ factor_1_simdd, double* factor_1, simdd__ factor_2_simdd, double* factor_2);
+strict_inline__ void fuse_mult_add3_CL(double* factor_1, double* factor_2, double* addend);
+strict_inline__ void fuse_mult_add3_CL(simdd__ factor_1_simdd, double* factor_2, double* addend);
+strict_inline__ void fuse_mult_add4_CL(double* result, simdd__ factor_1_simdd, double* factor_2, simdd__ addend_simdd);
+strict_inline__ void fuse_mult_add5_CL(double* result, simdd__ factor_1_simdd, double* factor_1, simdd__ factor_2_simdd, double* factor_2);
 
 
 //**********************************************************************************************************************************
 
 // Alignment commands
 
-inline void get_aligned_chunk(unsigned size, unsigned chunks, unsigned chunk_number, unsigned& start_index, unsigned& stop_index);
+strict_inline__ void get_aligned_chunk(unsigned size, unsigned chunks, unsigned chunk_number, unsigned& start_index, unsigned& stop_index);
 
 
 //**********************************************************************************************************************************
