@@ -45,6 +45,7 @@ kern <- function(data, gamma=1, type=c("gaussian.rbf","poisson"), threads=1){
   }else if(!is.numeric(type)){
     if(length(type)==2){
       aux_file <- type[2]
+      stopifnot(file.exists('aux_file'))
       type <- type[1]
     }
     type <- match.arg(type, choices = c("gaussian.rbf","poisson", "hierarchical"))

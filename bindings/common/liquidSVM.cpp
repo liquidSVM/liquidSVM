@@ -83,7 +83,7 @@ extern "C" const char* liquid_svm_default_params(int stage, int solver){
 #elif defined(AVX__)
 		return "Compiled with no SSE2__ but AVX__";
 #else
-		return "";
+		return "Compiled without vectorization";
 #endif
 		break;
 	default:
@@ -189,7 +189,7 @@ extern "C" double* liquid_svm_train(int cookie, const int argc, char** argv)
 
 	if(getConfig(cookie)->getI("SCALE")>0){
 		train_control.scale_data = true;
-		flush_info(1,"Using scaling\n");
+		flush_info(2,"Using scaling\n");
 	}
 
 	train_control.store_solutions_internally = (getConfig(cookie)->getI("STORE_SOLUTIONS_INTERNALLY",

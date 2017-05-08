@@ -413,6 +413,8 @@ unserialize.liquidSVM <- function(obj,...) {
   ret
 }
 
+# nocov start
+
 # #' The \code{svmSerializeHook} and \code{svmUnserializeHook} methods can be used
 # #' with \code{\link{serialize}} and \code{\link{unserialize}} as seen in the example.
 # #' 
@@ -446,3 +448,4 @@ svmUnserializeHook <- function(x) {
   }else
     x
 }
+# nocov end

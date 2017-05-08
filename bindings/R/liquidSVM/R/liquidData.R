@@ -200,7 +200,7 @@ splitIt <- function(data, target, prob, size, stratified){
   
 }
 
-cvSmldata <- function(data, folds=5, stratified=NULL, target=NULL){
+cvSmldata <- function(data, folds=5, stratified=NULL, target=NULL){ # nocov start
   stopifnot(length(folds) == 1 && folds >= 2)
   n <- nrow(data)
   stopifnot(n>=folds)
@@ -252,7 +252,7 @@ cvSmldata <- function(data, folds=5, stratified=NULL, target=NULL){
       ret$target <- target
     ret
   })
-}
+} # nocov end
 
 
 #' @param data the given data set

@@ -169,6 +169,8 @@ check-all: check check-mac check-win #check-cuda
 unittest:
 	cd $(SRC_DIR) && Rscript -e 'devtools::test()'
 
+coverage:
+	cd $(SRC_DIR) && echo 'Sys.setenv(NOT_CRAN='true'); covr::package_coverage()' | $(R) --no-save
 
 regenerate: template-parameters regenerate-quick
 
@@ -191,4 +193,3 @@ repository:
 	cd $(PUB_DIR)/bin/windows/contrib && for i in 3.0 3.1 3.3 3,4; do ln -fs 3.2 $$i; done
 	#cd $(PUB_DIR)/bin/windows/contrib && for i in 2.{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15} 3.0 3.1 3.3 3,4; do ln -fs 3.2 $$i; done
 	cd $(PUB_DIR)/bin/macosx/mavericks/contrib && for i in 3.0 3.1 3.3 3.4; do ln -fs 3.2 $$i; done
-

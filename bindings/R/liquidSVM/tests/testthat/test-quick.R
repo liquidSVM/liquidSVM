@@ -87,7 +87,7 @@ test_that("quick iris no-formula",{
 test_that("quick quakes",{
   set.seed(123)
   
-  tt <- ttsplit(quakes,testSize=30)
+  tt <- ttsplit(quakes,testSize=600)
   model <- svm(mag ~ ., tt$train,threads=1)
   expect_equal(nrow(model$last_result),0)
   hand_err <- mean((predict(model, tt$test)-tt$test$mag)^2)
@@ -100,15 +100,82 @@ test_that("quick quakes",{
   expect_lt(abs(test_err-hand_err),1e5)
 })
 
+test_that("quick 1dim",{
+  set.seed(123)
+  
+  tt <- liquidData('reg-1d',trainSize=400)
+  trX <- tt$train$X1
+  trY <- tt$train$Y
+  tsX <- tt$test$X1
+  tsY <- tt$test$Y
+  
+  expect_null(dim(trX))
+  expect_null(dim(trY))
+  expect_null(dim(tsX))
+  expect_null(dim(tsY))
+  
+  model <- svm(trX,trY,threads=1)
+  expect_equal(nrow(model$last_result),0)
+  hand_err <- mean((predict(model, tsX)-tsY)^2)
+  expect_true(nrow(model$last_result)>0)
+  names(hand_err) <- hand_err_name
+  test_err <- errors(test(model, tsX, tsY))
+  expect_equal(length(test_err),1)
+  expect_lt(hand_err,0.2)
+  expect_lt(test_err,0.2)
+  expect_lt(abs(test_err-hand_err),1e5)
+})
+
+test_that("quick iris environment",{
+  set.seed(123)
+  
+  tt <- ttsplit(iris,testSize=30)
+  
+  attach(tt$train)
+  model <- svm(Species ~ Sepal.Length+Sepal.Width+Petal.Length+Petal.Width, threads=1)
+  detach(tt$train)
+  expect_equal(nrow(model$last_result),0)
+  hand_err <- 1-mean(predict(model, tt$test)==tt$test$Species)
+  names(hand_err) <- hand_err_name
+  test_err <- errors(test(model, tt$test))
+  expect_equal(length(test_err),4)
+  test_err <- test_err[1]
+  expect_lt(hand_err,0.3)
+  expect_lt(test_err,0.3)
+  expect_equal(test_err,hand_err)
+})
+
+test_that("quick data as name",{
+  set.seed(123)
+  
+  tt <- liquidData('banana-bc')
+  model <- svm(Y ~ ., 'banana-bc', threads=1, folds=2, gammas=c(1,2,4,8))
+  
+  expect_equal(nrow(model$last_result),nrow(tt$test))
+  
+  result <- predict(model, tt$test)
+  hand_err <- 1-mean(result==tt$test$Y)
+  # names(hand_err) <- hand_err_name
+  test_err <- errors(test(model, tt$test))
+  expect_equal(length(test_err),1)
+  test_err <- test_err[1]
+  expect_lt(hand_err,0.3)
+  expect_lt(test_err,0.3)
+  expect_equal(test_err,hand_err)
+  
+  result2 <- predict(model, tt$train)
+  result3 <- predict(model, 'banana-bc')
+  expect_equal(result2,result3)
+})
+
 
 test_that("quick threads",{
   skip_on_cran()
-  
+
   set.seed(123)
-  
-  reg <- liquidData('reg-1d')
-  a <- system.time(model <- svm(Y ~ ., reg$train,threads=1, do.select=FALSE))
-  b <- system.time(model <- svm(Y ~ ., reg$train,threads=2, do.select=FALSE))
+  tt <- liquidData('banana-bc')
+  a <- system.time(model <- svm(Y ~ ., tt$train,threads=1, do.select=FALSE, folds=2))
+  b <- system.time(model <- svm(Y ~ ., tt$train,threads=2, do.select=FALSE, folds=2))
   expect_gt(a['elapsed'],b['elapsed'])
   expect_lt(a['user.self'],b['user.self'])
   expect_gt(b['user.self']/b['elapsed'],1.5)

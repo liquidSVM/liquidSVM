@@ -24,6 +24,30 @@ orig <- options(liquidSVM.warn.suboptimal=FALSE)[[1]]
 
 hand_err_name <- 'result'
 
+test_that("print model",{
+  set.seed(123)
+  
+  #  tt <- liquidData('banana-mc')
+  tt <- ttsplit(iris,testSize=30)
+  
+  # only init
+  model <- init.liquidSVM(Species ~ ., tt$train)
+  expect_output(print(model))
+  
+  # after delete:
+  clean(model)
+  expect_output(print(model), 'deleted')
+  
+  
+  # without selecting
+  model <- mcSVM(Species ~ ., tt$train,threads=1, do.select=FALSE)
+  expect_output(print(model))
+  
+  # now for th full train/select/test
+  model <- mcSVM(Species ~ ., tt,threads=1)
+  expect_output(print(model))
+})
+
 test_that("save/load model",{
   skip_on_cran()
   
@@ -137,6 +161,62 @@ test_that("serialize/unserialize model using R serialize",{
   expect_lt(test_err,0.3)
   expect_equal(test_err,hand_err)
 })
+
+test_that("getCover",{
+  skip_on_cran()
+  
+  set.seed(123)
+  banana <- liquidData('banana-mc',trainSize=900)
+  model <- mcSVM(Y~.,banana$train, voronoi=c(4,300), folds=2)
+  # task 4 is predicting 2 vs 3
+  cover <- getCover(model,task=4)
+  expect_true(all(banana$train$Y[cover$indices] %in% c(2,3)))
+  expect_equal(cover$task, 4)
+  
+  # centers <- cover$samples
+  # # we are considering task 4 and hence only show labels 2 and 3:
+  # bananaSub <- banana$train[banana$train$Y %in% c(2,3),]
+  # distances <- as.matrix(dist(bananaSub[,-1]))
+  # cells <- apply(distances[bananaSub %in% c(2,3),cover$indices],1,which.min)
+  # # and you can check that the cell sizes are as reported in the training phase for task 4
+  # table(cells)
+  
+})
+
+test_that("getSolution",{
+  skip_on_cran()
+  
+  set.seed(123)
+  x <- seq(0,1,by=.01)
+  y <- sin(x*10)
+  f <- 2
+  model <- lsSVM(x,y,threads=1)
+  sol <- getSolution(model, 1,1,f)
+  n <- length(sol$sv)
+  expect_lte(n,length(x))
+  expect_length(sol$sv, n)
+  expect_length(sol$coeff, n)
+  expect_length(sol$samples, n)
+  expect_length(sol$labels, n)
+  expect_equal(sol$task, 1)
+  expect_equal(sol$cell, 1)
+  expect_equal(sol$fold, f)
+})
+
+
+test_that("suboptimal warning",{
+  orig <- options(liquidSVM.warn.suboptimal=TRUE)[[1]]
+  set.seed(123)
+  
+  tt <- ttsplit(iris,testSize=30)
+  expect_warning(model <- svm(Species ~ ., tt$train,threads=1,gammas=c(1,10),lambdas=c(.1,1)), 'optimal')
+  options(liquidSVM.warn.suboptimal=orig)
+})
+
+test_that("compilation info",{
+  expect_true(any(nchar(compilationInfo())>0))
+})
+
 
 options(liquidSVM.warn.suboptimal=orig)
 

@@ -469,14 +469,6 @@ selectSVMs <- function(model, command.args=NULL, ..., d=NULL, warn.suboptimal=ge
   if(any(d>=2))
     cat(args,fill = T)
   
-  if(any(args=="-d0")){
-    ### should be fixed now, will get rid of this, if this is true.
-    warning("Got argument -d0 and removing it")
-    str(args)
-    cat(get_config_line(model,2))
-    args <- args[args!="-d0"]
-  }
-  
   ret <- .Call('liquid_svm_R_select',
             as.integer(model$cookie), args , PACKAGE='liquidSVM')
   # FIXME can only use this once we figure out how to pass selected train_val_info
@@ -881,7 +873,7 @@ numericToFactor <- function(x, known_levels){
 compilationInfo <- function(){
   ret <- .Call('liquid_svm_R_default_params',
                as.integer(-1L), as.integer(0L) , PACKAGE='liquidSVM')
-  strsplit(ret, " ")[[1]]
+  ret
 }
 
 #' @export
