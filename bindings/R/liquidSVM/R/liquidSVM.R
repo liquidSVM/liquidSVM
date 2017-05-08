@@ -684,7 +684,7 @@ test.liquidSVM <- function(model, newdata, labels=NULL, command.args=NULL, ..., 
         warning('binary classification was done for labels outside -1...1?')
       else if(min(result) >= 0)
         warning('All probabilites are > 0.5, maybe the binary classification was not done for labels -1 and 1?')
-      result <- (cbind(result,-result)+1) / 2
+      result <- (cbind(-result,result)+1) / 2
       colnames(result) <- if(is.null(model$levels))c(1,-1)else model$levels
       model$predict.cols <- 1:2
     }

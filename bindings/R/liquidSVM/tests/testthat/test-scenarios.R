@@ -100,6 +100,9 @@ test_that("mcSVM_predict.prob.3levels",{
   expect_lte(max(probs),1.001)
   expect_gte(min(probs),-0.001)
   expect_true(any(probs<0.5))
+  
+  result <- test(model, tt$test)
+  expect_equivalent(apply(probs,1,which.max), as.integer(result[,1]))
 })
 
 test_that("mcSVM_predict.prob.4levels",{
@@ -113,6 +116,9 @@ test_that("mcSVM_predict.prob.4levels",{
   expect_lte(max(probs),1.001)
   expect_gte(min(probs),-0.001)
   expect_true(any(probs<0.5))
+  
+  result <- test(model, tt$test)
+  expect_equivalent(apply(probs,1,which.max), as.integer(result[,1]))
 })
 
 test_that("mcSVM_predict.prob.2levels",{
@@ -126,6 +132,9 @@ test_that("mcSVM_predict.prob.2levels",{
   expect_lte(max(probs),1.001)
   expect_gte(min(probs),-0.001)
   expect_true(any(probs<0.5))
+  
+  result <- as.integer(colnames(probs))[apply(probs,1,which.max)]
+  expect_lt(mean(result != tt$test$Y),0.3)
 })
 
 test_that("svm_predict.prob.3levels",{
@@ -140,6 +149,9 @@ test_that("svm_predict.prob.3levels",{
   expect_lte(max(probs),1.001)
   expect_gte(min(probs),-0.001)
   expect_true(any(probs<0.5))
+  
+  result <- test(model, tt$test)
+  expect_equivalent(apply(probs,1,which.max), as.integer(result[,1]))
 })
 
 test_that("svm_predict.prob.4levels",{
@@ -153,6 +165,9 @@ test_that("svm_predict.prob.4levels",{
   expect_lte(max(probs),1.001)
   expect_gte(min(probs),-0.001)
   expect_true(any(probs<0.5))
+  
+  result <- test(model, tt$test)
+  expect_equivalent(apply(probs,1,which.max), as.integer(result[,1]))
 })
 
 
