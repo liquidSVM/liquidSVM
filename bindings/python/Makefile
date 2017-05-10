@@ -70,6 +70,10 @@ demo.html: demo.ipynb
 unittest:
 	PYTHONPATH=$(PWD) $(python) test/testLiquidSVM.py
 
+coverage:
+	PYTHONPATH=$(PWD) $(python) -M coverage run test/testLiquidSVM.py
+	$(python) -M coverage html
+
 pydoc: pydoc.html
 pydoc.html: liquidSVM/__init__.py
 	$(pydoc) -w liquidSVM/__init__.py
@@ -127,4 +131,3 @@ regenerate-quick:
 
 clean:
 	$(rm) -rf bin/* src/sources src/common
-

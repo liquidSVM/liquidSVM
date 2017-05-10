@@ -52,8 +52,6 @@ class SVM(object):
 
     Attributes
     ----------
-    cookie : int
-        the internal cookie of the C++ SVM
     last_result : (np.array , np.array)
         after each `test` the result and errors will be kept here.
 
@@ -82,7 +80,7 @@ class SVM(object):
         self.err_select = None
         self.last_result = None
 
-        self.cookie = _libliquidSVM.liquid_svm_init(
+        self._cookie = _libliquidSVM.liquid_svm_init(
             self.data, n, self.dim, self.labs)
         for name in kwargs:
             self.set(name, kwargs[name])
@@ -111,7 +109,7 @@ class SVM(object):
         TypeArgv = ct.c_char_p * len(argv)
         argv_s = TypeArgv(*argv)
         err = _libliquidSVM.liquid_svm_train(
-            ct.c_int(self.cookie), len(argv), argv_s)
+            ct.c_int(self._cookie), len(argv), argv_s)
         if not err:
             raise Exception("Problem with training of a liquidSVM model.")
         self.err_train = SVM.convertTable(err)
@@ -138,7 +136,7 @@ class SVM(object):
         TypeArgv = ct.c_char_p * len(argv)
         argv_s = TypeArgv(*argv)
         err = _libliquidSVM.liquid_svm_select(
-            ct.c_int(self.cookie), len(argv), argv_s)
+            ct.c_int(self._cookie), len(argv), argv_s)
         if not err:
             raise Exception("Problem with selecting of a liquidSVM model.")
         self.err_select = SVM.convertTable(err)
@@ -194,7 +192,7 @@ class SVM(object):
 
         errors_ret = ct.pointer(ct.POINTER(ct.c_double)())
 
-        result = _libliquidSVM.liquid_svm_test(ct.c_int(self.cookie), len(
+        result = _libliquidSVM.liquid_svm_test(ct.c_int(self._cookie), len(
             argv), argv_s, test_data, n, dim, test_labs, errors_ret)
         if not result:
             raise Exception("Problem with testing of a liquidSVM model.")
@@ -237,7 +235,7 @@ class SVM(object):
 
 
         """
-        return _libliquidSVM.liquid_svm_get_param(ct.c_int(self.cookie), ct.c_char_p(name.upper().encode('UTF-8')))
+        return _libliquidSVM.liquid_svm_get_param(ct.c_int(self._cookie), ct.c_char_p(name.upper().encode('UTF-8')))
 
     def set(self, name, value):
         """Sets the value of a liquidSVM-configuration parameter
@@ -262,7 +260,7 @@ class SVM(object):
         if name == "useCells":
             name = 'PARTITION_CHOICE'
             value = 6 if value else 0
-        _libliquidSVM.liquid_svm_set_param(ct.c_int(self.cookie), ct.c_char_p(
+        _libliquidSVM.liquid_svm_set_param(ct.c_int(self._cookie), ct.c_char_p(
             name.upper().encode('UTF-8')), ct.c_char_p(str(value).encode('UTF-8')))
         return self
 
@@ -331,13 +329,13 @@ class SVM(object):
         str
 
         """
-        return _libliquidSVM.liquid_svm_get_config_line(ct.c_int(self.cookie), ct.c_int(stage)).decode("utf-8")
+        return _libliquidSVM.liquid_svm_get_config_line(ct.c_int(self._cookie), ct.c_int(stage)).decode("utf-8")
 
     def clean(self):
         """Force to release internal C++ memory. After that, this SVM cannot be used any more."""
-        if self.cookie >= 0:
-            _libliquidSVM.liquid_svm_clean(ct.c_int(self.cookie))
-        self.cookie = -1
+        if self._cookie >= 0:
+            _libliquidSVM.liquid_svm_clean(ct.c_int(self._cookie))
+        self._cookie = -1
 
     def __del__(self):
         self.clean()
