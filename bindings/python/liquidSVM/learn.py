@@ -71,7 +71,7 @@ class SVR(lsSVM):
 
         Returns
         -------
-        self : object
+        SVR
             Returns self.
         """
         super(SVR, self).__init__(X, y, **self.kwargs)
@@ -102,7 +102,7 @@ class SVC(mcSVM):
 
         Returns
         -------
-        self : object
+        SVC
             Returns self.
         """
         super(SVC, self).__init__(X, y, **self.kwargs)

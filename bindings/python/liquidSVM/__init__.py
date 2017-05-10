@@ -37,7 +37,7 @@ Then you can use it like:
 
 For more information see the README and the demo notebook.
 
-@author: Ingo Steinwart and Philipp Thomann
+Copyright: Ingo Steinwart and Philipp Thomann
 '''
 
 from __future__ import print_function

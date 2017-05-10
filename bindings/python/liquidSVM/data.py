@@ -96,7 +96,7 @@ class LiquidData(object): # pylint: disable=too-few-public-methods
         # return ret
 
     def from_data(self, train_x, train_y, test_x, test_y):
-        """Creates a LiquidData from given `np.array`s
+        """Creates a LiquidData from given np.array objects
 
         Parameters
         ----------

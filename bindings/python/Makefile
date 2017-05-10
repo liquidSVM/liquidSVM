@@ -20,6 +20,10 @@ jupyter=jupyter
 pydoc=pydoc
 twine=twine
 
+SPHINXBUILD   = sphinx-build
+SPHINXOPTS    =
+
+
 rm=\rm
 # Makefiles echo somehow does not know -e ???
 echo=/bin/echo
@@ -73,6 +77,10 @@ unittest:
 coverage:
 	PYTHONPATH=$(PWD) $(python) -M coverage run test/testLiquidSVM.py
 	$(python) -M coverage html
+
+doc: doc/_build/html/index.html
+doc/_build/html/index.html: liquidSVM/*.py doc/*.rst
+	$(SPHINXBUILD) -M html "doc" "doc/_build" $(SPHINXOPTS)
 
 pydoc: pydoc.html
 pydoc.html: liquidSVM/__init__.py
