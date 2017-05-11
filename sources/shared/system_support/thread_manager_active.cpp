@@ -34,11 +34,7 @@
 	#include <pthread.h>
 #endif
 
-// #define MASTER_AS_FIRST_TEAM_MEMBER 
 
-// #ifndef THREADING_IMPLEMENTED
-//   #undef MASTER_AS_FIRST_TEAM_MEMBER
-// #endif
 #ifndef PRE_THREADS_HOOK
   #define PRE_THREADS_HOOK 
 #endif

@@ -38,6 +38,7 @@ Tparallel_control::Tparallel_control()
 	core_number_offset = 0;
 	GPUs = 0;
 	GPU_number_offset = 0;
+	keep_GPU_alive_after_disconnection = false;
 };
 
 

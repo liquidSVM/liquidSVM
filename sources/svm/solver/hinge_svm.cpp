@@ -574,20 +574,29 @@ void Thinge_svm::get_train_error(Tsvm_train_val_info& train_val_info)
 
 	if (is_first_team_member() == true)
 	{
-		train_val_info.train_error = 0.0;
-		train_val_info.pos_train_error = 0.0;
-		train_val_info.neg_train_error = 0.0;
-	
-		for (i=0;i<training_set_size;i++)
+		if (train_val_info.numerical_instability == false)
 		{
-			prediction = training_label_ALGD[i] * (1.0 - gradient_ALGD[i]);
-			train_val_info.train_error = train_val_info.train_error + loss_function.evaluate(training_label_ALGD[i], prediction);
-			train_val_info.neg_train_error = train_val_info.neg_train_error + neg_classification_loss(training_label_ALGD[i], prediction); 
-			train_val_info.pos_train_error = train_val_info.pos_train_error + pos_classification_loss(training_label_ALGD[i], prediction); 
+			train_val_info.train_error = 0.0;
+			train_val_info.pos_train_error = 0.0;
+			train_val_info.neg_train_error = 0.0;
+		
+			for (i=0;i<training_set_size;i++)
+			{
+				prediction = training_label_ALGD[i] * (1.0 - gradient_ALGD[i]);
+				train_val_info.train_error = train_val_info.train_error + loss_function.evaluate(training_label_ALGD[i], prediction);
+				train_val_info.neg_train_error = train_val_info.neg_train_error + neg_classification_loss(training_label_ALGD[i], prediction); 
+				train_val_info.pos_train_error = train_val_info.pos_train_error + pos_classification_loss(training_label_ALGD[i], prediction); 
+			}
+			train_val_info.train_error = ( (training_set_size > 0)? train_val_info.train_error / double(training_set_size):train_val_info.train_error);
+			train_val_info.neg_train_error = ( (neg_train_size > 0)? train_val_info.neg_train_error / double(neg_train_size):train_val_info.neg_train_error);
+			train_val_info.pos_train_error = ( (pos_train_size > 0)? train_val_info.pos_train_error / double(pos_train_size):train_val_info.pos_train_error);
 		}
-		train_val_info.train_error = train_val_info.train_error / double(training_set_size);
-		train_val_info.neg_train_error = ( (neg_train_size > 0)? train_val_info.neg_train_error / double(neg_train_size):train_val_info.neg_train_error);
-		train_val_info.pos_train_error = ( (pos_train_size > 0)? train_val_info.pos_train_error / double(pos_train_size):train_val_info.pos_train_error);
+		else
+		{
+			train_val_info.train_error = NOT_EVALUATED;
+			train_val_info.neg_train_error = NOT_EVALUATED;
+			train_val_info.pos_train_error = NOT_EVALUATED;
+		}
 	}
 }
 
@@ -600,16 +609,24 @@ void Thinge_svm::get_val_error(Tsvm_train_val_info& train_val_info)
 	Tbasic_svm::get_val_error(train_val_info);
 	if (is_first_team_member() == true)
 	{
-		train_val_info.pos_val_error = 0.0;
-		train_val_info.neg_val_error = 0.0;
-		
-		for (j=0;j<validation_set_size;j++)
+		if (train_val_info.numerical_instability == false)
 		{
-			train_val_info.neg_val_error = train_val_info.neg_val_error + neg_classification_loss(validation_label_ALGD[j], prediction_ALGD[j] + offset);
-			train_val_info.pos_val_error = train_val_info.pos_val_error + pos_classification_loss(validation_label_ALGD[j], prediction_ALGD[j] + offset);
+			train_val_info.pos_val_error = 0.0;
+			train_val_info.neg_val_error = 0.0;
+			
+			for (j=0;j<validation_set_size;j++)
+			{
+				train_val_info.neg_val_error = train_val_info.neg_val_error + neg_classification_loss(validation_label_ALGD[j], prediction_ALGD[j] + offset);
+				train_val_info.pos_val_error = train_val_info.pos_val_error + pos_classification_loss(validation_label_ALGD[j], prediction_ALGD[j] + offset);
+			}
+			train_val_info.neg_val_error = ( (neg_val_size > 0)? train_val_info.neg_val_error / double(neg_val_size):train_val_info.neg_train_error);
+			train_val_info.pos_val_error = ( (pos_val_size > 0)? train_val_info.pos_val_error / double(pos_val_size):train_val_info.pos_train_error);
 		}
-		train_val_info.neg_val_error = ( (neg_val_size > 0)? train_val_info.neg_val_error / double(neg_val_size):train_val_info.neg_train_error);
-		train_val_info.pos_val_error = ( (pos_val_size > 0)? train_val_info.pos_val_error / double(pos_val_size):train_val_info.pos_train_error);
+		else
+		{
+			train_val_info.neg_val_error = NOT_EVALUATED;
+			train_val_info.pos_val_error = NOT_EVALUATED;
+		}
 	}
 }
 

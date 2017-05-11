@@ -206,13 +206,6 @@ void Tbasic_svm::load(Tkernel* training_kernel, Tkernel* validation_kernel)
 		solution_current.reserve(training_set_size);
 		solution_old.reserve(training_set_size);
 		SV_list.reserve(training_set_size);
-
-// 		primal_dual_gap.resize(2 * get_team_size());
-// 		norm_etc_local.resize(2 * get_team_size());
-// 		norm_etc_global.resize(2 * get_team_size());
-// 
-// 		slack_sum_local.resize(2 * get_team_size());
-// 		slack_sum_global.resize(2 * get_team_size());
 	}
 }
 
@@ -399,16 +392,21 @@ void Tbasic_svm::get_val_error(Tsvm_train_val_info& train_val_info)
 {
 	unsigned i;
 
+
 	compute_val_predictions(train_val_info.val_iterations);
 	if (is_first_team_member() == true)
 	{
-		train_val_info.val_error = 0.0;
 		solution_old = solution_current;
+		if (train_val_info.numerical_instability == false)
+		{
+			train_val_info.val_error = 0.0;
+			for (i=0; i<validation_set_size; i++)
+				train_val_info.val_error = train_val_info.val_error + loss_function.evaluate(validation_label_ALGD[i], prediction_ALGD[i] + offset);
 
-		for (i=0; i<validation_set_size; i++)
-			train_val_info.val_error = train_val_info.val_error + loss_function.evaluate(validation_label_ALGD[i], prediction_ALGD[i] + offset);
-
-		train_val_info.val_error = ( (validation_set_size > 0)? train_val_info.val_error / double(validation_set_size) : train_val_info.train_error);
+			train_val_info.val_error = ( (validation_set_size > 0)? train_val_info.val_error / double(validation_set_size) : train_val_info.train_error);
+		}
+		else
+			train_val_info.val_error = NOT_EVALUATED;
 	}
 }
 

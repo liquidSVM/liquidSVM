@@ -153,6 +153,8 @@ void Ttrain_val_info::read_from_file(FILE* fp)
 	file_read(fp, init_time);
 	file_read(fp, train_time);
 	file_read(fp, val_time);
+	
+	file_read(fp, numerical_instability);
 }
 
 
@@ -187,6 +189,8 @@ void Ttrain_val_info::write_to_file(FILE* fp) const
 	file_write(fp, init_time);
 	file_write(fp, train_time);
 	file_write(fp, val_time);
+	
+	file_write(fp, numerical_instability);
 }
 
 
@@ -217,6 +221,8 @@ void Ttrain_val_info::clear()
 	init_time = 0.0;
 	train_time = 0.0;
 	val_time = 0.0;
+	
+	numerical_instability = false;
 }
 
 
@@ -278,7 +284,9 @@ Ttrain_val_info Ttrain_val_info::operator + (const Ttrain_val_info& train_val_in
 	result.init_time = init_time + train_val_info.init_time;
 	result.train_time = train_time + train_val_info.train_time;
 	result.val_time = val_time + train_val_info.val_time;
-
+	
+	result.numerical_instability = numerical_instability or train_val_info.numerical_instability;
+	
 	return Ttrain_val_info(result);
 }
 
@@ -316,6 +324,8 @@ Ttrain_val_info operator * (double scalar, Ttrain_val_info train_val_info)
 	result.init_time = scalar * train_val_info.init_time;
 	result.train_time = scalar * train_val_info.train_time;
 	result.val_time = scalar * train_val_info.val_time;
+	
+	result.numerical_instability = train_val_info.numerical_instability;
 
 	return Ttrain_val_info(result);
 }
@@ -396,6 +406,8 @@ void Ttrain_val_info::copy(const Ttrain_val_info& train_val_info)
 	init_time = train_val_info.init_time;
 	train_time = train_val_info.train_time;
 	val_time = train_val_info.val_time;
+	
+	numerical_instability = train_val_info.numerical_instability;
 };
 
 

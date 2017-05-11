@@ -77,7 +77,8 @@ class Tsvm_manager
 		void write_decision_function_manager_to_file(const Tsvm_decision_function_manager& decision_function_manager, const string& filename, double& file_time);
 	
 		
-		bool use_old_grid;
+		bool use_current_grid;
+		bool clear_previous_train_info;
 		Tfull_run_info full_run_info;
 		Tsvm_decision_function_manager decision_function_manager;
 		

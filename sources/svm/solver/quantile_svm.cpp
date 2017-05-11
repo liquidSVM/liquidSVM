@@ -112,13 +112,22 @@ void Tquantile_svm::get_train_error(Tsvm_train_val_info& train_val_info)
 	unsigned i;
 	double prediction;
 
-	train_val_info.train_error = 0.0;
-	for (i=0; i<training_set_size; i++)
+	
+	if (is_first_team_member() == true)
 	{
-		prediction = inverse_transform_label(training_label_transformed_ALGD[i] - gradient_ALGD[i]);
-		train_val_info.train_error = train_val_info.train_error + loss_function.evaluate(training_label_ALGD[i], prediction);
+		if (train_val_info.numerical_instability == false)
+		{
+			train_val_info.train_error = 0.0;
+			for (i=0; i<training_set_size; i++)
+			{
+				prediction = inverse_transform_label(training_label_transformed_ALGD[i] - gradient_ALGD[i]);
+				train_val_info.train_error = train_val_info.train_error + loss_function.evaluate(training_label_ALGD[i], prediction);
+			}
+			train_val_info.train_error = ( (training_set_size > 0)? train_val_info.train_error / double(training_set_size):train_val_info.train_error);
+		}
+		else
+			train_val_info.train_error = NOT_EVALUATED;
 	}
-	train_val_info.train_error = train_val_info.train_error / double(training_set_size);
 }
 
 //**********************************************************************************************************************************

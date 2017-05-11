@@ -317,6 +317,7 @@ void Tthread_manager_base::reserve_threads(Tparallel_control parallel_ctrl)
 			GPUs = 0;
 		GPU_number_offset = parallel_ctrl.GPU_number_offset;
 	#endif
+	keep_GPU_alive_after_disconnection = parallel_ctrl.keep_GPU_alive_after_disconnection;
 		
 	position = find(list_of_thread_managers, this);
 	if (position.size() == 0)
@@ -387,8 +388,11 @@ void Tthread_manager_base::connect_to_GPU()
 void Tthread_manager_base::disconnect_from_GPU()
 {
 	#ifdef  COMPILE_WITH_CUDA__
-		if (connected_to_GPU == true)
+		if ((keep_GPU_alive_after_disconnection == false) and (connected_to_GPU == true))
+		{
 			cudaThreadExit();
+			flush_info(INFO_2, "\nThread %d cleared GPU.", thread_id);
+		}
 		connected_to_GPU = false;
 	#endif
 }

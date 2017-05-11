@@ -41,6 +41,7 @@ class Tparallel_control
 		unsigned core_number_offset;
 		unsigned GPUs;
 		unsigned GPU_number_offset;
+		bool keep_GPU_alive_after_disconnection;
 };
 
 

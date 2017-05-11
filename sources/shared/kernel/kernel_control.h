@@ -49,6 +49,7 @@ class Tkernel_control
 		void write_to_file(FILE *fp) const;
 		void read_hierarchical_kernel_info_from_file();
 		void write_hierarchical_kernel_info_to_file();
+		void display();
 		void clear();
 		
 		

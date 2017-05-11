@@ -93,6 +93,8 @@ class Ttrain_val_info
 		double init_time;
 		double train_time;
 		double val_time;
+		
+		bool numerical_instability;
 
 	protected:
 		void ignore();

@@ -36,7 +36,7 @@
 
 Tsvm_manager::Tsvm_manager()
 {
-	use_old_grid = false;
+	use_current_grid = false;
 	fp_log_train_read = NULL;
 	fp_aux_train_read = NULL;
 	fp_sol_train_read = NULL;
@@ -88,7 +88,7 @@ void Tsvm_manager::clear()
 	working_set_manager.clear();
 	decision_function_manager.clear();
 	
-	if (use_old_grid == false)
+	if (use_current_grid == false)
 		current_grids.clear();
 	list_of_grids.clear();
 	list_of_fold_managers.clear();
@@ -388,6 +388,12 @@ void Tsvm_manager::train(const Ttrain_control& train_control, Tsvm_full_train_in
 	
 // Store some elementary statistics
 	
+	if (clear_previous_train_info == true)
+	{
+		full_run_info.clear();
+		svm_full_train_info.train_val_info_log.clear();
+	}
+	
 	full_run_info.number_of_tasks = working_set_manager.number_of_tasks();
 	full_run_info.total_number_of_cells = working_set_manager.total_number_of_working_sets();
 	full_run_info.number_of_cells_for_task.resize(full_run_info.number_of_tasks);
@@ -450,6 +456,7 @@ void Tsvm_manager::train(const Ttrain_control& train_control, Tsvm_full_train_in
 
 // 	Call common train routine
 	
+	Tsvm_manager::train_control.grid_control.ignore_resize = use_current_grid;
 	train_common(svm_full_train_info, false);
 	
 	
@@ -663,7 +670,14 @@ void Tsvm_manager::train_common(Tsvm_full_train_info& svm_full_train_info, bool 
 			svm_full_train_info.train_time = get_wall_time_difference(svm_full_train_info.train_time);
 
 			solver_control.set_clipping(working_set_info.max_abs_label);
+			
+			// Set some flags optimizing parallel and GPU execution
+			
 			parallel_control = train_control.parallel_control.set_to_single_threaded(working_set.size() < 500);
+			parallel_control.keep_GPU_alive_after_disconnection = true;
+			if ((select_mode == true) and (cv_control.use_stored_solution == true))
+				parallel_control.GPUs = 0;
+			
 
 			cv_manager.reserve_threads(parallel_control);
 			try

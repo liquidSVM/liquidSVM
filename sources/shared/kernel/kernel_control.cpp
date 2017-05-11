@@ -142,6 +142,36 @@ void Tkernel_control::write_hierarchical_kernel_info_to_file()
 }
 
 
+//**********************************************************************************************************************************
+
+
+void Tkernel_control::display()
+{
+	unsigned l;
+	unsigned li;
+
+
+
+	flush_info("\n\nKernel type:      %d.", kernel_type);
+	flush_info("\nFull kernel type: %d.", full_kernel_type);
+	flush_info("\nFull dimension:   %d.", full_dim);  
+	flush_info("\nNumber of nodes:  %d.", hierarchical_gammas.size());  
+	flush_info("\nWeights squared:  %2.4f.", get_hierarchical_weight_square_sum());
+	flush_info("\nFull dimension:   %d.", full_dim);  
+	
+	for (l=0; l<hierarchical_gammas.size(); l++)
+	{
+		flush_info("\nNode %d has weight %1.4f.  ", l, hierarchical_weights_squared[l]);
+		for (li=0; li<hierarchical_gammas[l].size(); li++)
+			flush_info("%3d:%1.4f ", hierarchical_coordinates[l][li], hierarchical_gammas[l][li]);
+	}
+
+	flush_info("\n");
+}
+
+
+
+
 
 //**********************************************************************************************************************************
 

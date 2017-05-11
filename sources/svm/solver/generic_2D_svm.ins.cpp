@@ -60,13 +60,14 @@ inline void Tsvm_2D_solver_generic_base_name::core_solver_generic_part(Tsvm_trai
 	unsigned k;
 	bool changed;
 	unsigned thread_id;
+
 	
 	new_alpha_1 = 0.0;
 	new_alpha_2 = 0.0;
 
 	thread_id = get_thread_id();
 	slack_sum_local[thread_id] = slack_sum_global[thread_id];
-	
+	train_val_info.numerical_instability = false;
 	
 	if (is_first_team_member() == true)
 	{
@@ -82,7 +83,7 @@ inline void Tsvm_2D_solver_generic_base_name::core_solver_generic_part(Tsvm_trai
 		if (primal_dual_gap[thread_id] > stop_eps)
 			initial_iteration(best_index_1, best_index_2, new_alpha_1, new_alpha_2);
 
-		while (primal_dual_gap[thread_id] > stop_eps)
+		while ((primal_dual_gap[thread_id] > stop_eps) and (train_val_info.numerical_instability == false))
 		{
 			set_NNs_search(best_index_1, best_index_2, new_alpha_1, new_alpha_2, train_val_info.train_iterations);
 			
@@ -133,12 +134,18 @@ inline void Tsvm_2D_solver_generic_base_name::core_solver_generic_part(Tsvm_trai
 			}
 			kernel_row2_ALGD = training_kernel->row(new_best_index_2);
 
+			if ((best_index_1 == new_best_index_1) and (best_index_2 = new_best_index_2))
+				train_val_info.numerical_instability = true;
+				
 			best_index_1 = new_best_index_1;
 			best_index_2 = new_best_index_2;
 
 			train_val_info.train_iterations++;
 			train_val_info.gradient_updates = train_val_info.gradient_updates + 2;
 		}
+	
+		if (train_val_info.numerical_instability == true)
+			flush_info(INFO_1, "\nWarning: Solver stopped for Gamma = %1.2e, Weights = %1.2e & %1.2e, and Lambda = %1.2e because of numerical numerical instability at iteration %d.", train_val_info.gamma, train_val_info.neg_weight, train_val_info.pos_weight, train_val_info.lambda, train_val_info.train_iterations);
 	
 		build_SV_list(train_val_info);
 		
