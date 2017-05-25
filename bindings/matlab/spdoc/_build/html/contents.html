@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LiquidSVM Documentation &#8212; liquidSVM 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head>
+  <body role="document">
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="mat-modindex.html" title="MATLAB Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">liquidSVM 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="liquidsvm-documentation">
+<h1>LiquidSVM Documentation<a class="headerlink" href="#liquidsvm-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This is the MATLAB Documentation for liquidSVM</p>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="least-squares-svm">
+<h2>Least Squares SVM<a class="headerlink" href="#least-squares-svm" title="Permalink to this headline">¶</a></h2>
+<p>This is the Least Squares class definition.</p>
+<span class="target" id="module-classes"></span><dl class="class">
+<dt id="classes.Liquid_LeastSquareSVM">
+<em class="property">class </em><code class="descclassname">classes.</code><code class="descname">Liquid_LeastSquareSVM</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#classes.Liquid_LeastSquareSVM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal"><span class="pre">Liquid_Model</span></code></p>
+<p>LeastSquareSVM Performs Least-Squares</p>
+<p>An interesting property still is CLIPPING.</p>
+<dl class="method">
+<dt id="classes.Liquid_LeastSquareSVM.train">
+<code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Liquid_LeastSquareSVM.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>train the model on a hyperparameter grid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="classes.Liquid_LeastSquareSVM.select">
+<code class="descname">select</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Liquid_LeastSquareSVM.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>select the best hyperparameteers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="classes.Liquid_LeastSquareSVM.test">
+<code class="descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Liquid_LeastSquareSVM.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>evaluate predictions for new test data and calculate test error.</p>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="LeastSquareSVM.html">LeastSquareSVM</a>, mcSVM</p>
+</div>
+<dl class="method">
+<dt id="classes.Liquid_LeastSquareSVM.Liquid_LeastSquareSVM">
+<code class="descname">Liquid_LeastSquareSVM</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#classes.Liquid_LeastSquareSVM.Liquid_LeastSquareSVM" title="Permalink to this definition">¶</a></dt>
+<dd><p>LeastSquareSVM (Constructor)
+Constructor of the class LeastSquareSVM</p>
+<p>Syntax:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">LeastSquareSVM</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">);</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">LeastSquareSVM</span><span class="p">(</span><span class="n">liquidData</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">);</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<em>double</em>) &#8211; matrix providing the input (train) data for the model.</li>
+<li><strong>y</strong> (<em>double (optional)</em>) &#8211; vector providing the input (train) labls for the model. The
+length of y must fit the length of x, meaning <code class="docutils literal"><span class="pre">size(y,1)</span> <span class="pre">==</span> <span class="pre">size(x,1)</span></code>.</li>
+<li><strong>liquidData</strong> (<em>An object of class Liquid_Data.</em>) &#8211; Such an object provides at least the train feature data as well as
+the train labels. In case test data is provided, testing is done automaticaly.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>For the optional parameters see:
+See <a class="reference external" href="Liquid_Model.constructor_Doc.html">Overview of Configuration Parameters</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal"><span class="pre">model</span></code> an object of class LeastSquareSVM</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>example of how to use the class:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">myData</span> <span class="o">=</span> <span class="p">[[</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;.</span><span class="mi">8</span><span class="p">;</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;.</span><span class="mi">2</span><span class="p">],[</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="o">+.</span><span class="mi">5</span><span class="p">;</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="o">-.</span><span class="mi">5</span><span class="p">]];</span>
+<span class="n">myRandomLiquid_Data</span> <span class="o">=</span> <span class="n">Liquid_Data</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span><span class="n">myData</span><span class="p">,</span><span class="s1">&#39;split&#39;</span><span class="p">,</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Liquid_LeastSquareSVM</span><span class="p">(</span><span class="n">myRandomLiquid_Data</span><span class="p">);</span>
+<span class="p">[</span><span class="n">result</span><span class="p">,</span><span class="n">error</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">myRandomLiquid_Data</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>example of how to use the class:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">reg</span> <span class="o">=</span> <span class="n">Liquid_Data</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;reg-1d&#39;</span><span class="p">);</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Liquid_LeastSquareSVM</span><span class="p">(</span><span class="n">reg</span><span class="p">);</span>
+<span class="p">[</span><span class="n">result</span><span class="p">,</span><span class="n">error</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">reg</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>See also Liquid_Model, Liquid_Data</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">LiquidSVM Documentation</a><ul>
+<li><a class="reference internal" href="#least-squares-svm">Least Squares SVM</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="mat-modindex.html" title="MATLAB Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">liquidSVM 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Nico Schmid.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.5.
+    </div>
+  </body>
+</html>
