@@ -76,8 +76,8 @@ int main(int argc, char** argv)
 //------- Load training set, the solutions & their performance, and the test data ------------------------
 
 	test_info.file_time = get_process_time_difference();
-	training_set.read_from_file(command_line_parser.train_filename);
-	test_set.read_from_file(command_line_parser.test_filename);
+	training_set.read_from_file(command_line_parser.train_file_format);
+	test_set.read_from_file(command_line_parser.test_file_format);
 	test_info.file_time = get_process_time_difference(test_info.file_time);
 		
 	if (training_set.dim() != test_set.dim())
@@ -124,8 +124,8 @@ int main(int argc, char** argv)
 	{
 		test_info.train_val_info[j].val_time = test_info.test_time;
 		test_info.train_val_info[j].write_to_file(fplogwrite);
-		
-		if (get_filetype(command_line_parser.test_filename) != NLA)
+
+		if (command_line_parser.test_file_format.label_position != 0)
 		{
 			if (command_line_parser.display_roc_style_errors == false)
 				flush_info(INFO_1,"\nTask %d: Test error %1.4f.",   j + task_offset, test_info.train_val_info[j].val_error);

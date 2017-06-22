@@ -40,8 +40,8 @@ class Tcommand_line_parser_svm_test: public Tcommand_line_parser
 		Ttest_control test_control;
 		bool display_roc_style_errors;
 
-		string train_filename;
-		string test_filename;
+		Tsample_file_format train_file_format;
+		Tsample_file_format test_file_format;
 		string result_filename;
 
 	protected:

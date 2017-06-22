@@ -29,7 +29,7 @@
 #
 ##################################################################################################################
 
-
+FILE_FORMAT=" +l "$LABEL_POS" +w "$WEIGHT_POS" +i "$ID_POS" +g "$GROUP_ID_POS" "
 
 # Iterate over all candidates of the search path if the variable SML_DATA_DIR has not been set
 # by the user, and take the first one, which containes the data.
@@ -40,7 +40,7 @@ then
 	OLD_IFS=$IFS
 	IFS=:
 	for DIR in $SML_DATA_PATH; do
-		if [[ -f "$DIR/$BASE_FILENAME.train.csv" ]] || [[ -f "$DIR/$BASE_FILENAME.train.uci" ]] || [[ -f "$DIR/$BASE_FILENAME.train.lsv" ]] || [[ -f "$DIR/$BASE_FILENAME.nla" ]]
+		if [[ -f "$DIR/$BASE_FILENAME.train.csv" ]] || [[ -f "$DIR/$BASE_FILENAME.train.lsv" ]]
 		then
 			SML_DATA_DIR="$DIR"
 			break
@@ -74,45 +74,24 @@ echo Writing result files to folder: $SML_RESULT_DIR
 
 # Determine file format of the training and test set.
 
-TRAIN_VAL_TEST=TRUE
+
 if [[ -f "$SML_DATA_DIR/$BASE_FILENAME.train.csv" ]]
 then
 	EXT=csv
-elif [[ -f "$SML_DATA_DIR/$BASE_FILENAME.train.uci" ]]
-then
-	EXT=uci
 elif [[ -f "$SML_DATA_DIR/$BASE_FILENAME.train.lsv" ]]
 then
 	EXT=lsv
-elif [[ -f "$SML_DATA_DIR/$BASE_FILENAME.train.nla" ]] && [[ $ALLOW_NLA = TRUE ]]
-then
-	EXT=nla
-elif [[ -f "$SML_DATA_DIR/$BASE_FILENAME.nla" ]] && [[ $ALLOW_NLA = TRUE ]]
-then
-	TRAIN_VAL_TEST=FALSE
-	EXT=nla
-	ALLOWED_EXT="nla"
 fi
 
 
 # Define training and test file names
 
-if [[ $TRAIN_VAL_TEST = TRUE ]]
-then
-	TRAIN_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.train.$EXT"
-	TEST_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.test.$EXT"
-	VAL_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.val.$EXT"
-	ALLOWED_EXT="[csv | uci | lsv "
-	if [[ $ALLOW_NLA = TRUE ]]
-	then
-		ALLOWED_EXT=$ALLOWED_EXT"| nla "
-	fi
-	ALLOWED_EXT=$ALLOWED_EXT"]"
-	ALLOWED_TRAIN_EXT=".train."$ALLOWED_EXT
-	ALLOWED_TEST_EXT=".test."$ALLOWED_EXT
-else
-	TRAIN_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.$EXT"
-fi
+
+TRAIN_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.train.$EXT"
+TEST_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.test.$EXT"
+VAL_FILENAME="$SML_DATA_DIR/$BASE_FILENAME.val.$EXT"
+ALLOWED_EXT="[csv | lsv ]"
+
 
 
 # Check whether files exist
@@ -122,12 +101,7 @@ then
 	echo
 	echo "SCRIPT ERROR: Could not determine extension of training file since" 
 	echo
-	if ! [[ $ALLOW_NLA = TRUE ]]
-	then 
-		echo "   "$BASE_FILENAME$ALLOWED_TRAIN_EXT
-	else
-		echo "   "$BASE_FILENAME$ALLOWED_TRAIN_EXT"   or   "$BASE_FILENAME".nla"
-	fi
+	echo "   "$BASE_FILENAME$ALLOWED_TRAIN_EXT
 	echo 
 	echo could not be found.
 	echo
@@ -147,6 +121,11 @@ then
 fi
 
 
+TRAIN_FILENAME=$TRAIN_FILENAME" "$FILE_FORMAT
+TEST_FILENAME=$TEST_FILENAME" "$FILE_FORMAT
+VAL_FILENAME=$VAL_FILENAME" "$FILE_FORMAT
+
+
 # Define auxiliary filenames
 
 LOG_SUMMARY_FILENAME="$SML_RESULT_DIR/$BASE_FILENAME.summary.log"
@@ -164,6 +143,7 @@ SOL_SELECT_FILENAME="$SML_RESULT_DIR/$BASE_FILENAME.sol"
 LOG_TEST_FILENAME="$SML_RESULT_DIR/$BASE_FILENAME.test.log"
 RES_TEST_FILENAME="$SML_RESULT_DIR/$BASE_FILENAME.result.csv"
 FULL_RES_TEST_FILENAME="$SML_RESULT_DIR/$BASE_FILENAME.full_result.csv"
+PREDICT_FILENAME="$SML_RESULT_DIR/$BASE_FILENAME.predict.csv"
 
 SVM_TRAIN_FILENAMES=$TRAIN_FILENAME" "$LOG_TRAIN_FILENAME" "$LOG_SUMMARY_FILENAME" "$SOL_TRAIN_FILENAME
 SVM_SELECT_FILENAMES=$TRAIN_FILENAME" "$LOG_TRAIN_FILENAME" "$LOG_SELECT_FILENAME" "$SOL_SELECT_FILENAME" "$LOG_SUMMARY_FILENAME

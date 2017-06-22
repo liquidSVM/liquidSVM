@@ -26,6 +26,7 @@
 #include "sources/shared/basic_functions/random_subsets.h"
 
 #include "sources/shared/basic_types/dataset_info.h"
+#include "sources/shared/basic_types/my_unordered_map_and_set.h"
 
 #include <cmath>
 
@@ -77,6 +78,10 @@ Tfold_manager::Tfold_manager(Tfold_control fold_control, const Tdataset& dataset
 
 		case RANDOM_SUBSET:
 			create_folds_subset(fold_control.negative_fraction);
+			break;
+			
+		case GROUPED:
+			create_folds_grouped();
 			break;
 			
 		default:
@@ -389,6 +394,34 @@ void Tfold_manager::create_folds_stratified_random()
 		for (i=0; i < train_size; i++)
 			fold_affiliation[subset_info[permutation[i]]] = (i % fold_control.number) + 1;
 	}
+}
+
+
+//**********************************************************************************************************************************
+
+
+void Tfold_manager::create_folds_grouped()
+{
+	unsigned i;
+	unsigned g;
+	unsigned group_size;
+	Tdataset_info data_set_info;
+	my_unordered_map<unsigned, unsigned> group_fold_map;
+
+	
+	data_set_info = Tdataset_info(dataset, true);
+	if (data_set_info.group_list.size() <= 1)
+		flush_exit(ERROR_DATA_MISMATCH, "Grouped folds can only be created for data having group information.");
+	
+	group_size = unsigned(double(data_set_info.group_list.size()) * fold_control.train_fraction);
+		
+	for (g=0; g<group_size; g++)
+		group_fold_map.insert(std::pair<unsigned, unsigned>(data_set_info.group_list[g], (g % fold_control.number) + 1));
+	for (g=group_size; g<data_set_info.group_list.size(); g++)
+		group_fold_map.insert(std::pair<unsigned, unsigned>(data_set_info.group_list[g], fold_control.number + 1));
+
+	for (i=0; i<dataset.size(); i++)
+		fold_affiliation[i] = group_fold_map[dataset.sample(i)->group_id];
 }
 
 

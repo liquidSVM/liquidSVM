@@ -31,6 +31,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <stdarg.h>
+#include <limits>
 
 
 #ifdef  COMPILE_WITH_CUDA__
@@ -617,18 +618,46 @@ string Tcommand_line_parser::get_next_filename(unsigned error_code)
 }
 
 
+
 //**********************************************************************************************************************************
 
 
-string Tcommand_line_parser::get_next_data_filename(unsigned error_code)
+Tsample_file_format Tcommand_line_parser::get_next_data_file_format(unsigned error_code)
 {
-	string filename;
+	Tsample_file_format sample_file_format;
 	
-	filename = get_next_filename(error_code);
-	check_data_filename(filename);
 	
-	return filename;
+	sample_file_format.filename = get_next_filename(error_code);
+	check_data_filename(sample_file_format.filename);
+	
+	current_position--;
+	while (next_parameter_equals('+') == true)
+	{
+		current_position++;
+		switch(parameter_list[current_position][1])
+		{
+			case 'g':
+				sample_file_format.group_id_position = get_next_number(ERROR_clp_gen_incorrect_data_file_modifiers, std::numeric_limits<int>::min());
+				break;
+				
+			case 'i':
+				sample_file_format.id_position = get_next_number(ERROR_clp_gen_incorrect_data_file_modifiers, std::numeric_limits<int>::min());
+				break;
+			
+			case 'l':
+				sample_file_format.label_position = get_next_number(ERROR_clp_gen_incorrect_data_file_modifiers, std::numeric_limits<int>::min());
+				break;
+			
+			case 'w':
+				sample_file_format.weight_position = get_next_number(ERROR_clp_gen_incorrect_data_file_modifiers, std::numeric_limits<int>::min());
+				break;
+		}
+	}
+	current_position++;
+	
+	return sample_file_format; 
 }
+
 
 
 //**********************************************************************************************************************************
@@ -644,31 +673,6 @@ string Tcommand_line_parser::get_next_aux_filename(unsigned error_code)
 	return filename;
 }
 
-//**********************************************************************************************************************************
-
-
-string Tcommand_line_parser::get_next_labeled_data_filename(unsigned error_code)
-{
-	string filename;
-	
-	filename = get_next_filename(error_code);
-	check_labeled_data_filename(filename);
-	
-	return filename;
-}
-
-
-//**********************************************************************************************************************************
-
-string Tcommand_line_parser::get_next_unlabeled_data_filename(unsigned error_code)
-{
-	string filename;
-	
-	filename = get_next_filename(error_code);
-	check_unlabeled_data_filename(filename);
-	
-	return filename;
-}
 
 //**********************************************************************************************************************************
 

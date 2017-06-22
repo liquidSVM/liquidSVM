@@ -50,7 +50,7 @@ class Tcommand_line_parser_create_tt: public Tcommand_line_parser
 		unsigned train_size;
 		unsigned val_size;
 		unsigned test_size;
-		string filename;
+		Tsample_file_format file_format;
 
 	protected:
 		void exit_with_help();
@@ -104,7 +104,7 @@ void Tcommand_line_parser_create_tt::parse()
 						test_size = get_next_number_no_limits(ERROR_clp_ttt_F, 0.0);
 					break;
 				case 't':
-					fold_control.kind = get_next_enum(ERROR_clp_ttt_t, BLOCKS, STRATIFIED);
+					fold_control.kind = get_next_enum(ERROR_clp_ttt_t, BLOCKS, GROUPED);
 					break;
 				default:
 					Tcommand_line_parser::exit_with_help(ERROR_clp_gen_unknown_option);
@@ -112,7 +112,7 @@ void Tcommand_line_parser_create_tt::parse()
 		}
 		
 	fold_control.random_seed = random_seed;
-	filename = get_next_data_filename(ERROR_clp_gen_missing_data_file_name);
+	file_format = get_next_data_file_format(ERROR_clp_gen_missing_data_file_name);
 };
 
 
@@ -126,9 +126,10 @@ void Tcommand_line_parser_create_tt::exit_with_help()
 	"\ncreate-tt creates a training, test, and optionally also a validation, data set" 
 	"\nfrom <data_file> and writes these data sets into 2 or 3 files. These have the"
 	"\nthe same name as <data_file> extended by .train', '.test', and '.val',"
-	"\nrespectively. The extension of <data_file> is inherited.\n"
+	"\nrespectively. The extension of <data_file>, and its file format in case of a"
+	"\n .csv extension, are inherited.\n"
 	"\nAllowed extensions:\n"
-		"<data_file>:  .csv, .lsv, .uci, and .nla\n");
+		"<data_file>:  .csv and .lsv\n");
 
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");
@@ -193,13 +194,14 @@ void Tcommand_line_parser_create_tt::display_help(unsigned error_code)
 	{
 		display_separator("-t <method>");
 		flush_info(INFO_1, 
-		"Selects the method for creating the files. Warning: stratified sampling may lead to adjusted\n"
-		"file sizes!\n");
+		"Selects the method for creating the files. Warning: stratified and grouped sampling may lead\n"
+		"to adjusted file sizes!\n");
 		display_specifics();
 		flush_info(INFO_1, "<method> = %d  =>  both files are a contiguous block\n", BLOCKS);
 		flush_info(INFO_1, "<method> = %d  =>  alternating fold assignmend (-f is ignored)\n", ALTERNATING);
 		flush_info(INFO_1, "<method> = %d  =>  random\n", RANDOM);
 		flush_info(INFO_1, "<method> = %d  =>  stratified random\n", STRATIFIED);
+		flush_info(INFO_1, "<method> = %d  =>  random respecting group information of samples\n", GROUPED);
 
 		display_ranges();
 		flush_info(INFO_1, "<method>:  integer between %d and %d\n", FROM_FILE+1, FOLD_CREATION_TYPES_MAX-2);
@@ -232,9 +234,10 @@ int main(int argc, char **argv)
 	Tfold_manager fold_manager_val;
 	
 	string extension;
-	string train_filename;
-	string test_filename;
-	string val_filename;
+	string filename;
+	Tsample_file_format train_file_format;
+	Tsample_file_format test_file_format;
+	Tsample_file_format val_file_format;
 
 	double write_time;
 	double read_time;
@@ -252,7 +255,7 @@ int main(int argc, char **argv)
 // Load data set
 
 	read_time = get_process_time_difference();
-	data_set.read_from_file(command_line_parser.filename);
+	data_set.read_from_file(command_line_parser.file_format);
 	read_time = get_process_time_difference(read_time);
 	
 
@@ -299,16 +302,22 @@ int main(int argc, char **argv)
 
 // Write to file
 	
-	extension = command_line_parser.filename.substr(command_line_parser.filename.length() - 4, command_line_parser.filename.length());
-	train_filename = command_line_parser.filename.substr(0, command_line_parser.filename.length() - 4) + ".train" + extension;
-	test_filename = command_line_parser.filename.substr(0, command_line_parser.filename.length() - 4) + ".test" + extension;
-	val_filename = command_line_parser.filename.substr(0, command_line_parser.filename.length() - 4) + ".val" + extension;
+	filename = command_line_parser.file_format.filename;
+	extension = filename.substr(filename.length() - 4, filename.length());
+	
+	train_file_format = command_line_parser.file_format;
+	test_file_format = command_line_parser.file_format;
+	val_file_format = command_line_parser.file_format;
+	
+	train_file_format.filename = filename.substr(0, filename.length() - 4) + ".train" + extension;
+	test_file_format.filename = filename.substr(0, filename.length() - 4) + ".test" + extension;
+	val_file_format.filename = filename.substr(0, filename.length() - 4) + ".val" + extension;
 	
 	write_time = get_process_time_difference();
-	training_set.write_to_file(train_filename);
+	training_set.write_to_file(train_file_format);
 	if (val_set.size() > 0)
-		val_set.write_to_file(val_filename);
-	test_set.write_to_file(test_filename);
+		val_set.write_to_file(val_file_format);
+	test_set.write_to_file(test_file_format);
 	write_time = get_process_time_difference(write_time);
 	
 

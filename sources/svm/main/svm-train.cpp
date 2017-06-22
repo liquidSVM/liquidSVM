@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 //-------- Load data --------------------------------------------------------------------------------------------
 
 	file_time = get_process_time_difference();
-	data_set.read_from_file(command_line_parser.train_filename);
+	data_set.read_from_file(command_line_parser.train_file_format);
 	file_time = get_process_time_difference(file_time);
 	
 	

@@ -236,6 +236,7 @@ void Tsvm_manager::read_decision_function_manager_from_file(Tsvm_decision_functi
 	unsigned filetype;
 	unsigned dim;
 	unsigned size;
+	Tsample_file_format sample_file_format;
 	
 	
 	filename = get_filename_of_fp(fpsolread);
@@ -247,7 +248,9 @@ void Tsvm_manager::read_decision_function_manager_from_file(Tsvm_decision_functi
 	{
 		file_read(fpsolread, size);
 		file_read(fpsolread, dim);
-		data_set.read_from_file(fpsolread, CSV, size, dim);
+		file_read_eol(fpsolread);
+
+		data_set.read_from_file(fpsolread, sample_file_format, size, dim);
 		data_loaded_from_sol_file = true;
 	}
 	else
@@ -274,6 +277,7 @@ void Tsvm_manager::read_decision_function_manager_from_file(Tsvm_decision_functi
 void Tsvm_manager::write_decision_function_manager_to_file(const Tsvm_decision_function_manager& decision_function_manager, FILE* fpsolwrite)
 {
 	string filename;
+	Tsample_file_format sample_file_format;
 	unsigned filetype;
 	
 	filename = get_filename_of_fp(fpsolwrite);
@@ -285,8 +289,8 @@ void Tsvm_manager::write_decision_function_manager_to_file(const Tsvm_decision_f
 		file_write(fpsolwrite, data_set.size());
 		file_write(fpsolwrite, data_set.dim());
 		file_write_eol(fpsolwrite);
-		
-		data_set.write_to_file(fpsolwrite, CSV);
+
+		data_set.write_to_file(fpsolwrite, sample_file_format);
 	}
 	
 	file_write(fpsolwrite, scale_data);

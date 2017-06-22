@@ -69,6 +69,7 @@ class Tfold_manager
 		void create_folds_random();
 		void create_folds_stratified_random();
 		void create_folds_subset(double negative_fraction);
+		void create_folds_grouped();
 
 		
 		Tdataset dataset;

@@ -236,13 +236,36 @@ void Tdataset::push_back(const Tdataset& dataset)
 
 
 
+
 //**********************************************************************************************************************************
 
+void Tdataset::read_from_file(Tsample_file_format& sample_file_format)
+{
+	unsigned dim;
+	FILE *fpread;
+	Tsample dummy_sample;
+	
+	sample_file_format.update_filetype();
+	check_data_filename(sample_file_format.filename);
 
-void Tdataset::read_from_file(FILE* fpread, unsigned filetype, unsigned size, unsigned dim)
+	fpread = open_file(sample_file_format.filename,"r");
+	
+	dim = 0;
+	if (sample_file_format.filetype != LSV)
+		dummy_sample.get_dim_from_file(fpread, sample_file_format, dim);
+	
+	read_from_file(fpread, sample_file_format, 0, dim);
+	close_file(fpread);
+	
+	flush_info(INFO_2, "\nLoaded %d samples of dimension %d from file %s", size(), dim, sample_file_format.filename.c_str());
+}
+
+
+//**********************************************************************************************************************************
+
+void Tdataset::read_from_file(FILE* fpread, Tsample_file_format& sample_file_format, unsigned size, unsigned dim)
 {
 	unsigned i;
-	unsigned j;
 	int read_status;
 	Tsample dummy_sample;
 	
@@ -250,21 +273,18 @@ void Tdataset::read_from_file(FILE* fpread, unsigned filetype, unsigned size, un
 	clear();
 	enforce_ownership();
 
-
 	if (size == 0)
 		size = numeric_limits<unsigned>::max();
 	
 	i = 0;
-	j = 0;
 	do
 	{
-		read_status = dummy_sample.read_from_file(fpread, filetype, dim);
+		read_status = dummy_sample.read_from_file(fpread, sample_file_format, dim);
 		if (read_status == FILE_OP_OK)
 		{
 			dummy_sample.number = i;
 			push_back(&dummy_sample);
 			i++;
-			j++;
 		}
 		else if (read_status == FILE_CORRUPTED)
 			exit_on_file_error(FILE_CORRUPTED, fpread);
@@ -273,66 +293,38 @@ void Tdataset::read_from_file(FILE* fpread, unsigned filetype, unsigned size, un
 }
 
 
-
 //**********************************************************************************************************************************
 
 
-void Tdataset::read_from_file(string filename)
-{
-	unsigned dim;
-	int filetype;
-	FILE *fpread;
-	Tsample dummy_sample;
-	
-	filetype = get_filetype(filename);
-	check_data_filename(filename);
-
-	fpread = open_file(filename,"r");
-	
-	dim = 0;
-	if (filetype != LSV)
-		dummy_sample.get_dim_from_file(fpread, filetype, dim);
-	
-	read_from_file(fpread, filetype, 0, dim);
-	close_file(fpread);
-	
-	flush_info(INFO_2, "\nLoaded %d samples of dimension %d from file %s", size(), dim, filename.c_str());
-}
-
-
-//**********************************************************************************************************************************
-
-
-void Tdataset::write_to_file(FILE* fpwrite, unsigned filetype) const
-{
-	unsigned i;
-	unsigned data_dim;
-
-	
-	data_dim = dim();
-	for (i=0;i<size();i++)
-		sample_list[i]->write_to_file(fpwrite, filetype, data_dim);
-}
-
-
-//**********************************************************************************************************************************
-
-
-void Tdataset::write_to_file(string filename) const
+void Tdataset::write_to_file(Tsample_file_format& sample_file_format) const
 {
 	FILE* fpwrite;
-	int filetype;
 
 
-	filetype = get_filetype(filename);
-	check_data_filename(filename);
-	fpwrite = open_file(filename, "w");
+	sample_file_format.update_filetype();
+	check_data_filename(sample_file_format.filename);
+	fpwrite = open_file(sample_file_format.filename, "w");
 	
-	flush_info(INFO_2, "\nWriting %d samples of dimension %d to file %s", size(), dim(), filename.c_str());
-	write_to_file(fpwrite, filetype);
+	flush_info(INFO_2, "\nWriting %d samples of dimension %d to file %s", size(), dim(), sample_file_format.filename.c_str());
+	write_to_file(fpwrite, sample_file_format);
 	
 	close_file(fpwrite);
 }
+
+//**********************************************************************************************************************************
+
+
+void Tdataset::write_to_file(FILE* fpwrite, Tsample_file_format& sample_file_format) const
+{
+	unsigned i;
+
+	
+	sample_file_format.dataset_dim = dim();
+	for (i=0;i<size();i++)
+		sample_list[i]->write_to_file(fpwrite, sample_file_format);
+}
+
+
 
 
 //**********************************************************************************************************************************
@@ -1206,6 +1198,21 @@ Tsubset_info Tdataset::create_subset_info_with_label(double label) const
 
 	for (i=0; i<size(); i++)
 		if (sample_list[i]->label == label)
+			subset_info.push_back(i);
+
+	return subset_info;
+}
+
+//**********************************************************************************************************************************
+
+
+Tsubset_info Tdataset::create_subset_info_of_group(double group_id) const
+{
+	unsigned i;
+	Tsubset_info subset_info;
+
+	for (i=0; i<size(); i++)
+		if (sample_list[i]->group_id == group_id)
 			subset_info.push_back(i);
 
 	return subset_info;

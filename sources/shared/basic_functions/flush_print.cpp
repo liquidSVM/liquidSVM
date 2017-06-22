@@ -246,7 +246,7 @@ void ddump(unsigned input)
 
 //**********************************************************************************************************************************
 
-#ifdef OWN_DEVELOP__
+#if defined(OWN_DEVELOP__) && defined(X64_CPU) 
 	void ddump(size_t input)
 	{
 		flush_info("%zu ", input);
@@ -304,9 +304,12 @@ void ddump(const Tsample& input_sample)
 {
 	unsigned i;
 	
-	flush_info("%2.4f:  ", input_sample.label);
+	flush_info("l: %2.4f  ", input_sample.label);
+	flush_info("w: %2.4f  ", input_sample.weight);
+	flush_info("gi: %d  ", input_sample.group_id);
+	
 	for (i=0; i<input_sample.dim(); i++)
-		flush_info("%2.4f  ", input_sample[i]);
+		flush_info("x%d: %2.4f  ", i, input_sample[i]);
 }
 
 

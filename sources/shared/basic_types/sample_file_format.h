@@ -15,48 +15,69 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
 
+#if !defined (SAMPLE_FILE_FORMAT_H) 
+	#define SAMPLE_FILE_FORMAT_H
 
-#if !defined (FOLD_CONTROL_H)
-	#define FOLD_CONTROL_H
 
- 
- 
+#include <vector>
 #include <cstdio>
+#include <string>
 using namespace std;
 
 
-//********************************************************************************************************************************** 
-
-
-const double FRACTION_NOT_ASSIGNED = -1.0;
-enum FOLD_CREATION_TYPES {FROM_FILE, BLOCKS, ALTERNATING, RANDOM, STRATIFIED, GROUPED, RANDOM_SUBSET, FOLD_CREATION_TYPES_MAX};
-
-
+	
 //**********************************************************************************************************************************
-
-
-class Tfold_control
+	
+	
+	
+class Tsample_file_format
 {
 	public:
-		Tfold_control();
+		Tsample_file_format();
 		void read_from_file(FILE *fp);
 		void write_to_file(FILE *fp) const;
+		void display(unsigned level) const;
+		void clear();
 
 
-		unsigned number;
-		unsigned kind;
-		double train_fraction;
-		double negative_fraction;
-		int random_seed;
+		unsigned count_extra_positions();
+		void compute_extra_position_list(unsigned number_of_columns);
+		void compute_full_include_list(unsigned number_of_columns);
+		void compute_full_exclude_list(unsigned number_of_columns);
+		unsigned get_true_column(int column, unsigned number_of_columns);
+		void update_filetype();
+		void check_filetype();
+		
+		
+		int label_position;
+		int weight_position;
+		int id_position;
+		int group_id_position;
+		
+		string filename;
+		unsigned filetype;
+		unsigned dataset_dim;
+		
+		
+		vector <unsigned> user_include_list;
+		vector <unsigned> user_exclude_list;
+		
+		vector <unsigned> full_include_list;
+		vector <unsigned> full_exclude_list;
+		vector <unsigned> extra_position_list;
 };
-
-
+	
+	
+	
+	
 //**********************************************************************************************************************************
+
 
 
 #ifndef COMPILE_SEPERATELY__
-	#include "sources/shared/training_validation/fold_control.cpp"
+	#include "sources/shared/basic_types/sample_file_format.cpp"
+#endif
+	
+	
 #endif
 
-
-#endif

@@ -206,6 +206,7 @@ void Tcommand_line_parser_svm_train::display_help(unsigned error_code)
 		flush_info(INFO_1, "<kind> = %d  =>  alternating fold assignmend\n", ALTERNATING);
 		flush_info(INFO_1, "<kind> = %d  =>  random\n", RANDOM);
 		flush_info(INFO_1, "<kind> = %d  =>  stratified random\n", STRATIFIED);
+		flush_info(INFO_1, "<kind> = %d  =>  random respecting group information of samples\n", GROUPED);
 		flush_info(INFO_1, "<kind> = %d  =>  random subset (<train_fraction> and <neg_fraction> required)\n", RANDOM_SUBSET);
 
 
@@ -500,8 +501,8 @@ void Tcommand_line_parser_svm_train::display_help(unsigned error_code)
 	{
 		display_separator("-S <solver> [<NNs>]");
 		flush_info(INFO_1, 
-		"Selects the SVM solver <solver> and the number <NNs> of nearest neighbors used in the working\n"
-		"set selection strategy (2D-solvers only).\n");
+		"Selects the SVM solver <solver> and the number <NNs> of nearest neighbors used\n" 
+		"in the working set selection strategy (2D-solvers only).\n");
 
 		display_specifics();
 		flush_info(INFO_1, "<solver> = %d  =>  kernel rule for classification\n", KERNEL_RULE);
@@ -586,7 +587,7 @@ void Tcommand_line_parser_svm_train::exit_with_help()
 	"recorded in <logfile> and an additional .aux file. Optionally, the SVM decision\n"
 	"functions can be saved in <solution_file>.\n"
 	"\nAllowed extensions:\n"
-	"<trainfile>:  .csv, .lsv, and .uci\n"
+	"<trainfile>:  .csv and .lsv\n"
 	"<logfile>:    .log\n"
 	"<solfile>:    .sol\n");
 
@@ -864,7 +865,8 @@ void Tcommand_line_parser_svm_train::parse(Ttrain_control& train_control, bool r
 
 	if (read_filenames == true)
 	{
-		train_filename = get_next_labeled_data_filename(ERROR_clp_gen_missing_train_file_name);
+		train_file_format = get_next_data_file_format(ERROR_clp_gen_missing_train_file_name);
+		check_labeled_data_format(train_file_format);
 		train_control.write_log_train_filename = get_next_log_filename(ERROR_clp_gen_missing_log_file_name);
 		train_control.write_aux_train_filename = convert_log_to_aux_filename(train_control.write_log_train_filename);
 		
@@ -874,7 +876,7 @@ void Tcommand_line_parser_svm_train::parse(Ttrain_control& train_control, bool r
 		if (current_position < parameter_list_size)
 			train_control.write_sol_train_filename = get_next_filename(); 
 	}
-	
+
 	train_control.parallel_control = get_parallel_control();
 	make_consistent(train_control);
 };

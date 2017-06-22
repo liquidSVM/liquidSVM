@@ -40,7 +40,7 @@ class Tcommand_line_parser_svm_train : public Tcommand_line_parser
 		Tcommand_line_parser_svm_train();
 		void parse(Ttrain_control& train_control, bool read_filenames);
 
-		string train_filename;
+		Tsample_file_format train_file_format;
 
 	protected:
 		void make_consistent(Ttrain_control& train_control);

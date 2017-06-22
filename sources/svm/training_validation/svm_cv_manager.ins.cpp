@@ -68,6 +68,13 @@ template <> inline void Tcv_manager<Tsvm_solution, Tsvm_train_val_info, Tsvm_sol
 			case SVM_LS_PAR:
 				solver = new Tleast_squares_svm_par();
 				break;
+		#else
+			case SVM_HINGE_PAR:
+				solver = new Thinge_2D_svm();
+				break;
+			case SVM_LS_PAR:
+				solver = new Tleast_squares_svm();
+				break;
 		#endif
 		default:
 			flush_exit(ERROR_UNSPECIFIED, "Specified solver type %d is unknown.", solver_control.solver_type);

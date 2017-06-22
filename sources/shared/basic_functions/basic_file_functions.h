@@ -19,6 +19,12 @@
 #if !defined (BASIC_FILE_FUNCTIONS_H) 
 	#define BASIC_FILE_FUNCTIONS_H
 
+	
+	
+#include "sources/shared/basic_types/sample_file_format.h"
+	
+	
+	
 
 #include <vector>
 #include <cstdio>
@@ -29,7 +35,7 @@ using namespace std;
 //**********************************************************************************************************************************
  
 
-enum FILETYPES {UNKNOWN_FILETYPE, NLA, CSV, WSV, LSV, UCI, LOG, AUX, SOL, FSOL, FILETYPES_MAX};
+enum FILETYPES {UNKNOWN_FILETYPE, CSV, LSV, LOG, AUX, SOL, FSOL, FILETYPES_MAX};
 enum FILE_ERROR_MESSAGES {FILE_OP_OK, END_OF_LINE, END_OF_FILE, ILLEGAL_FILETYPE, FILE_CORRUPTED, LSV_FILE_CORRUPTED, INPUT_TYPE_UNKNOWN, FILE_ERROR_MESSAGES_MAX};
 
 
@@ -39,11 +45,12 @@ void exit_on_file_error(int error_type, const string& filename);
 unsigned get_filetype(const string& filename);
 
 void check_data_filename(const string& filename);
-void check_labeled_data_filename(const string& filename);
-void check_unlabeled_data_filename(const string& filename);
 void check_log_filename(const string& filename);
 void check_aux_filename(const string& filename);
 void check_solution_filename(const string& filename);
+void check_labeled_data_format(const Tsample_file_format sample_file_format);
+void check_weighted_data_format(const Tsample_file_format sample_file_format);
+void check_grouped_data_format(const Tsample_file_format sample_file_format);
 
 string convert_log_to_aux_filename(const string& filename);
 
@@ -53,6 +60,7 @@ void close_file(FILE* fp);
 string get_filename_of_fp(FILE* fp);
 
 
+void file_read_eol(FILE* fp);
 void file_read(FILE* fp, bool& input);
 void file_read(FILE* fp, int& input);
 void file_read(FILE* fp, unsigned& input);

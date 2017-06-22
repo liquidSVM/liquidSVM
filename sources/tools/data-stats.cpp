@@ -16,8 +16,11 @@
 // along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
 
 
+
+
 #include "../shared/system_support/os_specifics.h"
 #include "../shared/basic_functions/flush_print.h"
+#include "../shared/basic_types/sample_file_format.h"
 #include "../shared/basic_types/dataset_info.h"
 #include "../shared/system_support/timing.h"
 #include "../shared/command_line/command_line_parser.h"
@@ -41,11 +44,12 @@ class Tcommand_line_parser_data_stats: public Tcommand_line_parser
 {
 	public:
 		Tcommand_line_parser_data_stats();
-		void parse(string& filename);
+		void parse();
 
 
 		double tau;
 		double label_tau;
+		Tsample_file_format file_format;
 
 	protected:
 		void exit_with_help();
@@ -66,7 +70,7 @@ Tcommand_line_parser_data_stats::Tcommand_line_parser_data_stats()
 //**********************************************************************************************************************************
 
 
-void Tcommand_line_parser_data_stats::parse(string& filename)
+void Tcommand_line_parser_data_stats::parse()
 {
 	check_parameter_list_size();
 	for(current_position=1; current_position<parameter_list_size; current_position++)
@@ -89,7 +93,7 @@ void Tcommand_line_parser_data_stats::parse(string& filename)
 					Tcommand_line_parser::exit_with_help(ERROR_clp_gen_unknown_option);
 			}
 		}
-	filename = get_next_data_filename(ERROR_clp_gen_missing_data_file_name);
+	file_format = get_next_data_file_format(ERROR_clp_gen_missing_data_file_name);
 };
 
 
@@ -102,7 +106,7 @@ void Tcommand_line_parser_data_stats::exit_with_help()
 	"\n\nUsage:\ndata-stats [options] <data_file> \n"
 	"\ndata-stats displays some statistics about the data contained in <data_file>.\n"
 	"\nAllowed extensions:\n"
-		"<data_file>:  .csv, .lsv, .nla, .wsv, and .uci\n");
+		"<data_file>:  .csv and .lsv\n");
 
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");
@@ -160,9 +164,7 @@ void Tcommand_line_parser_data_stats::display_help(unsigned error_code)
 
 int main(int argc, char **argv)
 {
-	string filename;
 	Tcommand_line_parser_data_stats command_line_parser;
-
 	Tdataset data_set;
 	Tdataset_info data_set_info;
 
@@ -176,13 +178,13 @@ int main(int argc, char **argv)
 	full_time = get_wall_time_difference();
 
 	command_line_parser.setup(argc, argv);
-	command_line_parser.parse(filename);
-
+	command_line_parser.parse();
+	
 
 // Load data set
 
 	file_time = get_process_time_difference();
-	data_set.read_from_file(filename);
+	data_set.read_from_file(command_line_parser.file_format);
 	file_time = get_process_time_difference(file_time);
 
 

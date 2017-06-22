@@ -75,3 +75,10 @@ DISPLAY=1
 : ${NUM_FOLDS:=5}
 : ${THREAD_OFFSET:=0}
 : ${GPU_OFFSET:=0}
+
+: ${LABEL_POS:=1}
+: ${WEIGHT_POS:=0}
+: ${ID_POS:=0}
+: ${GROUP_ID_POS:=0}
+
+

@@ -45,8 +45,7 @@ class Tcommand_line_parser_convert: public Tcommand_line_parser
 		
 		bool permute_data;
 		unsigned subset_size;
-		vector <string> filenames;
-
+		vector <Tsample_file_format> file_formats;
 
 	protected:
 		void exit_with_help();
@@ -88,12 +87,12 @@ void Tcommand_line_parser_convert::parse()
 			}			
 		}
 		
-	filenames.push_back(get_next_data_filename(ERROR_clp_gen_missing_data_file_name));
-	filenames.push_back(get_next_labeled_data_filename(ERROR_clp_gen_missing_data_file_name));
+	file_formats.push_back(get_next_data_file_format(ERROR_clp_gen_missing_data_file_name));
+	file_formats.push_back(get_next_data_file_format(ERROR_clp_gen_missing_data_file_name));
 	
 	while (current_position < parameter_list_size)
 	{
-		filenames.push_back(get_next_labeled_data_filename(ERROR_clp_gen_missing_data_file_name));
+		file_formats.push_back(get_next_data_file_format(ERROR_clp_gen_missing_data_file_name));
 		current_position++;
 	}
 };
@@ -107,10 +106,10 @@ void Tcommand_line_parser_convert::exit_with_help()
 	"\n\nconvert [options] <data_file_output> <data_file1_input> [<data_file2_input> ...]\n"
 	"\nWrites the data set contained in <data_fileX_input> into"
 	"\nthe file <data_file_output>. A type conversion is performed"
-	"\naccording to the file extensions.\n"
+	"\naccording to the file extensions and the file format specifers.\n"
 	"\nAllowed extensions:\n"
-		"<data_filex_input>:  .csv, .lsv, and .uci\n"
-		"<data_file_output>:  .csv, .lsv, and .uci\n");
+		"<data_filex_input>:  .csv and .lsv\n"
+		"<data_file_output>:  .csv and .lsv\n");
 
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");
@@ -186,10 +185,10 @@ int main(int argc, char **argv)
 // Load datasets
 
 	data_set.enforce_ownership();
-	for (i=1; i<command_line_parser.filenames.size(); i++)
+	for (i=1; i<command_line_parser.file_formats.size(); i++)
 	{
 		read_time_tmp = get_process_time_difference();
-		data_set_tmp.read_from_file(command_line_parser.filenames[i]);
+		data_set_tmp.read_from_file(command_line_parser.file_formats[i]);
 		read_time = read_time + get_process_time_difference(read_time_tmp);
 		data_set.push_back(data_set_tmp);
 	}
@@ -213,7 +212,7 @@ int main(int argc, char **argv)
 // Write dataset to file
 
 	write_time = get_process_time_difference();
-	data_set_final.write_to_file(command_line_parser.filenames[0]);
+	data_set_final.write_to_file(command_line_parser.file_formats[0]);
 	write_time = get_process_time_difference(write_time);
 
 

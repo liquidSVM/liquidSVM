@@ -16,11 +16,18 @@
 // along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
 
 
+#ifndef COMPILE_SEPERATELY__
+	#include "sources/shared/basic_types/sample_file_format.h"
+#endif
+
 #if !defined (TSAMPLE_H) 
 	#define TSAMPLE_H
 
 
 #include "sources/shared/system_support/os_specifics.h"
+#ifdef COMPILE_SEPERATELY__
+	#include "sources/shared/basic_types/sample_file_format.h"
+#endif
 
 #include <cstdio>
 #include <vector>
@@ -43,9 +50,9 @@ class Tsample
 		~Tsample();
 
 
-		int read_from_file(FILE* fpread, unsigned filetype, unsigned& dim);
-		void write_to_file(FILE* fpwrite, unsigned filetype, unsigned dataset_dim) const;
-
+		int read_from_file(FILE* fpread, Tsample_file_format sample_file_format, unsigned& dim);
+		void write_to_file(FILE* fpwrite, Tsample_file_format sample_file_format) const;
+		
 		inline unsigned get_number() const;
 		inline unsigned dim() const;
 		inline unsigned dim_aligned() const;
@@ -74,6 +81,7 @@ class Tsample
 		double label;
 		bool labeled;
 		double weight;
+		unsigned group_id;
 
  
 	private:
@@ -85,17 +93,19 @@ class Tsample
 		void copy(const Tsample* sample);
 		void alloc_for_csv(unsigned dim);
 		
-		unsigned get_dim_from_file(FILE* fpread, unsigned filetype, unsigned& dim) const;
+		unsigned get_dim_from_file(FILE* fpread, Tsample_file_format sample_file_format, unsigned& dim) const;
 		
 		inline int check_separator(FILE* fpread, int c) const;
 		inline void get_next_nonspace(FILE* fpread, int& c) const;
 		inline bool check_end_of_line(int c, unsigned filetype, unsigned position, unsigned dim) const;
-		inline void goto_next_line(FILE* fpread) const;
 		inline void goto_first_entry(FILE* fpread) const;
 		
+		vector <double> convert_to_io_vector(Tsample_file_format sample_file_format) const;
+		void convert_from_io_vector(Tsample_file_format sample_file_format, const vector <double>& io_vector);
 		
+		
+		unsigned id;
 		unsigned number;
-		
 		
 		unsigned sample_type;
 		unsigned dimension;

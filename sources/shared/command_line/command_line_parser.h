@@ -22,6 +22,7 @@
  
 
 #include "sources/shared/basic_types/loss_function.h"
+#include "sources/shared/basic_types/sample_file_format.h"
 #include "sources/shared/system_support/parallel_control.h"
 
 
@@ -48,6 +49,7 @@ unsigned const ERROR_clp_gen_missing_train_file_name = 21;
 unsigned const ERROR_clp_gen_missing_test_file_name = 22;
 unsigned const ERROR_clp_gen_missing_log_file_name = 23;
 unsigned const ERROR_clp_gen_missing_sol_file_name = 24;
+unsigned const ERROR_clp_gen_incorrect_data_file_modifiers = 25;
 
 
 //**********************************************************************************************************************************
@@ -75,7 +77,7 @@ class Tcommand_line_parser
 		bool loss_weights_are_set() const;
 		Tloss_control get_loss_control() const;
 		Tparallel_control get_parallel_control() const;
-		
+
 
 	protected:
 		void make_consistent();
@@ -105,12 +107,10 @@ class Tcommand_line_parser
 		template <typename Template_type> vector <Template_type> get_next_list(unsigned error_code, Template_type min, Template_type max = get_limits_max<Template_type>());
 		
 		string get_next_filename(unsigned error_code = ERROR_clp_gen_unknown);
-		string get_next_data_filename(unsigned error_code = ERROR_clp_gen_unknown);
-		string get_next_labeled_data_filename(unsigned error_code = ERROR_clp_gen_unknown);
-		string get_next_unlabeled_data_filename(unsigned error_code = ERROR_clp_gen_unknown);
 		string get_next_log_filename(unsigned error_code = ERROR_clp_gen_unknown);
 		string get_next_aux_filename(unsigned error_code);
 		string get_next_solution_filename(unsigned error_code = ERROR_clp_gen_unknown);
+		Tsample_file_format get_next_data_file_format(unsigned error_code = ERROR_clp_gen_unknown);
 		
 		
 		void check_parameter_list_size();
@@ -121,7 +121,6 @@ class Tcommand_line_parser
 		int random_seed;
 		Tparallel_control parallel_ctrl;
 		Tloss_control loss_ctrl;
-		
 		
 		char** parameter_list;
 		unsigned parameter_list_size;

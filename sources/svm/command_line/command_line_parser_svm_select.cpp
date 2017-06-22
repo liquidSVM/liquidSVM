@@ -120,7 +120,7 @@ void Tcommand_line_parser_svm_select::exit_with_help()
 	"decision functions are appended to <solfile> and some extra information is\n"
 	"appended to <logselectfile>.\n"
 	"\nAllowed extensions:\n"
-	"<trainfile>:     .csv, .lsv, and .uci\n"
+	"<trainfile>:     .csv and .lsv\n"
 	"<logtrainfile>:  .log\n"
 	"<logselectfile>: .log\n"
 	"<solfile>:       .sol\n");
@@ -175,7 +175,8 @@ void Tcommand_line_parser_svm_select::parse(bool read_filenames)
 
 	if (read_filenames == true)
 	{
-		train_filename = get_next_labeled_data_filename(ERROR_clp_gen_missing_train_file_name);
+		train_file_format = get_next_data_file_format(ERROR_clp_gen_missing_train_file_name);
+		check_labeled_data_format(train_file_format);
 		select_control.read_log_train_filename = get_next_log_filename(ERROR_clp_gen_missing_log_file_name);
 		select_control.read_aux_train_filename = convert_log_to_aux_filename(select_control.read_log_train_filename);
 		select_control.write_log_select_filename = get_next_log_filename(ERROR_clp_gen_missing_log_file_name);

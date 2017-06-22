@@ -114,10 +114,10 @@ void Tcommand_line_parser_svm_test::exit_with_help()
 	"performance is recorded in <logfile> and their predictions are saved in the\n"
 	"optional <resultfile>.\n"
 	"\nAllowed extensions:\n"
-	"<trainfile>:  .csv, .lsv, and .uci\n"
+	"<trainfile>:  .csv and .lsv\n"
 	"<solfile>:    .sol\n"
 	"<logfile>:    .log\n"
-	"<testfile>:   .csv, .lsv, .uci, and .nla\n"
+	"<testfile>:   .csv and .lsv\n"
 	"<resultfile>: unspecified\n");
 
 	if (full_help == false)
@@ -193,9 +193,10 @@ void Tcommand_line_parser_svm_test::parse(bool read_filenames)
 	
 	if (read_filenames == true)
 	{
-		train_filename = get_next_labeled_data_filename(ERROR_clp_gen_missing_train_file_name);
+		train_file_format = get_next_data_file_format(ERROR_clp_gen_missing_train_file_name);
+		check_labeled_data_format(train_file_format);
 		test_control.read_sol_select_filename = get_next_solution_filename(ERROR_clp_gen_missing_sol_file_name);
-		test_filename = get_next_data_filename(ERROR_clp_gen_missing_test_file_name);	
+		test_file_format = get_next_data_file_format(ERROR_clp_gen_missing_test_file_name);	
 		test_control.write_log_test_filename = get_next_log_filename(ERROR_clp_gen_missing_log_file_name);
 
 		if (current_position < parameter_list_size)

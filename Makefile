@@ -95,7 +95,8 @@ endif
 
 ARM_FILE= ./.arm
 ARM_FLAG= $(strip $(notdir $(wildcard $(ARM_FILE))))
-MACHINE_FLAGS= $(if $(ARM_FLAG), -mcpu=cortex-a53 -mfpu=neon-vfpv4, -march=native) 
+MACHINE_FLAGS= $(if $(ARM_FLAG),-mcpu=cortex-a53 -mfpu=neon-vfpv4,-march=native) 
+TARGET_MACHINE= $(if $(ARM_FLAG),-DARM_CPU,-DX64_CPU) 
 MATH_FLAGS= -ffast-math
 OPT_FLAGS= -O3 
 WARN_FLAGS= -Wall
@@ -229,8 +230,9 @@ info:
 	@echo 
 	@echo -----------------------------------------------------------------
 	@echo 
-	@echo The compiler is $(CPPC) version: $(GCCVERSION)
-	@echo The following C++ standard flag is set: $(CPP_VERSION)
+	@echo The compiler and its version:"            "$(CPPC)"  "$(GCCVERSION)
+	@echo The following C++ standard flag is set:" "$(CPP_VERSION)
+	@echo The following CPU flags are set:"        "$(MACHINE_FLAGS)
 	@echo 
 	@echo -----------------------------------------------------------------
 	@echo
@@ -339,7 +341,7 @@ cleaner: clean
 help:
 	@echo
 	@echo "make <target>"
-	@echo "make [VERSION=full|pro|dev|public] archive|r-package|ix-package|win-package-sse2|win-package-avx|win-package-avx2"
+	@echo "make [VERSION=full|pro|dev|public] archive|all-packages|ix-package|win-package-sse2|win-package-avx|win-package-avx2"
 	@echo
 	
 archive: cleaner

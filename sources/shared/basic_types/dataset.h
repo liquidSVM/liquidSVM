@@ -59,10 +59,10 @@ class Tdataset
 		void push_back(Tsample* sample);
 		void push_back(const Tdataset& dataset);
 		
-		void read_from_file(string filename);
-		void read_from_file(FILE* fpread, unsigned filetype, unsigned size, unsigned dim);
-		void write_to_file(string filename) const;
-		void write_to_file(FILE* fpwrite, unsigned filetype) const;
+		void read_from_file(Tsample_file_format& sample_file_format);
+		void read_from_file(FILE* fpread, Tsample_file_format& sample_file_format, unsigned size, unsigned dim);
+		void write_to_file(Tsample_file_format& sample_file_format) const;
+		void write_to_file(FILE* fpwrite, Tsample_file_format& sample_file_format) const;
 		
 		void enforce_ownership();
 		inline bool has_ownership() const;
@@ -87,6 +87,7 @@ class Tdataset
 		void apply_scaling(const vector <double>& scaling, const vector <double>& translate);
 		
 		Tsubset_info create_subset_info_with_label(double label) const;
+		Tsubset_info create_subset_info_of_group(double group_id) const;
 		void create_subset(Tdataset& data_subset, Tsubset_info subset_info, bool give_ownership = false) const;
 
 		template <typename float_type> float_type* upload_to_GPU(unsigned start_index, unsigned end_index) const;

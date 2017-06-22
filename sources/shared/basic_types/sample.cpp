@@ -48,15 +48,10 @@ Tsample::Tsample(unsigned sample_type, unsigned dim)
 {
 	flush_info(INFO_EXTREMELY_PEDANTIC_DEBUG, "\nCreating an empty sample of type %d and dimension %d.", sample_type, dim);
 	
-	if ((sample_type == NLA) or (sample_type == UCI) or (sample_type == WSV) or (sample_type == CSV))
+	if (sample_type == CSV)
 		create(dim);
 	else
 		create();
-	
-	if (sample_type == NLA)
-		labeled = false;
-	else
-		labeled = true;
 }
 
 
@@ -88,8 +83,6 @@ Tsample::Tsample(const Tsample& sample, unsigned new_sample_type)
 	flush_info(INFO_EXTREMELY_PEDANTIC_DEBUG, "\nCreating a sample of type %d and dimension %d from sample with number %d.", new_sample_type, sample.dim(), sample.get_number());
 	
 	create();
-	if ((new_sample_type == NLA) or (new_sample_type == UCI) or (new_sample_type == WSV))
-		new_sample_type = CSV;
 	
 	if (new_sample_type == sample.sample_type)
 		copy(&sample);
@@ -116,14 +109,12 @@ Tsample::Tsample(const Tsample& sample, unsigned new_sample_type)
 		weight = sample.weight;
 		number = sample.number;
 		
+		id = sample.id;
+		group_id = sample.group_id;
+		
 		sample_type = new_sample_type;
 		norm2 = sample.norm2;
-		
-		
-		if (new_sample_type == NLA)
-			labeled = false;
-		else
-			labeled = true;
+		labeled = sample.labeled;
 	}
 };
 
@@ -190,7 +181,10 @@ void Tsample::create()
 	number = 0;
 	norm2 = 0.0;
 	
+	id = 0;
+	group_id = 0;
 	weight = 1.0;
+	
 	blocked_destruction = false;
 };
 
@@ -269,6 +263,8 @@ void Tsample::copy(const Tsample* sample)
 	
 	weight = sample->weight;
 	number = sample->number;
+	id = sample->id;
+	group_id = sample->group_id;
 	
 	sample_type = sample->sample_type;
 	norm2 = sample->norm2;
@@ -318,9 +314,9 @@ bool Tsample::operator == (const Tsample& sample) const
 		return ((x_lsv == sample.x_lsv) and (index == sample.index));
 	else
 	{
-// 		If the sample actually use the same memory segement they are equal
+// 		If the sample actually use the same memory segment they are equal
 		
-		if (x_lsv == sample.x_lsv) 
+		if (x_csv == sample.x_csv) 
 			return true;
 		
 		
@@ -332,7 +328,7 @@ bool Tsample::operator == (const Tsample& sample) const
 		i = 0;
 		while ((i < dim()) and (equal == true))
 		{
-			equal = (x_lsv[i] == sample.x_lsv[i]);
+			equal = (x_csv[i] == sample.x_csv[i]);
 			i++;
 		}
 		return equal;
@@ -341,19 +337,21 @@ bool Tsample::operator == (const Tsample& sample) const
 
 //**********************************************************************************************************************************
 
-
-unsigned Tsample::get_dim_from_file(FILE* fpread, unsigned filetype, unsigned& dim) const
+unsigned Tsample::get_dim_from_file(FILE* fpread, Tsample_file_format sample_file_format, unsigned& dim) const
 {
-	double dummy_label;
-	double dummy_x;
 	int c;
+	double dummy_x;
+	unsigned number_of_extra_positions;
+	
 	
 	rewind(fpread);
-	
+	sample_file_format.check_filetype();
+	if (sample_file_format.filetype != CSV)
+		return ILLEGAL_FILETYPE;
 	
 	c = getc(fpread);
 	if (c == 34)
-		goto_next_line(fpread);
+		file_read_eol(fpread);
 	else
 		ungetc(c, fpread);
 	
@@ -363,11 +361,6 @@ unsigned Tsample::get_dim_from_file(FILE* fpread, unsigned filetype, unsigned& d
 	else
 		ungetc(c, fpread);
 	
-	if ((filetype == CSV) or (filetype == WSV)) 
-		file_read(fpread, dummy_label);
-	else if ((filetype != NLA) and (filetype != UCI))
-		return ILLEGAL_FILETYPE;
-
 	dim = 0;
 	get_next_nonspace(fpread, c);
 	do
@@ -379,28 +372,40 @@ unsigned Tsample::get_dim_from_file(FILE* fpread, unsigned filetype, unsigned& d
 		}
 	while (not ((c=='\n') or (c == 13)));
 	
-	if ((filetype == UCI) or (filetype == WSV))
-		dim = unsigned(max(0, int(dim) - 1));
-
 	rewind(fpread);
-	return FILE_OP_OK;
+	number_of_extra_positions = sample_file_format.count_extra_positions();
+
+	if (number_of_extra_positions > dim)
+	{
+		dim = 0;
+		return FILE_CORRUPTED;
+	}
+	else
+	{
+		dim = dim - number_of_extra_positions;
+		return FILE_OP_OK;
+	}
 }
+
+
+
 
 
 //**********************************************************************************************************************************
 
-int Tsample::read_from_file(FILE* fpread, unsigned filetype, unsigned& dim)
+int Tsample::read_from_file(FILE* fpread, Tsample_file_format sample_file_format, unsigned& dim)
 {
-	unsigned j;	
+	unsigned j;
 	int c;
 	int read_status;
-
 	double dummy_x;
 	unsigned dummy_index;
 	unsigned old_dummy_index;
+	vector <double> io_vector;
+	unsigned io_size;
 	
 	
-// Check whether we have reached the end of the filetype
+// Check whether we have reached the end of the file.
 // Here we assume that every line must contain data, that is
 // we must not have a couple of "\n" at the end of the file
 	
@@ -420,7 +425,7 @@ int Tsample::read_from_file(FILE* fpread, unsigned filetype, unsigned& dim)
 		c = getc(fpread);
 		if (c == 34)
 		{
-			goto_next_line(fpread);
+			file_read_eol(fpread);
 			
 			c = getc(fpread);
 			if (c == 34)
@@ -437,24 +442,22 @@ int Tsample::read_from_file(FILE* fpread, unsigned filetype, unsigned& dim)
 
 // Once we known that there is something to read we 
 // need to make sure we start with a fresh sample
+// In addition set labeled flag and read labels for LSV
 	
 	destroy();
-	if ((filetype == CSV) or (filetype == WSV) or (filetype == NLA) or (filetype == UCI))
-		create(dim);
+	if (sample_file_format.filetype == CSV)
+	{
+		io_size = dim + sample_file_format.count_extra_positions();
+		io_vector.resize(io_size);
+		labeled = (sample_file_format.label_position != 0);
+	}
 	else
+	{
 		create();
-
-	if (filetype == NLA)
-		labeled = false;
-	else
+		io_size = dim;
 		labeled = true;
-	
-	
-// For labeled data, read the label first	
-	
-	if ((filetype == LSV) or (filetype == CSV) or (filetype == WSV))
 		file_read(fpread, label);
-
+	}
 	
 // Read the x-part of the file line
 	
@@ -470,7 +473,7 @@ int Tsample::read_from_file(FILE* fpread, unsigned filetype, unsigned& dim)
 		read_status = check_separator(fpread, c);
 		if (read_status == FILE_OP_OK)
 		{
-			if (filetype == LSV)
+			if (sample_file_format.filetype == LSV)
 			{
 				file_read(fpread, dummy_index, dummy_x);
 				if ((dummy_index <= old_dummy_index) and (old_dummy_index != 0))
@@ -485,42 +488,18 @@ int Tsample::read_from_file(FILE* fpread, unsigned filetype, unsigned& dim)
 				old_dummy_index = dummy_index;
 			}
 			else
-				file_read(fpread, x_csv[j]);
+				file_read(fpread, io_vector[j]);
 
 			j++;
 			get_next_nonspace(fpread, c);
 		}
 	}
-	while (not(check_end_of_line(c, filetype, j, dim)));
-
-
-// Read label for UCI type data sets
-	
-	if ((filetype == UCI) or (filetype == WSV))
-	{
-		if (c != '\n') 
-		{
-			if (filetype == UCI)
-				file_read(fpread, label);
-			else
-			{
-				ungetc(c, fpread);
-				check_separator(fpread, c);
-				get_next_nonspace(fpread, c);
-				file_read(fpread, weight);
-				if (weight <= 0.0)
-					exit_on_file_error(FILE_CORRUPTED, fpread);
-			}
-			get_next_nonspace(fpread, c);
-		}
-		else
-			exit_on_file_error(FILE_CORRUPTED, fpread);
-	}
+	while (not(check_end_of_line(c, sample_file_format.filetype, j, io_size)));
 
 	
 // Make sure that the file line was read correctly (including windows conventions).
 
- 	if (((c != '\n') and (c != 13)) or ((j != dim) and (filetype != LSV)))
+ 	if (((c != '\n') and (c != 13)) or ((j != io_size) and (sample_file_format.filetype != LSV)))
 		exit_on_file_error(FILE_CORRUPTED, fpread);
 	if (c == 13)
 	{
@@ -532,18 +511,21 @@ int Tsample::read_from_file(FILE* fpread, unsigned filetype, unsigned& dim)
 	
 // Set the dimension for filetype LSV
 	
-	if (filetype == LSV)
+	if (sample_file_format.filetype == LSV)
 	{
 		dim = dummy_index + 1;
 		dimension = dummy_index + 1;
 	}
-	
+	else
+		convert_from_io_vector(sample_file_format, io_vector);
+
 	
 // Finally, compute norms
 	
 	norm2 = ((*this) * (*this)); 
 	return FILE_OP_OK;
 }
+
 
 
 //**********************************************************************************************************************************
@@ -588,12 +570,6 @@ inline bool Tsample::check_end_of_line(int c, unsigned filetype, unsigned positi
 	{
 		case CSV:
 			return ((c == '\n') or (c == 13) or (position >= dim));
-		case WSV:
-			return ((c == '\n') or (c == 13) or (position >= dim));
-		case NLA:
-			return ((c == '\n') or (c == 13) or (position >= dim));
-		case UCI:
-			return ((c == '\n') or (c == 13) or (position >= dim));
 		case LSV:
 			return ((c == '\n') or (c == 13));
 		default:
@@ -601,17 +577,6 @@ inline bool Tsample::check_end_of_line(int c, unsigned filetype, unsigned positi
 	}
 }
 
-//**********************************************************************************************************************************
-
-
-inline void Tsample::goto_next_line(FILE* fpread) const
-{
-	int c;
-	
-	do
-		c = getc(fpread);
-	while ((c != '\n') and (c != 13) and (c != EOF));
-}
 
 //**********************************************************************************************************************************
 
@@ -627,52 +592,157 @@ inline void Tsample::goto_first_entry(FILE* fpread) const
 }
 
 
+
 //**********************************************************************************************************************************
 
-void Tsample::write_to_file(FILE* fpwrite, unsigned filetype, unsigned dataset_dim) const
+void Tsample::write_to_file(FILE* fpwrite, Tsample_file_format sample_file_format) const
 {
 	unsigned j; 
 	Tsample sample_tmp;
+	vector <double> io_vector;
 
-	if (((filetype == LSV) and (sample_type != LSV)) or ((filetype != LSV) and (sample_type == LSV)))
-		sample_tmp = Tsample(*this, filetype);
-	else
-		sample_tmp = *this;
-	
-	if (filetype == LSV)
+	sample_file_format.check_filetype();
+	if (sample_file_format.filetype == LSV)
 	{
+		if (sample_type != LSV)
+			sample_tmp = Tsample(*this, LSV);
+		else
+			sample_tmp = *this;
+		
 		file_write(fpwrite, label, "%g", " ");
 		for (j=0; j<sample_tmp.x_lsv.size(); j++)
 			if (sample_tmp.x_lsv[j] != 0.0)
 				file_write(fpwrite, sample_tmp.index[j], sample_tmp.x_lsv[j]);
 	}
-	else if (filetype == UCI)
-	{
-		for (j=0; j<sample_tmp.dim(); j++)
-			file_write(fpwrite, sample_tmp.x_csv[j], "%g, ", "");
-		for (j=sample_tmp.dim(); j<dataset_dim; j++)
-			file_write(fpwrite, 0.0, "%g, ", "");
-		file_write(fpwrite, label, "%g", "");
-	}
-	else if (filetype == NLA)
-	{
-		for (j=0; j+1<sample_tmp.dim(); j++)
-			file_write(fpwrite, sample_tmp.x_csv[j], "%g, ", "");
-		file_write(fpwrite, sample_tmp.x_csv[int(sample_tmp.dim())-1], "%g", "");
-		for (j=sample_tmp.dim(); j<dataset_dim; j++)
-			file_write(fpwrite, 0.0, ", %g", "");
-	}
 	else
 	{
-		file_write(fpwrite, label, "%g", "");
-		for (j=0;j<sample_tmp.dim();j++)
-			file_write(fpwrite, sample_tmp.x_csv[j], ", %g", "");
-		for (j=sample_tmp.dim();j<dataset_dim;j++)
-			file_write(fpwrite, 0.0, ", %g", "");
-		if (filetype == WSV)
-			file_write(fpwrite, weight, ", %g", "");
+		io_vector = convert_to_io_vector(sample_file_format);
+		for (j=0; j+1<io_vector.size(); j++)
+			file_write(fpwrite, io_vector[j], "%g, ", "");	
+		file_write(fpwrite, io_vector[j], "%g", "");	
 	}
 	file_write_eol(fpwrite);
+}
+
+
+
+//**********************************************************************************************************************************
+
+vector <double> Tsample::convert_to_io_vector(Tsample_file_format sample_file_format) const
+{
+	unsigned i;
+	unsigned j;
+	unsigned ii;
+	unsigned number_of_columns;
+	unsigned number_of_extra_positions;
+	vector <double> x_part;
+	vector <double> io_vector;
+	
+	
+	sample_file_format.compute_full_include_list(sample_file_format.dataset_dim);
+	number_of_extra_positions = sample_file_format.count_extra_positions();
+	number_of_columns = number_of_extra_positions + sample_file_format.full_include_list.size();
+
+	sample_file_format.compute_extra_position_list(number_of_columns);
+		
+	x_part = get_x_part();
+	for (i=dim(); i<sample_file_format.dataset_dim; i++)
+		x_part.push_back(0.0);
+	io_vector.resize(number_of_columns);
+	
+	if (number_of_extra_positions == 0)
+		for (i=0; i<sample_file_format.full_include_list.size(); i++)
+			io_vector[i] = x_part[sample_file_format.full_include_list[i] - 1];
+	else
+	{
+		number_of_extra_positions--;
+		j = 0;
+		ii = 0;
+		for (i=0; i<io_vector.size(); i++)
+			if (i+1 == sample_file_format.extra_position_list[min(j, number_of_extra_positions)])
+				j++;
+			else
+			{
+				io_vector[i] = x_part[sample_file_format.full_include_list[ii] - 1];
+				ii++;
+			}
+	}
+	
+	if (sample_file_format.label_position != 0)
+		io_vector[int(sample_file_format.get_true_column(sample_file_format.label_position, number_of_columns)) - 1] = label;
+
+	if (sample_file_format.weight_position != 0)
+		io_vector[int(sample_file_format.get_true_column(sample_file_format.weight_position, number_of_columns)) - 1] = weight;
+
+	if (sample_file_format.id_position != 0)
+		io_vector[int(sample_file_format.get_true_column(sample_file_format.id_position, number_of_columns)) - 1] = double(id);
+
+	if (sample_file_format.group_id_position != 0)
+		io_vector[int(sample_file_format.get_true_column(sample_file_format.group_id_position, number_of_columns)) - 1] = double(group_id);
+	
+	return io_vector;
+}
+
+
+//**********************************************************************************************************************************
+
+void Tsample::convert_from_io_vector(Tsample_file_format sample_file_format, const vector <double>& io_vector)
+{
+	unsigned i;
+	unsigned ii;
+	unsigned j;
+	unsigned number_of_columns;
+	unsigned dimension_new;
+	
+	
+	destroy();
+	number_of_columns = io_vector.size();
+	sample_file_format.compute_full_exclude_list(number_of_columns);
+	
+	if (number_of_columns <= sample_file_format.full_exclude_list.size())
+		flush_exit(ERROR_DATA_FALLS_OUTSIDE_SAFE_PARAMETERS, "Cannot create a sample from %d columns with %d extra positions.", number_of_columns, sample_file_format.full_exclude_list.size()); 
+	
+	dimension_new = number_of_columns - sample_file_format.full_exclude_list.size();
+	
+	create(dimension_new);
+	
+	if (sample_file_format.full_exclude_list.size() == 0)
+		for (i=0; i<number_of_columns; i++)
+			x_csv[i] = io_vector[i];
+	else
+	{
+		j = 0;
+		ii = 0;
+		for (i=0; i<number_of_columns; i++)
+			if (i+1 != sample_file_format.full_exclude_list[j])
+			{
+				x_csv[ii] = io_vector[i];
+				ii++;
+			}
+			else
+				j++;
+	}
+	
+	
+	if (sample_file_format.label_position != 0)
+	{
+		labeled = true;
+		label = io_vector[int(sample_file_format.get_true_column(sample_file_format.label_position, number_of_columns)) - 1];
+	}
+	else
+		labeled = false;
+	
+	if (sample_file_format.weight_position != 0)
+		weight = io_vector[int(sample_file_format.get_true_column(sample_file_format.weight_position, number_of_columns)) - 1];
+	
+	if (weight <= 0.0)
+		flush_exit(ERROR_DATA_FALLS_OUTSIDE_SAFE_PARAMETERS, "Sample has negative weight %1.3f.", weight);
+
+	if (sample_file_format.id_position != 0)
+		id = unsigned(io_vector[int(sample_file_format.get_true_column(sample_file_format.id_position, number_of_columns)) - 1]);
+
+	if (sample_file_format.group_id_position != 0)
+		group_id = unsigned(io_vector[int(sample_file_format.get_true_column(sample_file_format.group_id_position, number_of_columns)) - 1]);
 }
 
 

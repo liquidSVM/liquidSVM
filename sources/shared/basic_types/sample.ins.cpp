@@ -165,6 +165,7 @@ inline vector <double> Tsample::get_x_part() const
 	
 	vector_tmp.resize(dim());
 	get_x_part(&vector_tmp[0]);
+	
 	return vector_tmp;
 }
 

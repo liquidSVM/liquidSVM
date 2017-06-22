@@ -75,8 +75,8 @@ class Tcommand_line_parser_scale_data: public Tcommand_line_parser
 		bool save_scaling_info;
 
 		string aux_filename;
-		string in_filename;
-		string out_filename;
+		Tsample_file_format read_file_format;
+		Tsample_file_format write_file_format;
 
 	protected:
 		void exit_with_help();
@@ -166,8 +166,8 @@ void Tcommand_line_parser_scale_data::parse()
 					Tcommand_line_parser::exit_with_help(ERROR_clp_gen_unknown_option);
 			}
 		}
-	in_filename = get_next_data_filename(ERROR_clp_gen_missing_data_file_name);
-	out_filename = get_next_data_filename(ERROR_clp_gen_missing_data_file_name);
+	read_file_format = get_next_data_file_format(ERROR_clp_gen_missing_data_file_name);
+	write_file_format = get_next_data_file_format(ERROR_clp_gen_missing_data_file_name);
 };
 
 
@@ -181,7 +181,7 @@ void Tcommand_line_parser_scale_data::exit_with_help()
 	"\nscale-data manipulates the data in <inpt_data_file> according to the options and" 
 	"\nsaves the result in <output_data_file>.\n"
 	"\nAllowed extensions:\n"
-		"<data_file>:  .csv, .lsv, .nla, .wsv, and .uci\n");
+		"<data_file>:  .csv and .lsv\n");
 
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");
@@ -388,7 +388,7 @@ int main(int argc, char **argv)
 // Load data set and, if applicable, scaling information
 
 	file_time = get_process_time_difference();
-	data_set.read_from_file(command_line_parser.in_filename);
+	data_set.read_from_file(command_line_parser.read_file_format);
 
 	
 	if (command_line_parser.load_scaling_info == true)
@@ -598,6 +598,10 @@ int main(int argc, char **argv)
 			}
 		}
 	}
+	else
+		if (((scaling_labels != 1.0) or (translate_labels != 0.0)) and (data_set.is_unsupervised_data() == true))
+			flush_exit(ERROR_DATA_MISMATCH, "Trying to scale non-existing labels in a non-trivial manner.");
+	
 	
 	if (command_line_parser.scale_labels == SCALE_LABELS)
 		flush_info(INFO_2, "\nScaling and translating the labels.");
@@ -616,7 +620,7 @@ int main(int argc, char **argv)
 	
 	
 	file_time = get_process_time_difference(file_time);
-	scaled_data_set.write_to_file(command_line_parser.out_filename);
+	scaled_data_set.write_to_file(command_line_parser.write_file_format);
 	
 	if (command_line_parser.save_scaling_info == true)
 	{

@@ -76,30 +76,8 @@ void check_data_filename(const string& filename)
 	unsigned filetype;
 	
 	filetype = get_filetype(filename);
-	if ((filetype != CSV) and (filetype != WSV) and (filetype != LSV) and (filetype != UCI) and (filetype != NLA))
-		flush_exit(ERROR_IO, "Data file '%s' does not have one of the allowed types: '.lsv', '.csv', '.wsv', .uci', or '.nla'.", filename.c_str());
-}
-
-//**********************************************************************************************************************************
-
-void check_labeled_data_filename(const string& filename)
-{
-	unsigned filetype;
-	
-	filetype = get_filetype(filename);
-	if ((filetype != CSV) and (filetype != WSV) and (filetype != LSV) and (filetype != UCI))
-		flush_exit(ERROR_IO, "Labeled data file '%s' does not have one of the allowed types: '.lsv', '.csv', '.wsv', or '.uci'.", filename.c_str());
-}
-
-//**********************************************************************************************************************************
-
-void check_unlabeled_data_filename(const string& filename)
-{
-	unsigned filetype;
-	
-	filetype = get_filetype(filename);
-	if (filetype != NLA)
-		flush_exit(ERROR_IO, "Unlabeled data file '%s' does not have one of the allowed types: '.nla'.", filename.c_str());
+	if ((filetype != CSV) and (filetype != LSV))
+		flush_exit(ERROR_IO, "Data file '%s' does not have one of the allowed types: '.lsv' or '.csv'.", filename.c_str());
 }
 
 
@@ -136,6 +114,39 @@ void check_solution_filename(const string& filename)
 	if ((filetype != SOL) and (filetype != FSOL))
 		flush_exit(ERROR_IO, "Solution file '%s' does not have one of the allowed types: '.sol' or '.fsol'.", filename.c_str());
 }
+
+//**********************************************************************************************************************************
+
+void check_labeled_data_format(const Tsample_file_format sample_file_format)
+{
+	if ((sample_file_format.label_position == 0) and (get_filetype(sample_file_format.filename) == CSV))
+		flush_exit(ERROR_IO, "Data file format for '%s' does not have a position for labels.", sample_file_format.filename.c_str());
+}
+
+//**********************************************************************************************************************************
+
+
+void check_weighted_data_format(const Tsample_file_format sample_file_format)
+{
+	if (get_filetype(sample_file_format.filename) == LSV)
+		flush_exit(ERROR_IO, "Data file '%s' cannot contain weights.", sample_file_format.filename.c_str());	
+	
+	if (sample_file_format.weight_position == 0)
+		flush_exit(ERROR_IO, "Data file format for '%s' does not have a position for weights.", sample_file_format.filename.c_str());	
+}
+
+//**********************************************************************************************************************************
+
+void check_grouped_data_format(const Tsample_file_format sample_file_format)
+{
+	if (get_filetype(sample_file_format.filename) == LSV)
+		flush_exit(ERROR_IO, "Data file '%s' cannot contain group information.", sample_file_format.filename.c_str());	
+	
+	if (sample_file_format.group_id_position == 0)
+		flush_exit(ERROR_IO, "Data file format for '%s' does not have a position for group affiliations.", sample_file_format.filename.c_str());	
+}
+
+
 
 //**********************************************************************************************************************************
 
@@ -234,16 +245,10 @@ unsigned get_filetype(const string& filename)
 		return UNKNOWN_FILETYPE;
 
 	extension = filename.substr(last_dot_position, filename.length() - last_dot_position);
-	if (extension == ".nla")
-		return NLA;
 	if (extension == ".csv")
 		return CSV;
-	if (extension == ".wsv")
-		return WSV;
 	if (extension == ".lsv")
 		return LSV;
-	if (extension == ".uci")
-		return UCI;
 	if (extension == ".log")
 		return LOG;
 	if (extension == ".aux")
@@ -262,6 +267,17 @@ unsigned get_filetype(const string& filename)
 }
 
 
+//**********************************************************************************************************************************
+
+
+void file_read_eol(FILE* fp)
+{
+	int c;
+	
+	do
+		c = getc(fp);
+	while ((c != '\n') and (c != 13) and (c != EOF));
+}
 
 //**********************************************************************************************************************************
 

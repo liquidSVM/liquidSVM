@@ -55,45 +55,55 @@ Tdataset_info::Tdataset_info(const Tdataset& dataset, bool quick_info, double ta
 
 	min_label = labels[argmin(labels)];
 	max_label = labels[argmax(labels)];
-	max_abs_label = max(abs(min_label), abs(max_label));	
+	max_abs_label = max(abs(min_label), abs(max_label));
 	
-	if (dataset.is_classification_data())
-	{
-		kind = CLASSIFICATION;
-		
-		for (i=0; i<size; i++)
-			label_list_tmp.insert(int(labels[i]));
-		copy(label_list_tmp.begin(), label_list_tmp.end(), inserter(label_list, label_list.begin()));
-
-		for (i=0; i<label_list.size(); i++)
-			label_count.push_back(unsigned(dataset.create_subset_info_with_label(label_list[i]).size()));
-		
-		label_numbers.assign(label_list[label_list.size()-1] - label_list[0] + 1, 0);
-		for (i=0; i<label_list.size(); i++)
-			label_numbers[label_list[i] - label_list[0]] = i;
-
-		most_frequent_label_number = 0;
-		largest_label_count = label_count[0];
-		for (i=1; i<label_list.size(); i++)
-			if (largest_label_count < label_count[i])
-			{
-				most_frequent_label_number = i;
-				largest_label_count = label_count[i];
-			}
-	}
+	group_list.resize(dataset.size());
+	for (i=0; i<dataset.size(); i++)
+		group_list[i] = dataset.sample(i)->group_id;
+	group_list = get_unique_entries(group_list);
+	
+	if (dataset.is_unsupervised_data() == true)
+		kind = UNSUPERVISED;
 	else
 	{
-		kind = REGRESSION;
+		if (dataset.is_classification_data())
+		{
+			kind = CLASSIFICATION;
+			
+			for (i=0; i<size; i++)
+				label_list_tmp.insert(int(labels[i]));
+			copy(label_list_tmp.begin(), label_list_tmp.end(), inserter(label_list, label_list.begin()));
 
-		mean_label = mean(labels);
-		square_label_error = square_sum(labels, mean_label) / double(size);
+			for (i=0; i<label_list.size(); i++)
+				label_count.push_back(unsigned(dataset.create_subset_info_with_label(label_list[i]).size()));
+			
+			label_numbers.assign(label_list[label_list.size()-1] - label_list[0] + 1, 0);
+			for (i=0; i<label_list.size(); i++)
+				label_numbers[label_list[i] - label_list[0]] = i;
 
-		label_median_tmp = quantile(labels, 0.5);
-		median_label = 0.5 * (label_median_tmp.first + label_median_tmp.second);
-		abs_label_error = abs_sum(labels, median_label) / double(size);
+			most_frequent_label_number = 0;
+			largest_label_count = label_count[0];
+			for (i=1; i<label_list.size(); i++)
+				if (largest_label_count < label_count[i])
+				{
+					most_frequent_label_number = i;
+					largest_label_count = label_count[i];
+				}
+		}
+		else
+		{
+			kind = REGRESSION;
 
-		lower_label_quantile = quantile(labels, label_tau).first;
-		upper_label_quantile = quantile(labels, 1.0 - label_tau).second;
+			mean_label = mean(labels);
+			square_label_error = square_sum(labels, mean_label) / double(size);
+
+			label_median_tmp = quantile(labels, 0.5);
+			median_label = 0.5 * (label_median_tmp.first + label_median_tmp.second);
+			abs_label_error = abs_sum(labels, median_label) / double(size);
+
+			lower_label_quantile = quantile(labels, label_tau).first;
+			upper_label_quantile = quantile(labels, 1.0 - label_tau).second;
+		}
 	}
 
 	if (quick_info == false)

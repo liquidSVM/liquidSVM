@@ -16,45 +16,46 @@
 // along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
 
 
-#if !defined (COMMAND_LINE_PARSER_SVM_SELECT_H)
-	#define COMMAND_LINE_PARSER_SVM_SELECT_H
+#if !defined (MY_UNORDERED_MAP_AND_SET_H)
+	#define MY_UNORDERED_MAP_AND_SET_H
 
 
+#include "sources/shared/system_support/compiler_specifics.h"
+	
+//**********************************************************************************************************************************
 
-#include "sources/shared/basic_functions/flush_print.h"
-#include "sources/shared/command_line/command_line_parser.h"
-
-#include "sources/svm/training_validation/svm_manager.h"
-
+// This little header file defines my_unordered_map by C++11 unordered_map if possible
+// and by STL map otherwise. It also includes the necessary header files. The same is
+// done for unordered_set.
 
 //**********************************************************************************************************************************
 
 
-class Tcommand_line_parser_svm_select : public Tcommand_line_parser
-{
-	public:
-		Tcommand_line_parser_svm_select();
-		void parse(bool read_filenames);
+#ifdef USE_TR1_CODE
+	#define my_unordered_map unordered_map
+	#include <tr1/unordered_map>
+	using namespace std::tr1; 
+	
+	#define my_unordered_set unordered_set
+	#include <tr1/unordered_set>
+	using namespace std::tr1; 
+#else
+	#ifdef FALL_BACK_MAP
+		#define my_unordered_map map
+		#include <map>
 
-		
-		Tselect_control select_control;
-		
-		Tsample_file_format train_file_format;
-		
-	protected:
-		virtual void make_consistent();
-		virtual void exit_with_help();
-		virtual void display_help(unsigned error_code);
-};
-
-
-//**********************************************************************************************************************************
-
-
-#ifndef COMPILE_SEPERATELY__
-	#include "sources/svm/command_line/command_line_parser_svm_select.cpp"
+		#define my_unordered_set set
+		#include <set>
+	#else
+		#define my_unordered_map unordered_map
+		#include <unordered_map>
+	
+		#define my_unordered_set unordered_set
+		#include <unordered_set>
+	#endif
 #endif
 
 
 #endif
-
+	
+	

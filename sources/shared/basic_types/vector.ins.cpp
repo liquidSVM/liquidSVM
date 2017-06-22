@@ -18,7 +18,7 @@
 
 
 #include "sources/shared/basic_functions/flush_print.h"
-
+#include "sources/shared/basic_types/my_unordered_map_and_set.h"
 
 #include <cmath>
 #include <limits>
@@ -738,6 +738,24 @@ template <typename Template_type1, typename Template_type2> void sort_down(vecto
 		value[i] = paired_vector[i].first;
 		index[i] = paired_vector[i].second;
 	}
+}
+
+
+//**********************************************************************************************************************************
+
+
+template <typename Template_type> vector <Template_type> get_unique_entries(const vector<Template_type> vec, unsigned start_index, int length)
+{
+	unsigned i;
+	my_unordered_set <Template_type> entries_tmp;
+	vector <Template_type> entries;
+
+	for (i = 0; i<vec.size(); i++)
+		entries_tmp.insert(vec[i]);
+		
+	copy(entries_tmp.begin(), entries_tmp.end(), inserter(entries, entries.begin()));
+	
+	return entries;
 }
 
 

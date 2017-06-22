@@ -71,6 +71,8 @@ class Tdataset_info
 		double lower_label_quantile;
 		double upper_label_quantile;
 		
+		vector <unsigned> group_list;
+		
 		vector <double> means;
 		vector <double> minima;
 		vector <double> maxima;

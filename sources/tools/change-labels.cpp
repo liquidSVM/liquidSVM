@@ -54,9 +54,9 @@ class Tcommand_line_parser_change_labels: public Tcommand_line_parser
 		
 		unsigned label_replace_mode;
 		
-		string label_filename;
-		string read_filename;
-		string write_filename;
+		Tsample_file_format label_file_format;
+		Tsample_file_format read_file_format;
+		Tsample_file_format write_file_format;
 
 	protected:
 		void exit_with_help();
@@ -103,7 +103,7 @@ void Tcommand_line_parser_change_labels::parse()
 				case 'f':
 					label_replace_mode = get_next_enum(ERROR_clp_tcl_f, REPLACE_LABEL, REPLACE_MODES_MAX-1);
 					current_position++;
-					label_filename = get_next_labeled_data_filename(ERROR_clp_tcl_f);
+					label_file_format = get_next_data_file_format(ERROR_clp_tcl_f);
 					current_position--;
 					break;
 					
@@ -117,11 +117,16 @@ void Tcommand_line_parser_change_labels::parse()
 			}
 		}
 		
-	read_filename = get_next_labeled_data_filename(ERROR_clp_gen_missing_data_file_name);
+	read_file_format = get_next_data_file_format(ERROR_clp_gen_missing_data_file_name);
+	check_labeled_data_format(read_file_format);
+	
 	if (current_position < parameter_list_size)
-		write_filename = get_next_labeled_data_filename(ERROR_clp_gen_missing_data_file_name);
+	{
+		write_file_format = get_next_data_file_format(ERROR_clp_gen_missing_data_file_name);
+		check_labeled_data_format(write_file_format);
+	}
 	else
-		write_filename = read_filename;
+		write_file_format = read_file_format;
 };
 
 
@@ -131,11 +136,11 @@ void Tcommand_line_parser_change_labels::exit_with_help()
 {
 	flush_info(INFO_SILENCE,
 	"\n\nchange-labels [options] <read_data_file> [<write_data_file>]\n"
-	"\nChanges the labels of the data set contained in <read_data_file> and saves\n"
-	"the results to <write_data_file>. If the latter is missing, the result is\n"
-	"written to <read_data_file> instead\n"
+	"\nChanges the labels of the data set contained in <read_data_file> and saves"
+	"\nthe results to <write_data_file>. If the latter is missing, the result is"
+	"\nwritten to <read_data_file> instead.\n"
 	"\nAllowed extensions:\n"
-		"<x_data_file>:  .csv, .lsv, and .uci\n");
+		"<x_data_file>:  .csv (labeled) and .lsv\n");
 
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");
@@ -227,10 +232,10 @@ int main(int argc, char **argv)
 	Tdataset_info label_data_set_info;
 	double file_time;
 	double full_time;
-
 	bool simple_diff;
 	double new_label;
-
+	
+	
 // Read command line
 	
 	full_time = get_wall_time_difference();
@@ -242,19 +247,19 @@ int main(int argc, char **argv)
 // Load data set
 
 	file_time = get_process_time_difference();
-	data_set.read_from_file(command_line_parser.read_filename);
-	if (command_line_parser.label_filename.size() > 0)
+	data_set.read_from_file(command_line_parser.read_file_format);
+	if (command_line_parser.label_file_format.filename.size() > 0)
 	{
-		label_data_set.read_from_file(command_line_parser.label_filename);
+		label_data_set.read_from_file(command_line_parser.label_file_format);
 		if (label_data_set.size() != data_set.size())
-			flush_exit(ERROR_DATA_MISMATCH, "File file %s contains %d samples but the file %s contains %d labels.", command_line_parser.read_filename.c_str(), data_set.size(), command_line_parser.label_filename.c_str(), label_data_set.size());
+			flush_exit(ERROR_DATA_MISMATCH, "File file %s contains %d samples but the file %s contains %d labels.", command_line_parser.read_file_format.filename.c_str(), data_set.size(), command_line_parser.label_file_format.filename.c_str(), label_data_set.size());
 	}
 	file_time = get_process_time_difference(file_time);
-	flush_info(INFO_1,"\n%d samples read from file %s", data_set.size(), command_line_parser.read_filename.c_str());
+	flush_info(INFO_1,"\n%d samples read from file %s", data_set.size(), command_line_parser.read_file_format.filename.c_str());
 	
-	if (command_line_parser.label_filename.size() > 0)
+	if (command_line_parser.label_file_format.filename.size() > 0)
 	{
-		flush_info(INFO_1,"\n%d labels read from file %s", label_data_set.size(), command_line_parser.label_filename.c_str());
+		flush_info(INFO_1,"\n%d labels read from file %s", label_data_set.size(), command_line_parser.label_file_format.filename.c_str());
 	
 		data_set_info = Tdataset_info(data_set, true);
 		label_data_set_info = Tdataset_info(label_data_set, true);
@@ -289,13 +294,13 @@ int main(int argc, char **argv)
 	
 	if (command_line_parser.scaling_flag == true)
 		for (i=0; i<data_set.size(); i++)
-				data_set.sample(i)->label = command_line_parser.scale_factor * data_set.sample(i)->label;
+			data_set.sample(i)->label = command_line_parser.scale_factor * data_set.sample(i)->label;
 	
 	
 	file_time = get_process_time_difference(file_time);
-	data_set.write_to_file(command_line_parser.write_filename);
+	data_set.write_to_file(command_line_parser.write_file_format);
 	file_time = get_process_time_difference(file_time);
-	flush_info(INFO_1,"\n%d samples written to file %s", data_set.size(), command_line_parser.write_filename.c_str());
+	flush_info(INFO_1,"\n%d samples written to file %s", data_set.size(), command_line_parser.write_file_format.filename.c_str());
 
 
 // Clean up

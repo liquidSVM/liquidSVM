@@ -65,6 +65,9 @@ template <typename Template_type1, typename Template_type2> void merge_sort_down
 
 template <typename Template_type> map <Template_type, unsigned> create_map(const vector <Template_type>& vec, unsigned start_index = 0, int length = -1);
 
+template <typename Template_type>  vector <Template_type> get_unique_entries(const vector<Template_type> vec, unsigned start_index = 0, int length = -1);
+
+
 template <typename Template_type> void apply_permutation(vector <Template_type>& vec, vector <unsigned> permutation);
 
 
