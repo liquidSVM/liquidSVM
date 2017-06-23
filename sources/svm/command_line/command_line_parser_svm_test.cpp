@@ -119,6 +119,7 @@ void Tcommand_line_parser_svm_test::exit_with_help()
 	"<logfile>:    .log\n"
 	"<testfile>:   .csv and .lsv\n"
 	"<resultfile>: unspecified\n");
+	display_help_file_formats();
 
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");

@@ -110,7 +110,8 @@ void Tcommand_line_parser_convert::exit_with_help()
 	"\nAllowed extensions:\n"
 		"<data_filex_input>:  .csv and .lsv\n"
 		"<data_file_output>:  .csv and .lsv\n");
-
+	display_help_file_formats();
+	
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");
 

@@ -590,6 +590,7 @@ void Tcommand_line_parser_svm_train::exit_with_help()
 	"<trainfile>:  .csv and .lsv\n"
 	"<logfile>:    .log\n"
 	"<solfile>:    .sol\n");
+	display_help_file_formats();
 
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");

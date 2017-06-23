@@ -158,7 +158,7 @@ void Tcommand_line_parser::exit_with_help(unsigned error_code)
 			flush_info("%s ", parameter_list[current_position]);
 		flush_info("\n");
 		
-		if ((error_code != ERROR_clp_gen_unknown) and (error_code != ERROR_clp_gen_unknown_option))
+		if ((error_code != ERROR_clp_gen_unknown) and (error_code != ERROR_clp_gen_unknown_option) and (error_code != ERROR_clp_gen_incorrect_data_file_modifiers))
 			flush_info("\nThe correct usage of this option is:\n");
 	}
 	
@@ -394,6 +394,27 @@ void Tcommand_line_parser::display_help(unsigned error_code)
 		if (error_code == ERROR_clp_gen_missing_sol_file_name)
 			flush_info(INFO_SILENCE, "\nMissing filename for solution file.\n");
 	}
+	
+	if (error_code == ERROR_clp_gen_incorrect_data_file_modifiers)
+		display_help_file_formats();
+}
+
+
+//**********************************************************************************************************************************
+
+
+void Tcommand_line_parser::display_help_file_formats()
+{
+	flush_info("\nThe format of .csv data files can be changed by file format modifiers, which\n");
+	flush_info("follow the file name. Currently, these modifers are available:\n\n");
+	flush_info("+l <pos>      Determines the row of the labels\n");
+	flush_info("+w <pos>      Determines the row of the weights\n");
+	flush_info("+i <pos>      Determines the row of the sample numbers\n");
+	flush_info("+g <pos>      Determines the row of the group numbers\n\n");
+	flush_info("In each case, <pos> = 0 means that the corresponding information is not\n");
+	flush_info("contained in one of the row. For positive <pos> the <pos>-th column from\n");
+	flush_info("the left is used, while for negative <pos> it is counted from the right.\n");
+	flush_info("For labeled .csv files +l 0 is not allowed.\n");
 }
 
 

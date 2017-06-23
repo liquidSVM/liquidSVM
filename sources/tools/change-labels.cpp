@@ -141,6 +141,7 @@ void Tcommand_line_parser_change_labels::exit_with_help()
 	"\nwritten to <read_data_file> instead.\n"
 	"\nAllowed extensions:\n"
 		"<x_data_file>:  .csv (labeled) and .lsv\n");
+	display_help_file_formats();
 
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");

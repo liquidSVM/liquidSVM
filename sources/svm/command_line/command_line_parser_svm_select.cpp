@@ -124,6 +124,7 @@ void Tcommand_line_parser_svm_select::exit_with_help()
 	"<logtrainfile>:  .log\n"
 	"<logselectfile>: .log\n"
 	"<solfile>:       .sol\n");
+	display_help_file_formats();
 
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");

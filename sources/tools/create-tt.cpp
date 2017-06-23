@@ -130,6 +130,7 @@ void Tcommand_line_parser_create_tt::exit_with_help()
 	"\n .csv extension, are inherited.\n"
 	"\nAllowed extensions:\n"
 		"<data_file>:  .csv and .lsv\n");
+	display_help_file_formats();
 
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");

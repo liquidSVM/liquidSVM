@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
 
+
 #if !defined (SAMPLE_FILE_FORMAT_H) 
 	#define SAMPLE_FILE_FORMAT_H
 

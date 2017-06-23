@@ -107,7 +107,8 @@ void Tcommand_line_parser_data_stats::exit_with_help()
 	"\ndata-stats displays some statistics about the data contained in <data_file>.\n"
 	"\nAllowed extensions:\n"
 		"<data_file>:  .csv and .lsv\n");
-
+	display_help_file_formats();
+	
 	if (full_help == false)
 		flush_info(INFO_SILENCE, "\nOptions:");
 	display_help(ERROR_clp_gen_d);

@@ -92,6 +92,7 @@ class Tcommand_line_parser
 		void display_specifics();
 		void display_ranges();
 		void display_defaults();
+		void display_help_file_formats();
 		
 		bool get_next_bool(unsigned error_code);
 		unsigned get_next_class(unsigned error_code);
