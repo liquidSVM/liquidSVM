@@ -85,7 +85,7 @@ Tdataset::Tdataset(const Tdataset& dataset)
 
 //**********************************************************************************************************************************
 
-Tdataset::Tdataset(const double* data_array, unsigned size, unsigned dim, const double* labels, bool array_transposed)
+Tdataset::Tdataset(const double* data_array, unsigned size, unsigned dim, const double* labels, const double* weights, const double* group_ids, const double* ids, bool array_transposed)
 {
 	unsigned i;
 	unsigned j;
@@ -98,10 +98,17 @@ Tdataset::Tdataset(const double* data_array, unsigned size, unsigned dim, const 
 		for(i=0; i<size; i++)
 		{
 			dummy_sample = Tsample(&data_array[i * dim], dim, 0.0);
+			dummy_sample.number = i;
 			if (labels != NULL)
 				dummy_sample.label = labels[i];
 			else
 				dummy_sample.labeled = false;
+			if (weights != NULL)
+				dummy_sample.weight = weights[i];
+			if (group_ids != NULL)
+				dummy_sample.group_id = group_ids[i];
+			if (ids != NULL)
+				dummy_sample.id = ids[i];
 
 			push_back(&dummy_sample);
 		}  
@@ -110,6 +117,7 @@ Tdataset::Tdataset(const double* data_array, unsigned size, unsigned dim, const 
 		dummy_sample = Tsample(CSV, dim);
 		for(i=0; i<size; i++)
 		{
+			dummy_sample.number = i;
 			for (j=0; j<dim; j++)
 				dummy_sample.change_coord(j, data_array[j * size + i]);
 
@@ -117,6 +125,12 @@ Tdataset::Tdataset(const double* data_array, unsigned size, unsigned dim, const 
 				dummy_sample.label = labels[i];
 			else
 				dummy_sample.labeled = false;
+			if (weights != NULL)
+				dummy_sample.weight = weights[i];
+			if (group_ids != NULL)
+				dummy_sample.group_id = group_ids[i];
+			if (ids != NULL)
+				dummy_sample.id = ids[i];
 
 			push_back(&dummy_sample);
 		}  

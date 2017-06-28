@@ -121,7 +121,7 @@ extern "C" int liquid_svm_init(const double* data, const unsigned size, const un
 	}
   try{
   Tsvm_manager *SVM = new Tsvm_manager();
-		Tdataset data_set = Tdataset(data, size, dim, labels, __LIQUIDSVM_DATA_BY_COLS);
+		Tdataset data_set = Tdataset(data, size, dim, labels, NULL, NULL, NULL, __LIQUIDSVM_DATA_BY_COLS);
 //		for(int i=0; i<8 && i<size; i++){
 //		  flush_info(1,"%.2f ",data_set.sample(i)->label);
 //		  for(int j=0; j<dim; j++) flush_info(1,",%.2f",data_set.sample(i)->coord(j));
@@ -336,7 +336,7 @@ extern "C" double* liquid_svm_test(int cookie, const int argc, char** argv, cons
 
 	Tsvm_full_test_info test_info;
 
-	Tdataset test_data_set = Tdataset(test_data, test_size, dim, labels, __LIQUIDSVM_DATA_BY_COLS);
+	Tdataset test_data_set = Tdataset(test_data, test_size, dim, labels, NULL, NULL, NULL, __LIQUIDSVM_DATA_BY_COLS);
 	test_data_set.enforce_ownership();
 	
 	SVM->test(test_data_set, command_line_parser.test_control, test_info);

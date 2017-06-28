@@ -51,7 +51,7 @@ class Tdataset
 	public:
 		Tdataset();
 		Tdataset(const Tdataset& dataset);
-		Tdataset(const double* data_array, unsigned size, unsigned dim, const double* labels, bool array_transposed = false);
+		Tdataset(const double* data_array, unsigned size, unsigned dim, const double* labels, const double* weights = NULL, const double* group_ids = NULL, const double* ids = NULL, bool array_transposed = false);
 		~Tdataset();
 
 		void clear();
