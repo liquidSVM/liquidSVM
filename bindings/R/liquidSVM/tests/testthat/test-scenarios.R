@@ -226,7 +226,7 @@ test_that("nplSVM (alarm = +1)",{
   set.seed(123)
   npl_factors <- c(3,6,12)/6
   
-  tt <- liquidData('banana-bc',trainSize=30)
+  tt <- liquidData('banana-bc',trainSize=100)
   
   model <- nplSVM(Y ~ ., tt$train,threads=1, class=-1, constraint.factors=npl_factors,folds=3)
   result <- test(model, tt$test)
@@ -236,14 +236,14 @@ test_that("nplSVM (alarm = +1)",{
   expect_equal(nrow(test_err),length(npl_factors))
   expect_equal(test_err[,3], false_alarm_rate, tolerance=.0001, check.attributes=F )
   expect_equal(1-test_err[,1], detection_rate, tolerance=.0001, check.attributes=F )
-  expect_equal(0.05 * npl_factors, false_alarm_rate, tolerance=.06, check.attributes=F )
+  expect_equal(0.05 * npl_factors, false_alarm_rate, tolerance=.08, check.attributes=F, check.names=F)
 })
 
 test_that("nplSVM (alarm = -1)",{
   set.seed(123)
   npl_factors <- c(3,6,12)/6
   
-  tt <- liquidData('banana-bc',trainSize=300)
+  tt <- liquidData('banana-bc',trainSize=100)
   
   model <- nplSVM(Y ~ ., tt$train,threads=1, class=1, constraint.factors=npl_factors,folds=3)
   result <- test(model, tt$test)
@@ -253,7 +253,7 @@ test_that("nplSVM (alarm = -1)",{
   expect_equal(nrow(test_err),length(npl_factors))
   expect_equal(test_err[,2], false_alarm_rate, tolerance=.0001, check.attributes=F )
   expect_equal(1-test_err[,1], detection_rate, tolerance=.0001, check.attributes=F )
-  expect_equal(0.05 * npl_factors, false_alarm_rate, tolerance=.06, check.attributes=F,use.names=F )
+  expect_equal(0.05 * npl_factors, false_alarm_rate, tolerance=.08, check.attributes=F, check.names=F)
 })
 
 test_that("rocSVM",{
@@ -278,6 +278,9 @@ test_that("plotROC p",{
   
   model <- rocSVM(Y~.,tt$train,threads=1, weight_steps=weight_steps,folds=3)
 
+  # to neither open any window nor write to Rplots.pdf
+  pdf(file=NULL)
+  
   plotROC(model ,tt$test)
   # or:
   result <- test(model, tt$test)
@@ -285,6 +288,8 @@ test_that("plotROC p",{
 
   model.ls <- lsSVM(Y~., tt$train,threads=1,folds=3)
   result <- plotROC(model.ls, tt$test)
+  
+  dev.off()
   
   if(file.exists('Rplots.pdf')){
     unlink('Rplots.pdf')
@@ -303,10 +308,7 @@ test_that("bsSVM ls",{
   test_err <- errors(result)
   
   expect_equal(length(test_err),6)
-  #....????
+  # ....????
 })
 
 options(liquidSVM.warn.suboptimal=orig)
-
-
-

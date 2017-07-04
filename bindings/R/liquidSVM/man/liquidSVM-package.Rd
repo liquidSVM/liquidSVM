@@ -12,9 +12,12 @@ class of machine learning algorithms, for non-parametric classification and regr
 \itemize{
 \item fully integrated hyper-parameter selection,
 \item extreme speed on both small and large data sets,
-\item multi-threaded,
-\item inclusion of a variety of different classification and regression scenarios,
-\item full flexibility for experts.
+\item full flexibility for experts, and
+\item inclusion of a variety of different learning scenarios:
+\itemize{
+\item multi-class classification, ROC, and Neyman-Pearson learning, and
+\item least-squares, quantile, and expectile regression
+}
 }
 \ifelse{latex}{\out{\clearpage}}{}
 Further information is available in the following vignettes:

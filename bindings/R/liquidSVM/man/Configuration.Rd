@@ -358,7 +358,7 @@ For completeness here are some values that usually get set by the learning scena
 }
 
 \item{\code{FOLDS_KIND}}{
-\code{FROM_FILE}, \code{BLOCKS}, \code{ALTERNATING}, \code{RANDOM}, \code{STRATIFIED}, \code{RANDOM_SUBSET}
+\code{BLOCKS}, \code{ALTERNATING}, \code{RANDOM}, \code{STRATIFIED}, \code{RANDOM_SUBSET}
 }
 
 \item{\code{WS_TYPE}}{

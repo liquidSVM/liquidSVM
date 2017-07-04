@@ -8,7 +8,7 @@ COMMON_DIR=$(MAIN_DIR)/bindings/common
 
 MAC_HOST=isamac
 MAC_DIR=work/R
-MAC_R=R
+MAC_R=/usr/local/bin/R
 MAC_R-devel=R
 WIN_HOST=isawinwin
 WIN_DIR=winhome2/work/R
@@ -190,6 +190,6 @@ repository:
 	cd $(PUB_DIR) && cp -f ./$(BUNDLE_WIN) ./bin/windows/contrib/3.2/ && Rscript -e 'tools::write_PACKAGES("./bin/windows/contrib/3.2", type="win.binary")'
 	cd $(PUB_DIR) && cp -f ./$(BUNDLE_MAC) ./bin/macosx/mavericks/contrib/3.2/ && Rscript -e 'tools::write_PACKAGES("./bin/macosx/mavericks/contrib/3.2", type="mac.binary")'
 	## Now we cheat, since we have only limited build-system capability:
-	cd $(PUB_DIR)/bin/windows/contrib && for i in 3.0 3.1 3.3 3,4; do ln -fs 3.2 $$i; done
+	cd $(PUB_DIR)/bin/windows/contrib && for i in 3.0 3.1 3.3 3.4 3.5; do ln -fs 3.2 $$i; done
 	#cd $(PUB_DIR)/bin/windows/contrib && for i in 2.{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15} 3.0 3.1 3.3 3,4; do ln -fs 3.2 $$i; done
-	cd $(PUB_DIR)/bin/macosx/mavericks/contrib && for i in 3.0 3.1 3.3 3.4; do ln -fs 3.2 $$i; done
+	cd $(PUB_DIR)/bin/macosx/mavericks/contrib && for i in 3.0 3.1 3.3 3.4 3.5; do ln -fs 3.2 $$i; done

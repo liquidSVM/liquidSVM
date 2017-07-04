@@ -313,6 +313,7 @@ clean:
 	@find . -type f -name "*~" -exec rm -f {} \;
 	
 	@echo Removing all training files
+	@$(MKDIR_P) results
 	@find results -type f -name "*.log" -exec rm -f {} \;
 	@find results -type f -name "*.sol" -exec rm -f {} \;
 	@find results -type f -name "*.aux" -exec rm -f {} \;
