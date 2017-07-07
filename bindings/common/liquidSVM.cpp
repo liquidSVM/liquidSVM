@@ -114,6 +114,10 @@ inline Tsvm_manager* getSVMbyCookie(int cookie){
 
 extern "C" int liquid_svm_init(const double* data, const unsigned size, const unsigned dim, const double* labels)
 {
+	return liquid_svm_init_annotated(data, size, dim, labels, NULL, NULL, NULL);
+}
+extern "C" int liquid_svm_init_annotated(const double* data, const unsigned size, const unsigned dim, const double* labels, const double* sample_weights, const unsigned* group_ids, const unsigned* ids)
+{
 	if(size < 1 || dim < 1)
 	{
     error("No data provided!\n");
@@ -121,7 +125,7 @@ extern "C" int liquid_svm_init(const double* data, const unsigned size, const un
 	}
   try{
   Tsvm_manager *SVM = new Tsvm_manager();
-		Tdataset data_set = Tdataset(data, size, dim, labels, NULL, NULL, NULL, __LIQUIDSVM_DATA_BY_COLS);
+		Tdataset data_set = Tdataset(data, size, dim, labels, sample_weights, group_ids, ids, __LIQUIDSVM_DATA_BY_COLS);
 //		for(int i=0; i<8 && i<size; i++){
 //		  flush_info(1,"%.2f ",data_set.sample(i)->label);
 //		  for(int j=0; j<dim; j++) flush_info(1,",%.2f",data_set.sample(i)->coord(j));

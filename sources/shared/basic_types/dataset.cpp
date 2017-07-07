@@ -85,7 +85,7 @@ Tdataset::Tdataset(const Tdataset& dataset)
 
 //**********************************************************************************************************************************
 
-Tdataset::Tdataset(const double* data_array, unsigned size, unsigned dim, const double* labels, const double* weights, const double* group_ids, const double* ids, bool array_transposed)
+Tdataset::Tdataset(const double* data_array, unsigned size, unsigned dim, const double* labels, const double* weights, const unsigned* group_ids, const unsigned* ids, bool array_transposed)
 {
 	unsigned i;
 	unsigned j;

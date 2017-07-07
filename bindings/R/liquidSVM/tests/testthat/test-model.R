@@ -203,6 +203,24 @@ test_that("getSolution",{
   expect_equal(sol$fold, f)
 })
 
+test_that("groupedFolds",{
+  set.seed(123)
+  tt <- ttsplit(iris, testProb=0.5)
+  groups <- sample.int(n=50, size=nrow(tt$train), replace=T)
+  
+  model <- lsSVM(Species~., tt$train, threads=1, groupIds=groups)
+  result <- test(model, tt$test)
+  expect_lte(errors(result), 0.1)
+  
+  model <- lsSVM(Species~., tt$train, threads=1, groupIds=factor(groups))
+  result <- test(model, tt$test)
+  expect_lte(errors(result), 0.1)
+  
+  model <- mcSVM(Species~., tt$train, threads=1, groupIds=groups)
+  result <- test(model, tt$test)
+  expect_lte(errors(result)[1], 0.1)
+})
+
 
 test_that("suboptimal warning",{
   orig <- options(liquidSVM.warn.suboptimal=TRUE)[[1]]

@@ -82,7 +82,7 @@ SEXP liquid_svm_R_default_params(SEXP stage, SEXP solver){
   return mkString(liquid_svm_default_params(INTEGER(stage)[0],INTEGER(solver)[0]));
 }
   
-SEXP liquid_svm_R_init(SEXP dataR, SEXP labelsR){
+SEXP liquid_svm_R_init(SEXP dataR, SEXP labelsR, SEXP sampleWeightsR, SEXP groupIdsR, SEXP idsR){
   int size = length(labelsR);
   if(size < 1){
     error("No data");
@@ -95,13 +95,29 @@ SEXP liquid_svm_R_init(SEXP dataR, SEXP labelsR){
   }
   
   SEXP cookieR = PROTECT(allocVector(INTSXP, 1));
-  double *data, *labels;
+  double *data, *labels, *sampleWeights;
+  unsigned *groupIds, *ids;
   int *cookie;
   data = REAL(dataR);
   labels = REAL(labelsR);
+  if(length(sampleWeightsR)>0){
+    sampleWeights = REAL(sampleWeightsR);
+  }else{
+    sampleWeights = NULL;
+  }
+  if(length(groupIdsR)>0){
+    groupIds = (unsigned int *) INTEGER(groupIdsR);
+  }else{
+    groupIds = NULL;
+  }
+  if(length(idsR)>0){
+    ids = (unsigned int *) INTEGER(idsR);
+  }else{
+    ids = NULL;
+  }
   cookie = INTEGER(cookieR);
   GetRNGstate();
-  cookie[0] = liquid_svm_init(data, size, dim, labels);
+  cookie[0] = liquid_svm_init_annotated(data, size, dim, labels, sampleWeights, groupIds, ids);
   PutRNGstate();
   
   UNPROTECT(1);
@@ -380,7 +396,7 @@ extern SEXP liquid_svm_R_read_solution(SEXP cookieR, SEXP filenameR){
 
 static const R_CallMethodDef R_CallDef[] = {
   CALLDEF(liquid_svm_R_default_params,2),
-  CALLDEF(liquid_svm_R_init,2),
+  CALLDEF(liquid_svm_R_init,5),
   CALLDEF(liquid_svm_R_train,2),
   CALLDEF(liquid_svm_R_select,2),
   CALLDEF(liquid_svm_R_test,5),

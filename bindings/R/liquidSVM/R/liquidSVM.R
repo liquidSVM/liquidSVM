@@ -236,9 +236,13 @@ init.liquidSVM.formula <- function(x,y, ..., d=NULL){
 #' Unlike the specialized functions \code{qtSVM, exSVM, nplSVM} etc.
 #' this does not trigger the correct \code{select}
 #' @param useCells if \code{TRUE} partitions the problem (equivalent to \code{partition_choice=6})
+#' @param sampleWeights vector of weights for every sample or \code{NULL} (default) [currently has no effect]
+#' @param groupIds vector of integer group ids for every sample or \code{NULL} (default).
+#' If not \code{NULL} this will do group-wise folds, see \code{folds_kind='GROUPED'}.
+#' @param ids vector of integer ids for every sample or \code{NULL} (default) [currently has no effect]
 #' @export
 #' @describeIn init.liquidSVM Initialize SVM model using a data frame and a label vector
-init.liquidSVM.default <- function(x,y, scenario=NULL, useCells=NULL, ..., d=NULL){
+init.liquidSVM.default <- function(x,y, scenario=NULL, useCells=NULL, ..., sampleWeights=NULL, groupIds=NULL, ids=NULL, d=NULL){
   train <- x
   labels <- y
 #   mf <- model.frame(formula, data)
@@ -248,12 +252,33 @@ init.liquidSVM.default <- function(x,y, scenario=NULL, useCells=NULL, ..., d=NUL
   }else{
     labels <- as.numeric(labels)
   }
-
+  
+  noSamples <- if(is.null(dim(x))) length(x) else nrow(x)
+  if(length(labels) != noSamples)
+    stop('x and y do not have the same number of samples')
+  
+  failedAnnotation <- function(x, typeF=function(x) is.integer(x) || is.factor(x)){
+    if(is.null(x)) return(FALSE)
+    if(!typeF(x)) return(TRUE)
+    if(length(x) != length(labels)) return(TRUE)
+    if(any(as.numeric(x) < 0)) return(TRUE)
+    return(FALSE)
+  }
+  if(failedAnnotation(sampleWeights, typeF=is.numeric)) stop('sampleWeights has to be NULL or positive numeric of same length as labels.')
+  if(failedAnnotation(groupIds)) stop('groupIds has to be NULL or non-negative integers of same length as labels.')
+  if(failedAnnotation(ids)) stop('ids has to be NULL or non-negative integers of same length as labels.')
+  
   if(any(is.na(labels)))
     warning("Training labels have NA values, removing the corresponding samples.")
   if(any(is.na(train)))
     warning("Training data has NA values, removing the corresponding samples.")
-  val_index <- stats::complete.cases(train, labels)
+  if(!is.null(sampleWeights) && any(is.na(sampleWeights)))
+    warning("sampleWeights has NA values, removing the corresponding samples.")
+  if(!is.null(groupIds) && any(is.na(groupIds)))
+    warning("groupIds has NA values, removing the corresponding samples.")
+  if(!is.null(ids) && any(is.na(ids)))
+    warning("ids has NA values, removing the corresponding samples.")
+  val_index <- stats::complete.cases(train, labels, sampleWeights, groupIds, ids)
   train <- if(is.null(dim(train)))
     train[val_index]
   else
@@ -279,6 +304,7 @@ init.liquidSVM.default <- function(x,y, scenario=NULL, useCells=NULL, ..., d=NUL
     str(as.numeric(labels))
   cookie <- .Call('liquid_svm_R_init',
             as.numeric(data.matrix(train)), as.numeric(labels),
+            as.numeric(sampleWeights), as.integer(groupIds), as.integer(ids),
             PACKAGE='liquidSVM')
   
   stopifnot( is.integer(cookie) & length(cookie)==1 & cookie>=0)
@@ -296,6 +322,8 @@ init.liquidSVM.default <- function(x,y, scenario=NULL, useCells=NULL, ..., d=NUL
   }
   
   setConfig(result, "SCENARIO", scenario)
+  if(!is.null(groupIds))
+    setConfig(result, "FOLDS_KIND", "GROUPED")
   set_all_params(result, d=d,...)
   if(is.null(useCells))
     useCells <- (train_size > 10000)
