@@ -80,6 +80,9 @@ class SVM(object):
         self.err_select = None
         self.last_result = None
 
+        self.trained = False
+        self.selected = False
+
         self._cookie = _libliquidSVM.liquid_svm_init(
             self.data, n, self.dim, self.labs)
         for name in kwargs:
@@ -113,8 +116,9 @@ class SVM(object):
         if not err:
             raise Exception("Problem with training of a liquidSVM model.")
         self.err_train = SVM.convertTable(err)
-        self.err_train = np.core.records.fromarrays(self.err_train.transpose(), names=SVM._err_names, formats=['float']*14)
+        self.err_train = np.core.records.fromarrays(self.err_train.transpose(), names=SVM._err_names, formats=['float']*13)
         self.err_select = None
+        self.trained = True
         return self.err_train
 
     def select(self, **kwargs):
@@ -134,6 +138,8 @@ class SVM(object):
             all selected validation errors and technical details of the training phase
 
         """
+        if not self.trained:
+            raise Exception("Model has not yet been trained")
         argv = SVM.makeArgs(kwargs, defaultLine=self.configLine(2))
         TypeArgv = ct.c_char_p * len(argv)
         argv_s = TypeArgv(*argv)
@@ -142,11 +148,13 @@ class SVM(object):
         if not err:
             raise Exception("Problem with selecting of a liquidSVM model.")
         new_err_select = SVM.convertTable(err)
-        new_err_select = np.core.records.fromarrays(new_err_select.transpose(), names=SVM._err_names, formats=['float']*14)
+        new_err_select = np.core.records.fromarrays(new_err_select.transpose(), names=SVM._err_names, formats=['float']*13)
         if self.err_select is None:
             self.err_select = new_err_select
         else:
             self.err_select = np.append(self.err_select, new_err_select)
+        self.selected = True
+
         if hasattr(self, 'auto_test_data'):
             self.test(self.auto_test_data)
         return self.err_select
@@ -182,6 +190,8 @@ class SVM(object):
             The second return argument gives the errors if labels were provided,
             or is empty else. The number of rows depends on the learning scenario.
         """
+        if not self.selected:
+            raise Exception("Model has not yet been selected")
         if test_labs is None:
             if isinstance(test_data, LiquidData):
                 test_data = test_data.test
@@ -270,6 +280,44 @@ class SVM(object):
         _libliquidSVM.liquid_svm_set_param(ct.c_int(self._cookie), ct.c_char_p(
             name.upper().encode('UTF-8')), ct.c_char_p(str(value).encode('UTF-8')))
         return self
+
+    def solution(self, task, cell, fold):
+        """Get the solution for task in cell and fold.
+
+        Parameters
+        ----------
+        task : int in range 1 to the number of tasks in the scenario
+            the task for which a solution is requested
+        cell : int in range 1 to number of cells in task
+            the cell for which a solution is requested
+        fold : int in range 1 to number of folds
+            the fold for which a solution is requested
+
+        Returns
+        -------
+        DecisionFunction
+            the decision function that solves the problem
+        """
+        if not self.selected:
+            raise Exception("Model has not yet been selected")
+
+        offset = _libliquidSVM.liquid_svm_get_solution_offset(
+            ct.c_int(self._cookie), ct.c_int(task), ct.c_int(cell), ct.c_int(fold))
+
+        sv = _libliquidSVM.liquid_svm_get_solution_svs(
+            ct.c_int(self._cookie), ct.c_int(task), ct.c_int(cell), ct.c_int(fold))
+        if not sv:
+            raise Exception("Problem with get solution of a liquidSVM model.")
+        sv = SVM.convertTable(sv)[0,:]
+
+        coeff = _libliquidSVM.liquid_svm_get_solution_coeffs(
+            ct.c_int(self._cookie), ct.c_int(task), ct.c_int(cell), ct.c_int(fold))
+        if not coeff:
+            raise Exception("Problem with get solution of a liquidSVM model.")
+        coeff = SVM.convertTable(coeff)[0,:]
+
+        return DecisionFunction(task, cell, fold, offset, sv, coeff, self.data, self.labs)
+
 
     @staticmethod
     def makeArgs(kwargs, default={}, defaultLine=None):
@@ -507,3 +555,14 @@ class nplSVM(SVM):
             self.set("NPL_CLASS", self.nplClass)
             self.set("NPL_CONSTRAINT", self.constraint * cf)
             SVM.select(self, **kwargs)
+
+class DecisionFunction:
+    def __init__(self, task, cell, fold, offset, sv, coeff, data, labels):
+        self.task = task
+        self.cell = cell
+        self.fold = fold
+        self.offset = offset
+        self.sv = sv.astype(np.int)
+        self.coeff = coeff
+        self.labels = labels[self.sv]
+        self.samples = data[self.sv,:]

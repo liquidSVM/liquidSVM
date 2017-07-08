@@ -47,6 +47,9 @@ extern Tsubset_info liquid_svm_get_cover(int cookie, unsigned task);
 extern Tsvm_decision_function liquid_svm_get_solution(int cookie, unsigned task, unsigned cell, unsigned fold);
 #endif
 
+extern "C" double liquid_svm_get_solution_offset(int cookie, unsigned task, unsigned cell, unsigned fold);
+extern "C" double* liquid_svm_get_solution_svs(int cookie, unsigned task, unsigned cell, unsigned fold);
+extern "C" double* liquid_svm_get_solution_coeffs(int cookie, unsigned task, unsigned cell, unsigned fold);
 
 
 #ifndef COMPILE_SEPERATELY__

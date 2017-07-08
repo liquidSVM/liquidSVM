@@ -118,3 +118,15 @@ _libliquidSVM.liquid_svm_test.argtypes = [
 _libliquidSVM.liquid_svm_test.restype = ct.POINTER(ct.c_double)
 
 _libliquidSVM.liquid_svm_clean.argtypes = [ct.c_int]
+
+_libliquidSVM.liquid_svm_get_solution_offset.argtypes = [
+    ct.c_int, ct.c_int, ct.c_int, ct.c_int]
+_libliquidSVM.liquid_svm_get_solution_offset.restype = ct.c_double
+
+_libliquidSVM.liquid_svm_get_solution_svs.argtypes = [
+    ct.c_int, ct.c_int, ct.c_int, ct.c_int]
+_libliquidSVM.liquid_svm_get_solution_svs.restype = ct.POINTER(ct.c_double)
+
+_libliquidSVM.liquid_svm_get_solution_coeffs.argtypes = [
+    ct.c_int, ct.c_int, ct.c_int, ct.c_int]
+_libliquidSVM.liquid_svm_get_solution_coeffs.restype = ct.POINTER(ct.c_double)

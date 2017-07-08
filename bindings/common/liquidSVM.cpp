@@ -451,6 +451,27 @@ extern Tsvm_decision_function liquid_svm_get_solution(int cookie, unsigned task,
 
 }
 
+extern "C" double liquid_svm_get_solution_offset(int cookie, unsigned task, unsigned cell, unsigned fold)
+{
+//	  Tsvm_decision_function f = liquid_svm_get_solution(cookie, task, cell, fold);
+	  return 0.0;
+}
+extern "C" double* liquid_svm_get_solution_svs(int cookie, unsigned task, unsigned cell, unsigned fold)
+{
+	  Tsvm_decision_function f = liquid_svm_get_solution(cookie, task, cell, fold);
+	  vector<double> vec(f.sample_number.begin(), f.sample_number.end());
+	  vector<vector<double>> ret;
+	  ret.push_back(vec);
+	  return convertMatrixToArray(ret);
+}
+extern "C" double* liquid_svm_get_solution_coeffs(int cookie, unsigned task, unsigned cell, unsigned fold)
+{
+	  Tsvm_decision_function f = liquid_svm_get_solution(cookie, task, cell, fold);
+	  vector<vector<double>> ret;
+	  ret.push_back(f.coefficient);
+	  return convertMatrixToArray(ret);
+}
+
 
 extern "C" void liquid_svm_write_solution(int cookie, const char* filename, size_t len, unsigned char *buffer)
 {
