@@ -137,6 +137,10 @@ extern "C" int liquid_svm_init_annotated(const double* data, const unsigned size
     int cookie = ++last_id;
     cookies[cookie] = SVM;
     flush_info(INFO_DEBUG,"\nnew cookie: %d, cookies.size: %d\n",cookie, cookies.size());
+
+    if(group_ids != NULL)
+    		getConfig(cookie)->set("HAS_GROUP_IDS", 1);
+
     return cookie;
     //getSVMbyCookie(cookie[0]);
   }catch(...){

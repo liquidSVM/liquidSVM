@@ -71,6 +71,7 @@ else:
 
 
 TdoubleP = npct.ndpointer(dtype=np.double)
+TunsignedP = npct.ndpointer(dtype=np.uint)
 
 
 def nullable_from_param(cls, obj): # pylint: disable=unused-argument
@@ -81,11 +82,22 @@ def nullable_from_param(cls, obj): # pylint: disable=unused-argument
         return obj
     return TdoubleP.from_param(obj)
 
+def nullable_from_param_unsigned(cls, obj): # pylint: disable=unused-argument
+    if obj is None:
+        return obj
+    return TunsignedP.from_param(obj)
+
 
 TdoublePnullable = type(
     'TdoublePnullable',
     (TdoubleP,),
     {'from_param': classmethod(nullable_from_param)}
+)
+
+TunsignedPnullable = type(
+    'TunsignedPnullable',
+    (TunsignedP,),
+    {'from_param': classmethod(nullable_from_param_unsigned)}
 )
 
 _set_param = _libliquidSVM.liquid_svm_set_param
@@ -102,6 +114,10 @@ _get_config_line.restype = ct.c_char_p
 _libliquidSVM.liquid_svm_init.argtypes = [
     TdoubleP, ct.c_int, ct.c_int, TdoubleP]
 _libliquidSVM.liquid_svm_init.restype = ct.c_int
+
+_libliquidSVM.liquid_svm_init_annotated.argtypes = [
+    TdoubleP, ct.c_int, ct.c_int, TdoubleP, TdoublePnullable, TunsignedPnullable, TunsignedPnullable]
+_libliquidSVM.liquid_svm_init_annotated.restype = ct.c_int
 
 _libliquidSVM.liquid_svm_train.argtypes = [
     ct.c_int, ct.c_int, ct.POINTER(ct.c_char_p)]

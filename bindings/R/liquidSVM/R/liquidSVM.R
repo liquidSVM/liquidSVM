@@ -322,8 +322,6 @@ init.liquidSVM.default <- function(x,y, scenario=NULL, useCells=NULL, ..., sampl
   }
   
   setConfig(result, "SCENARIO", scenario)
-  if(!is.null(groupIds))
-    setConfig(result, "FOLDS_KIND", "GROUPED")
   set_all_params(result, d=d,...)
   if(is.null(useCells))
     useCells <- (train_size > 10000)

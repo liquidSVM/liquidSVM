@@ -501,6 +501,9 @@ void Tconfig::set_scenario(int scenario, string param){
 		default:
 			break;
 	}
+	// overwrite FOLDS_KIND setting if samples are grouped
+	if(getI("HAS_GROUP_IDS", 0))
+		set("FOLDS_KIND", GROUPED);
 }
 
 const string Tconfig::config_line(int stage){

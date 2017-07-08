@@ -45,6 +45,13 @@ class SVM(object):
     labs : np.array (1-dim)
         the labels. If this is `None` then the labels
         have to be provided in the `data` argument.
+    sampleWeights : np.array (1-dim)
+        weights for samples or `None` (default) [currently has no effect]
+    groupIds : np.array (1-dim)
+        group ids for samples or `None` (default). Will be converted to unsigned.
+        If not `None` this will do group-wise folds, see `folds_kind='GROUPED'`.
+    ids : np.array (1-dim)
+        ids for samples (will be converted to unsigned) or `None` (default) [currently has no effect]
     **kwargs : dict
         Configuration arguments, can be `threads=1`, `display=1`, `grid_choice=1`, etc.
         For more information see: `?doc.configuration`
@@ -58,7 +65,7 @@ class SVM(object):
 
     """
 
-    def __init__(self, data, labs=None, **kwargs):
+    def __init__(self, data, labs=None, sampleWeights=None, groupIds=None, ids=None, **kwargs):
         if labs is None:
             if isinstance(data, str):
                 data = LiquidData(data)
@@ -71,6 +78,10 @@ class SVM(object):
             else:
                 raise ValueError('No labels have been specified!')
         n = data.shape[0]
+        if not labs.ndim == 1:
+            raise Exception('labs has to be a vector.')
+        if not labs.shape == (n,):
+            raise Exception('labs and data have not same amount of samples.')
         self.dim = data.shape[1] if len(data.shape) >= 2 else 1
         self.data = np.asarray(data, dtype=np.double).copy()
         self.labs = np.asarray(labs, dtype=np.double).copy()
@@ -83,8 +94,20 @@ class SVM(object):
         self.trained = False
         self.selected = False
 
-        self._cookie = _libliquidSVM.liquid_svm_init(
-            self.data, n, self.dim, self.labs)
+        if sampleWeights is not None:
+            if not sampleWeights.shape == (n,) or np.any(sampleWeights < 0):
+                raise Exception('sampleWeights has to be None or positive numeric of same length as samples.')
+        if groupIds is not None:
+            if not groupIds.shape == (n,) or np.any(groupIds < 0):
+                raise Exception('groupIds has to be None or positive numeric of same length as samples.')
+            groupIds = groupIds.astype(np.uint)
+        if ids is not None:
+            if not ids.shape == (n,) or np.any(ids < 0):
+                raise Exception('ids has to be None or positive numeric of same length as samples.')
+            ids = ids.astype(np.uint)
+
+        self._cookie = _libliquidSVM.liquid_svm_init_annotated(
+            self.data, n, self.dim, self.labs, sampleWeights, groupIds, ids)
         for name in kwargs:
             self.set(name, kwargs[name])
         if not len(self.get("SVM_TYPE")):
