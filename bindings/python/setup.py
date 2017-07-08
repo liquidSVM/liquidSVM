@@ -51,8 +51,7 @@ else:
         extra_compile_args += ['-g2', '-mtune=generic', '-msse2']
     extra_link_args = []
     if sys.platform == 'darwin':
-        extra_compile_args += ['-stdlib=libc++',
-                               '-mmacosx-version-min=10.7', '-DSYSTEM_WITH_64BIT']
+        extra_compile_args += ['-stdlib=libc++', '-mmacosx-version-min=10.7']
         extra_link_args += ['-mmacosx-version-min=10.7']
 
 module = Extension('liquidSVM', sources=['src/liquidSVMmodule.cpp'],

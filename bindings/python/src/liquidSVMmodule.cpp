@@ -23,42 +23,39 @@
 #define MS_WIN64
 #endif
 
-#define VPRINTF(message_format, ...) va_list arguments; \
-              va_start(arguments, message_format); \
-              vprintf(message_format, arguments); \
-              va_end(arguments);
-//              PySys_FormatStdout(message_format, arguments); \ // gave SIGSEGV
-//              PySys_WriteStdout(message_format, arguments); \ // gave SIGSEGV and we would need to restrict to 1000bytes
-
 #include <Python.h>
 
+#define VPRINTF(message_format, ...) \
+{ \
+    char buffer[1001]; \
+    va_list args; \
+    va_start (args, message_format); \
+    vsnprintf (buffer, 1001, message_format, args); \
+    va_end (args); \
+    PyGILState_STATE gstate; \
+    gstate = PyGILState_Ensure(); \
+    PySys_WriteStdout("%s", buffer); \
+    PyGILState_Release(gstate); \
+}
+
+bool doInterrupt = false;
 void CheckUserInterrupt();
+
+#define CLEAR_INTERRUPT doInterrupt = false;
+
 
 #include "common/liquidSVM.h"
 
-// Interrupt handling does not work at the moment, since we cannot save thread state
-// and the following needs to be executed "on the GIL" or so.
-// This will only possible once we implement real bindings and all the functions
-// will then be able to save the thread state
-// still this will be needed to be done only say on the master thread??
-#ifndef BLABLA____
-void CheckUserInterrupt(){}
-#else
-#define MY_PY_BEGIN if (PyEval_ThreadsInitialized()) py_thread_state = PyEval_SaveThread();
-#define MY_PY_END if (py_thread_state) PyEval_RestoreThread(py_thread_state);
-PyThreadState *py_thread_state = NULL;
 void CheckUserInterrupt(){
-	MY_PY_END
-	PyErr_CheckSignals();
-	if(PyErr_Occurred())
-	{
-		MY_PY_BEGIN
+    PyGILState_STATE gstate;
+    gstate = PyGILState_Ensure();
+	int err = PyErr_CheckSignals();
+    PyGILState_Release(gstate);
+	if(err < 0)
+	    doInterrupt = true;
+	if(doInterrupt)
 		throw string("Interrupted");
-	}else{
-		MY_PY_BEGIN
-	}
 }
-#endif
 
 
 /*

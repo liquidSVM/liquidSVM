@@ -47,6 +47,10 @@
 #define warning(x) flush_info(x);
 #endif
 
+#ifndef CLEAR_INTERRUPT
+#define CLEAR_INTERRUPT ;
+#endif
+
 #define __DEFAULT_PARAMS_GRID__ "-g 10 .2 5 -l 10 .001 .01 -a 0 3 3"
 #define __DEFAULT_PARAMS_TRAIN_MC__ " -r 1 -s 1 0.001 -W 1 -f 4 5"
 #define __DEFAULT_PARAMS_TRAIN_LS__ " -r 1 -s -1.0 0.001 -f 3 5"
@@ -145,6 +149,7 @@ extern "C" int liquid_svm_init_annotated(const double* data, const unsigned size
     //getSVMbyCookie(cookie[0]);
   }catch(...){
     error("\nShould not happen!! liquid_svm_init\n");
+    CLEAR_INTERRUPT
     return -1;
   }
 }
@@ -211,6 +216,7 @@ extern "C" double* liquid_svm_train(int cookie, const int argc, char** argv)
     for(int i=0; i<argc; i++) flush_info(0,"%s ",argv[i]);
     flush_info(0,"\n");
     error("liquid_svm_select problems with command args\n");
+    CLEAR_INTERRUPT
     return NULL;
   }
 
@@ -248,6 +254,7 @@ extern "C" double* liquid_svm_train(int cookie, const int argc, char** argv)
   
   }catch(...){
     error("\nShould not happen!! liquid_svm_train\n");
+    CLEAR_INTERRUPT
   }
   return ret;
 }
@@ -268,6 +275,7 @@ extern "C" double* liquid_svm_select(int cookie, const int argc, char** argv)
     for(int i=0; i<argc; i++) flush_info(0,"%s ",argv[i]);
     flush_info(0,"\n");
     error("liquid_svm_select problems with command args\n");
+    CLEAR_INTERRUPT
     return NULL;
   }
 	
@@ -309,6 +317,7 @@ extern "C" double* liquid_svm_select(int cookie, const int argc, char** argv)
   
   }catch(...){
     error("\nShould not happen!! liquid_svm_select\n");
+    CLEAR_INTERRUPT
   }
   
   return ret;
@@ -332,6 +341,7 @@ extern "C" double* liquid_svm_test(int cookie, const int argc, char** argv, cons
     for(int i=0; i<argc; i++) flush_info(0,"%s ",argv[i]);
     flush_info(0,"\n");
     error("liquid_svm_test problems with command args\n");
+    CLEAR_INTERRUPT
     return NULL;
   }
 
@@ -416,6 +426,7 @@ extern "C" double* liquid_svm_test(int cookie, const int argc, char** argv, cons
 
   }catch(...){
     error("\nShould not happen!! liquid_svm_test\n");
+    CLEAR_INTERRUPT
     return NULL;
   }
 	
@@ -435,7 +446,8 @@ extern Tsubset_info liquid_svm_get_cover(int cookie, unsigned task)
 
   }catch(...){
     error("\nShould not happen!! liquid_svm_test\n");
-  }
+    CLEAR_INTERRUPT
+ }
   return info;
   
 }
@@ -450,6 +462,7 @@ extern Tsvm_decision_function liquid_svm_get_solution(int cookie, unsigned task,
 
   }catch(...){
     error("\nShould not happen!! liquid_svm_test\n");
+    CLEAR_INTERRUPT
   }
   return ret;
 
@@ -508,6 +521,7 @@ extern "C" void liquid_svm_write_solution(int cookie, const char* filename, size
 
   }catch(...){
     error("\nShould not happen!! liquid_svm_write_solution\n");
+    CLEAR_INTERRUPT
   }
 
 }
@@ -570,6 +584,7 @@ extern "C" int liquid_svm_read_solution(int cookie, const char* filename, size_t
 
   }catch(...){
     error("\nShould not happen!! liquid_svm_read_solution\n");
+    CLEAR_INTERRUPT
   }
 
   return cookie;
@@ -596,6 +611,7 @@ extern "C" void liquid_svm_clean(int cookie)
     }
   }catch(...){
     warning("\nShould not happen!! liquid_svm_R_clean\n");
+    CLEAR_INTERRUPT
     return;
   }
 }
