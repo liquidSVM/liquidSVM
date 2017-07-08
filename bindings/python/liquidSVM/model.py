@@ -113,6 +113,8 @@ class SVM(object):
         if not err:
             raise Exception("Problem with training of a liquidSVM model.")
         self.err_train = SVM.convertTable(err)
+        self.err_train = np.core.records.fromarrays(self.err_train.transpose(), names=SVM._err_names, formats=['float']*14)
+        self.err_select = None
         return self.err_train
 
     def select(self, **kwargs):
@@ -139,7 +141,12 @@ class SVM(object):
             ct.c_int(self._cookie), len(argv), argv_s)
         if not err:
             raise Exception("Problem with selecting of a liquidSVM model.")
-        self.err_select = SVM.convertTable(err)
+        new_err_select = SVM.convertTable(err)
+        new_err_select = np.core.records.fromarrays(new_err_select.transpose(), names=SVM._err_names, formats=['float']*14)
+        if self.err_select is None:
+            self.err_select = new_err_select
+        else:
+            self.err_select = np.append(self.err_select, new_err_select)
         if hasattr(self, 'auto_test_data'):
             self.test(self.auto_test_data)
         return self.err_select
@@ -315,6 +322,12 @@ class SVM(object):
         cols = int(arr[1])
         raw = npct.as_array(arr, (2 + rows * cols,))
         return raw[2:(2 + rows * cols)].reshape((rows, cols))
+
+    _err_names = ["task", "cell", "fold", "gamma", "pos_weight", "lambda", "train_error",
+                  "val_error", "init_iterations", "train_iterations", "val_iterations",
+                  "gradient_updates", "SVs"]
+    _err_types = ["int", "int", "int", "float", "float", "float", "float",
+                  "float", "int", "int", "int","int", "int", "int"]
 
     def configLine(self, stage):
         """Internal function to get the command-line like parameters for the different stages.

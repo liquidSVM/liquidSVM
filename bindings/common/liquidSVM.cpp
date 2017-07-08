@@ -179,7 +179,6 @@ vector<double> convertValInfo(int task, int cell, int fold, Tsvm_train_val_info 
 	row.push_back(info.init_iterations);
 	row.push_back(info.train_iterations);
 	row.push_back(info.val_iterations);
-	row.push_back(info.init_iterations);
 	row.push_back(info.gradient_updates);
 	row.push_back(info.SVs);
 	return row;

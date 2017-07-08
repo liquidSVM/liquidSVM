@@ -19,14 +19,19 @@
 
 Where you would else use sklearn.svm.SVC or SVR you can just
 use ours. First load some data:
+
 >>> import liquidSVM.data as ld
 >>> banana = ld.LiquidData('banana-bc')
+
 Now in sklearn you would do something like
+
 >>> import sklearn.svm as sk
 >>> model = sk.SVC(verbose=1)
 >>> model.fit(banana.train.data, banana.train.target)
 >>> ( model.predict(banana.test.data) != banana.test.target).mean()
+
 You can just replace it with:
+
 >>> import liquidSVM.learn as ll
 >>> model = ll.SVC(display=1)
 >>> model.fit(banana.train.data, banana.train.target)

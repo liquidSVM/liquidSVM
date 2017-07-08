@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with liquidSVM. If not, see <http://www.gnu.org/licenses/>.
 #
+from __future__ import print_function
 import sys
 import liquidSVM
 from liquidSVM import mcSVM, lsSVM, qtSVM, exSVM, nplSVM, rocSVM
@@ -87,7 +88,7 @@ def main(*argv):
     f = getattr(liquidSVM, scenario + 'SVM')
     # f = globals()[scenario+'SVM']
     model = f(data, **config)
-    print("Test errors:", *model.lastResult[1][:, 0])
+    print("Test errors:", *model.last_result[1][:, 0])
 
 
 if __name__ == '__main__':

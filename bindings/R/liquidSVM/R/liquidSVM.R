@@ -430,7 +430,7 @@ trainSVMs <- function(model, ... , solver=c("kernel.rule","ls","hinge","quantile
   if(!is.null(ret)){
     errors_labels <- c("task", "cell", "fold", "gamma", "pos_weight", "lambda", "train_error",
       "val_error", "init_iterations", "train_iterations", "val_iterations",
-      "init_iterations", "gradient_updates", "SVs")
+      "gradient_updates", "SVs")
     train_errors <- as.data.frame(matrix(ret, ncol=length(errors_labels), byrow=T))
     colnames(train_errors) <- errors_labels
     model$train_errors <- train_errors
@@ -507,7 +507,7 @@ selectSVMs <- function(model, command.args=NULL, ..., d=NULL, warn.suboptimal=ge
   if(!is.null(ret)){
     errors_labels <- c("task", "cell", "fold", "gamma", "pos_weight", "lambda", "train_error",
                        "val_error", "init_iterations", "train_iterations", "val_iterations",
-                       "init_iterations", "gradient_updates", "SVs")
+                       "gradient_updates", "SVs")
     select_errors <- as.data.frame(matrix(ret, ncol=length(errors_labels), byrow=T))
     colnames(select_errors) <- errors_labels
     model$select_errors <- rbind(model$select_errors,select_errors)
