@@ -10,7 +10,7 @@ from liquidSVM import LiquidData, lsSVM, mcSVM
 class Test(unittest.TestCase):
 
     def testliquidSVM_ls(self):
-        d = LiquidData('reg-1d')
+        d = LiquidData('reg-1d', trainSize=400)
         m = lsSVM(d.train)
         pred = m.predict(d.test.data)
         myerr = ((pred - d.test.target)**2).mean()
@@ -19,7 +19,7 @@ class Test(unittest.TestCase):
         self.assertAlmostEqual(myerr, err[0, 0])
 
     def testliquidSVM_bc(self):
-        d = LiquidData('covtype.1000')
+        d = LiquidData('covtype.1000', trainSize=400)
         m = mcSVM(d.train)
         result, err = m.test(d.test)
         myerr = (result[:, 0] != d.test.target).mean()
@@ -27,7 +27,7 @@ class Test(unittest.TestCase):
         self.assertAlmostEqual(myerr, err[0, 0])
 
     def testliquidSVM_mc(self):
-        d = LiquidData('banana-mc')
+        d = LiquidData('banana-mc', trainSize=400)
         lev = 4
         tasks = lev * (lev - 1) / 2
         m = mcSVM(d.train)

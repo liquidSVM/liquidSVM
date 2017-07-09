@@ -76,7 +76,7 @@ print.liquidSVM <- function(x,...){
   }
   cat("\n")
   if(nrow(model$last_result)>0){
-    cat("  has a $last_result because of automagical testing\n")
+    cat("  has a $last_result because there has been predicting or testing\n")
   }
   if(length(model$solution_aux_filename)>0){
     cat("  solution was loaded from", solution_aux_filename,fill=T)

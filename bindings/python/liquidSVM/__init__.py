@@ -30,8 +30,9 @@ To install use
 
 Then you can use it like:
 
->>> from liquidSVM import *
->>> model = mcSVM(iris, iris_labs, display=1,threads=2)
+>>> import liquidSVM as svm
+>>> from liquidSVM import iris, iris_labs
+>>> model = svm.mc(iris, iris_labs, display=1,threads=2)
 >>> result, err = model.test(iris, iris_labs)
 >>> result = model.predict(iris)
 
@@ -48,6 +49,25 @@ from .model import * # noqa
 from .data import * # noqa
 
 __all__ = model.__all__ + data.__all__ + ["doc"]
+
+
+# Aliases for more access to functions,
+# however only the xxxSVM are in __all__
+# so that they are not loaded when using
+#   from liquidSVM import *
+
+ls = lsSVM
+LeastSquares = lsSVM
+mc = mcSVM
+MultiClass = mcSVM
+qt = qtSVM
+QuantileRegression = qtSVM
+ex = exSVM
+ExpectileRegression = exSVM
+npl = nplSVM
+NeymanPearsonLearning = nplSVM
+roc = rocSVM
+ROC = rocSVM
 
 
 if __name__ == '__main__':
