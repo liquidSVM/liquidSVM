@@ -21,6 +21,7 @@ places.
 import os
 import numpy as np
 import pkg_resources
+import warnings
 
 __all__ = ["iris", "iris_labs", "LiquidData"]
 
@@ -45,6 +46,26 @@ class LiquidData(object): # pylint: disable=too-few-public-methods
     ----------
     name : str
         The base name of a train/test splitted data set to load.
+    targetCol : int
+        The index of the target column where the labels are
+    header : bool
+        do the data files have headers
+    loc : str or list of str
+        The location where the data was found
+    prob : None or float
+        probability of sample being put into test set
+    trainSize : None or int
+        size of the train set. If stratified, this will only be approximately fulfilled.
+    testSize : None or int
+        size of the test set. If stratified, this will only be approximately fulfilled.
+    stratified : None or bool or int
+        whether sampling should be done separately in every bin defined by
+        the unique values of the target column.
+        Also can be index or name of the column in \code{data} that should be used to define bins.
+    delimiter : str (", " is default)
+        passed to `numpy.genfromtext`
+    **kwargs : dict
+        passed to `numpy.genfromtext`
 
     Attributes
     ----------
@@ -56,46 +77,203 @@ class LiquidData(object): # pylint: disable=too-few-public-methods
         The test set including labels
     loc : str
         The location where the data was found
+
     """
-    def __init__(self, name):
+    def __init__(self, name, targetCol=0, header=False,loc=[
+                    ".","~/liquidData",
+                    pkg_resources.resource_filename(__name__, 'data/'),
+                    "http://www.isa.uni-stuttgart.de/liquidData"
+                 ], prob=None, testSize=None, trainSize=None, stratified=None,
+                 delimiter=", ", **kwargs):
         train_data = None
         test_data = None
         the_loc = None
-        for loc in ["./", os.path.expanduser('~/liquidData/'),
-                    pkg_resources.resource_filename(__name__, 'data/'),  # @UndefinedVariable
-                    'http://www.isa.uni-stuttgart.de/liquidData/']:
+        if isinstance(loc, str):
+            loc = [ loc ]
+        for l in loc:
             # print('Trying to load from ' + loc)
             for ext in ['.csv', '.csv.gz']:
                 try:
                     # print(loc+name+'.train'+ext)
-                    train_file_name = loc + name + '.train' + ext
-                    test_file_name = loc + name + '.train' + ext
-                    train_data = np.genfromtxt(train_file_name, delimiter=", ")
-                    test_data = np.genfromtxt(test_file_name, delimiter=", ")
-                    the_loc = loc
+                    train_file_name = l + "/" + name + '.train' + ext
+                    test_file_name = l + "/" + name + '.train' + ext
+                    train_data = np.genfromtxt(train_file_name, delimiter=delimiter, **kwargs)
+                    test_data = np.genfromtxt(test_file_name, delimiter=delimiter, **kwargs)
+                    the_loc = l
                     break
                 except: # pylint: disable=bare-except
                     pass
             if the_loc is not None:
                 break
         if train_data is None or test_data is None:
-            raise IOError()
+            raise IOError("Data files for name %s not found." % name)
 
         self.name = name
-        self.train = self.__bunch(train_data, name + " (train)")
-        self.test = self.__bunch(test_data, name + " (test)")
+        self.train = self.__bunch(train_data, targetCol, name + " (train)",
+                                  prob=prob, size=trainSize, stratified=stratified)
+        self.test = self.__bunch(test_data, targetCol, name + " (test)",
+                                  prob=prob, size=testSize, stratified=stratified)
         self.loc = the_loc
 
     @staticmethod
-    def __bunch(data, descr):
+    def _isIntegerArray(x):
+        if x.dtype.kind == 'i':
+            return True
+        return bool(np.equal(np.mod(x, 1), 0).all())
+
+    @staticmethod
+    def _sampleBunch(bunch, prob, size, stratified):
+        I = LiquidData._sampleIt(bunch.data, bunch.target, prob, size, stratified)
+        ret = bunch.copy()
+        ret.data = bunch.data[I,:]
+        if bunch.target is not None:
+            ret.target = bunch.target[I]
+        return ret
+
+    @staticmethod
+    def _sampleIt(data, target, prob, size, stratified):
+
+        n = data.shape[0]
+        if target is not None and target.shape != (n,):
+            raise ValueError('target has shape %s but data has %d samples.' % (target.shape, n))
+
+        if prob is None and size is None:
+            return range(n)
+
+        if stratified is None:
+            if target is None:
+                stratified = False
+            else:
+                stratified = LiquidData._isIntegerArray(target)
+        if stratified == True:
+            if target is None:
+                raise ValueError('if stratified=True also target has to be specified.')
+            stratified = target
+
+        if size is not None:
+            prob = size / float(n)
+        else:
+            size = max(round(n * prob), 1)
+        size = int(size)
+
+        if size >= n:
+            # first we recommend to use Inf
+            if size != np.inf and size > n and prob > 1:
+                warnings.warn("Trying to sample more data than available. This is interpreted to shuffle all available"
+                              " data. If this is what you want use size=Inf or prob=1")
+            # now we just coule do
+            #   return(1:n)
+            # but we still want to have it shuffled:
+            return np.random.permutation(n)
+
+        if stratified is None or (isinstance(stratified, bool) and stratified == False):
+            return np.random.choice(n, size, replace=False)
+        else:
+            ## split indices into groups
+            import collections
+            groups = collections.defaultdict(list)
+            for i in range(n):
+                groups[stratified[i]].append(i)
+            ## do the stratified sampling
+            samples = [
+                np.random.choice(g, size=max(int(prob * len(g)), 1), replace=False) for g in groups.values()
+                ]
+            samples =np.concatenate(samples)
+            ## finally shuffle everything around
+            return np.random.permutation(samples)
+
+    def sample(self, prob=0.2, trainSize=None, testSize=None, stratified=None):
+        """Creates a new LiquidData that samples from the current one.
+
+        Parameters
+        ----------
+        prob : None or float
+            probability of sample being put into test set
+        trainSize : None or int
+            size of the train set. If stratified, this will only be approximately fulfilled.
+        testSize : None or int
+            size of the test set. If stratified, this will only be approximately fulfilled.
+        stratified : None or bool or int
+            whether sampling should be done separately in every bin defined by
+            the unique values of the target column.
+            Also can be index of the column in ``data`` that should be used to define bins.
+        Examples
+        --------
+        ## example for sample.liquidData
+        banana = LiquidData('banana-mc')
+        banana.sample(prob=0.1)
+        # this is equivalent to
+        LiquidData('banana-mc', prob=0.1)
+        """
+        ## first we create a new environment
+        ret = self.copy()
+
+        if prob is None:
+            if trainSize is None and testSize is None:
+                raise ValueError("one of prob, trainSize, testSize hast to be specified!")
+            if testSize is None:
+                testSize = ret.test.data.shape[0] * trainSize / ret.train.data.shape[0]
+            if trainSize is None:
+                trainSize = ret.train.data.shape[0] * testSize / ret.test.data.shape[0]
+
+        ret.name = ret.name + " (sample)"
+        ret.train = LiquidData._sampleBunch(ret.train, prob, trainSize, stratified)
+        ret.test = LiquidData._sampleBunch(ret.test, prob, testSize, stratified)
+        return ret
+
+    def __repr__(self):
+        return "LiquidData(%s) <dim: %d train: %d, test: %d>" % (
+                                self.name, self.train.data.shape[1],
+                                self.train.data.shape[0], self.test.data.shape[0])
+
+    def __str__(self):
+        ret = []
+        x = self
+        def cat(*args, **kwargs):
+            sep = kwargs.get('sep', " ")
+            ret.append(sep.join([ str(i) for i in args ]))
+        cat('LiquidData "', x.name, '"', sep = '')
+        cat(" with", x.train.data.shape[0], "train samples and", x.train.data.shape[0], "test samples")
+        cat("\n")
+        cat("  having", x.train.data.shape[1], "columns")
+        if x.train.target is not None:
+            cat(' and a target with ')#, x.train.target, '"', sep='')
+            try:
+                col = x.train.target
+                if col.dtype.kind == 'i':
+                    lev, a = np.unique(col, return_counts=True)
+                    cat(len(a), 'unique levels: ')
+                    b = [ "".join([str(l), ' (', str(c), ' samples)']) for l,c in zip(lev, a) ]
+                    cat(", ".join(b[:min(3, len(b))]))
+                    if len(b) > 3:
+                        cat(", ...")
+                else:
+                    cat('mean %.3f and range [%.3f,%.3f]' % (col.mean(), np.min(col), np.max(col)))
+            except Exception as e:
+                pass
+        cat('\n')
+        return "".join(ret)
+
+    @staticmethod
+    def __bunch(data, targetCol, descr, prob, size, stratified):
         # ret = []
         # ret.data = data[:,1:]
         # ret.target = data[:,0]
         # ret.DESCR = descr
-        return Bunch(data=data[:, 1:], target=data[:, 0], DESCR=descr)
-        # return ret
+        if targetCol is None:
+            bunch = Bunch(data=data, target=None, DESCR=descr)
+        else:
+            if targetCol < 0 or targetCol > data.shape[1]:
+                raise ValueError('targetCol is %d but has to be between 0 and %d.' % (targetCol, data.shape[1]))
+            target = data[:, targetCol]
+            data = np.delete(data, targetCol, axis=1)
+            if LiquidData._isIntegerArray(target):
+                target = target.astype(np.int)
+            bunch = Bunch(data=data, target=target, DESCR=descr)
+        return LiquidData._sampleBunch(bunch, prob=prob, size=size, stratified=stratified)
 
-    def from_data(self, train_x, train_y, test_x, test_y):
+    @staticmethod
+    def from_data(self, train_x, train_y, test_x, test_y, prob=1, trainSize=None, testSize=None, stratified=None):
         """Creates a LiquidData from given np.array objects
 
         Parameters
@@ -116,9 +294,24 @@ class LiquidData(object): # pylint: disable=too-few-public-methods
         self.train = Bunch(data=train_x, target=train_y, DESCR='')
         self.test = Bunch(data=test_x, target=test_y, DESCR='')
 
+    def copy(self):
+        import copy
+        return copy.copy(self)
+    # def copy(self):
+    #     newone = LiquidData.__new__(LiquidData)
+    #     newone.__dict__.update(self.__dict__)
+    #     return newone
+
 
 class Bunch(dict):
     """This emulates the Bunch of sklearn"""
     def __init__(self, *args, **kwds):
         super(Bunch, self).__init__(*args, **kwds)
         self.__dict__ = self
+    def copy(self):
+        import copy
+        return copy.copy(self)
+    # def copy(self):
+    #     newone = Bunch.__new__(Bunch)
+    #     newone.__dict__.update(self.__dict__)
+    #     return newone
