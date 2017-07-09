@@ -75,8 +75,8 @@ unittest:
 	PYTHONPATH=$(PWD) $(python) test/testLiquidSVM.py
 
 coverage:
-	PYTHONPATH=$(PWD) $(python) -M coverage run test/testLiquidSVM.py
-	$(python) -M coverage html
+	PYTHONPATH=$(PWD) $(python) -m coverage run test/testLiquidSVM.py
+	$(python) -m coverage html
 
 doc: doc/_build/html/index.html
 doc/_build/html/index.html: liquidSVM/*.py doc/*.rst

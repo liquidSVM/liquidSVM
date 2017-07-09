@@ -66,6 +66,7 @@ class SVM(object):
     """
 
     def __init__(self, data, labs=None, sampleWeights=None, groupIds=None, ids=None, **kwargs):
+        self.auto_test_data = None
         if labs is None:
             if isinstance(data, str):
                 data = LiquidData(data)
@@ -180,7 +181,7 @@ class SVM(object):
             self.err_select = np.append(self.err_select, new_err_select)
         self.selected = True
 
-        if hasattr(self, 'auto_test_data'):
+        if self.selected and self.auto_test_data is not None:
             self.test(self.auto_test_data)
         return self.err_select
 

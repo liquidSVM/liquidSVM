@@ -182,7 +182,7 @@ class LiquidData(object): # pylint: disable=too-few-public-methods
             ## finally shuffle everything around
             return np.random.permutation(samples)
 
-    def sample(self, prob=0.2, trainSize=None, testSize=None, stratified=None):
+    def sample(self, prob=None, trainSize=None, testSize=None, stratified=None):
         """Creates a new LiquidData that samples from the current one.
 
         Parameters
