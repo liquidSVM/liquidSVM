@@ -141,6 +141,8 @@ class SVM(object):
         self.err_train = SVM.convertTable(err)
         self.err_train = np.core.records.fromarrays(self.err_train.transpose(), names=SVM._err_names, formats=['float']*13)
         self.err_select = None
+        self.gammas = np.sort(np.unique(self.err_train.gamma))
+        self.lambdas = np.sort(np.unique(self.err_train['lambda'] ))
         self.trained = True
         return self.err_train
 
@@ -414,6 +416,39 @@ class SVM(object):
 
         """
         return _libliquidSVM.liquid_svm_get_config_line(ct.c_int(self._cookie), ct.c_int(stage)).decode("utf-8")
+
+    def __repr__(self):
+        return "%s(cookie: %s dim: %d train samples: %d)" % (
+            type(self).__name__, self._cookie, self.dim,
+            self.data.shape[0])
+
+    def __str__(self):
+        model = self
+        ret = []
+        def cat(*args, **kwargs):
+            sep = kwargs.get('sep', " ")
+            ret.append(sep.join([ str(i) for i in args ]))
+        cat(type(model).__name__, "model")
+        cat(" on", model.dim, "features")
+        cat(" (cookie=", model._cookie, ")", sep = "")
+        cat("\n")
+        # if len(model.get("SCENARIO")) > 0:
+        #     cat(" Scenario:", model.get("SCENARIO"),"\n")
+        hyper = "".join((str(len(model.gammas)), "x", str(len(model.lambdas))))
+        if model.selected:
+            cat("  trained and selected on a", hyper, "grid")
+        elif model.trained:
+            cat("  trained on a", hyper, "grid; no solution selected yet")
+        else:
+            cat("  not yet trained at all")
+        cat("\n")
+        if model.last_result is not None:
+            cat("  has a .last_result because there has been predicting or testing\n")
+        # if len(model.solution_aux_filename) > 0:
+        #     cat("  solution was loaded from", model.solution_aux_filename, '\n')
+        if model._cookie < 0:
+            cat("    deleted, please forget me!\n")
+        return "".join(ret)
 
     def clean(self):
         """Force to release internal C++ memory. After that, this SVM cannot be used any more."""
