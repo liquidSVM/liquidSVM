@@ -103,13 +103,19 @@ void do_default_params(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void do_init(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
-  if(nrhs != 2){
-	  mexErrMsgTxt("init needs exactly two arguments: x,y");
+  if(nrhs < 2){
+	  mexErrMsgTxt("init needs at least two arguments: x,y");
+      return;
+  }
+  if(nrhs > 5){
+	  mexErrMsgTxt("init cannot handle more than five arguments: x, y, sampleWeight, groupId, id");
       return;
   }
   //declare variables
-  mxArray *a_in_m, *b_in_m;
+  mxArray *a_in_m, *b_in_m, *in_m;
   double *a, *b;
+  double *sw=NULL, *gsR=NULL, *idsR=NULL;
+  unsigned *gs=NULL, *ids=NULL;
   //associate inputs
   a_in_m = mxDuplicateArray(prhs[0]);
   b_in_m = mxDuplicateArray(prhs[1]);
@@ -125,14 +131,66 @@ void do_init(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
 
   //flush_info("size %d dims %d\n",size,dims);
   
-  a = mxGetPr(a_in_m); 
-  b = mxGetPr(b_in_m); 
+  a = mxGetPr(a_in_m);
+  b = mxGetPr(b_in_m);
   
-  int cookie = liquid_svm_init(a, size, dims, b);
+  int i=2;
+
+  if(nrhs > i){
+	if(mxGetDimensions(prhs[i])[1] != 0){
+	  if(mxGetDimensions(prhs[i])[0] != size || mxGetDimensions(prhs[1])[1] != 1){
+		  flush_info("sampleWeights have not correct dimensions: %d x %d, should be: %d x %d", mxGetDimensions(prhs[i])[0],mxGetDimensions(prhs[i])[1], size, 1);
+		  mexErrMsgTxt("sampleWeights labels have not correct dimensions.");
+		  return;
+	  }
+	  in_m = mxDuplicateArray(prhs[i]);
+	  sw = mxGetPr(in_m);
+	}
+  }
+
+  i++;
+  if(nrhs > i){
+	if(mxGetDimensions(prhs[i])[1] != 0){
+	  if(mxGetDimensions(prhs[i])[0] != size || mxGetDimensions(prhs[1])[1] != 1){
+		  flush_info("groupIds have not correct dimensions: %d x %d, should be: %d x %d", mxGetDimensions(prhs[i])[0],mxGetDimensions(prhs[i])[1], size, 1);
+		  mexErrMsgTxt("groupIds labels have not correct dimensions.");
+		  return;
+	  }
+	  in_m = mxDuplicateArray(prhs[i]);
+	  gsR = mxGetPr(in_m);
+	  gs = new unsigned[size];
+	  for(int j=0; j<size; j++)
+		  gs[j] = (unsigned)gsR[j];
+	}
+  }
+
+  i++;
+  if(nrhs > i){
+	if(mxGetDimensions(prhs[i])[1] != 0){
+	  if(mxGetDimensions(prhs[i])[0] != size || mxGetDimensions(prhs[1])[1] != 1){
+		  flush_info("ids have not correct dimensions: %d x %d, should be: %d x %d", mxGetDimensions(prhs[i])[0],mxGetDimensions(prhs[i])[1], size, 1);
+		  mexErrMsgTxt("ids labels have not correct dimensions.");
+		  return;
+	  }
+	  in_m = mxDuplicateArray(prhs[i]);
+	  idsR = mxGetPr(in_m);
+	  ids = new unsigned[size];
+	  for(int j=0; j<size; j++)
+		  ids[j] = (unsigned)idsR[j];
+	}
+  }
+
+  int cookie = liquid_svm_init_annotated(a, size, dims, b, sw, gs, ids);
   
   plhs[0] = mxCreateDoubleMatrix(1,1,mxREAL);
   mxGetPr(plhs[0])[0] = cookie;
+
+  if(gs != NULL)
+	  delete[] gs;
+  if(ids != NULL)
+	  delete[] ids;
 }
+
 void do_train(int cookie, int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
   info_mode = 1;
