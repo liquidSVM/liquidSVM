@@ -735,7 +735,7 @@ void Tsample::convert_from_io_vector(Tsample_file_format sample_file_format, con
 	if (sample_file_format.weight_position != 0)
 		weight = io_vector[int(sample_file_format.get_true_column(sample_file_format.weight_position, number_of_columns)) - 1];
 	
-	if (weight <= 0.0)
+	if (weight < 0.0)
 		flush_exit(ERROR_DATA_FALLS_OUTSIDE_SAFE_PARAMETERS, "Sample has negative weight %1.3f.", weight);
 
 	if (sample_file_format.id_position != 0)

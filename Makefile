@@ -115,7 +115,7 @@ endif
 
 # Finally, we glue everything together
 
-CPP_FLAGS= $(MACHINE_FLAGS) $(MATH_FLAGS) $(OPT_FLAGS) $(CPP_VERSION) $(INCLUDE_PATH) $(LINK_FLAGS) $(WARN_FLAGS) $(DEVELOP_OPT) $(PRO_VERSION_OPT) -DCOMPILE_SEPERATELY__ -DCOMPILE_WITHOUT_EXCEPTIONS__ -DCOMPILE_FOR_COMMAND_LINE__ $(LD_LINKER_FLAGS)
+CPP_FLAGS= $(MACHINE_FLAGS) $(TARGET_MACHINE) $(MATH_FLAGS) $(OPT_FLAGS) $(CPP_VERSION) $(INCLUDE_PATH) $(LINK_FLAGS) $(WARN_FLAGS) $(DEVELOP_OPT) $(PRO_VERSION_OPT) -DCOMPILE_SEPERATELY__ -DCOMPILE_WITHOUT_EXCEPTIONS__ -DCOMPILE_FOR_COMMAND_LINE__ $(LD_LINKER_FLAGS)
 
 
 #----------- CUDA-compiler related flags --------------------------------------------------
@@ -232,7 +232,7 @@ info:
 	@echo 
 	@echo The compiler and its version:"            "$(CPPC)"  "$(GCCVERSION)
 	@echo The following C++ standard flag is set:" "$(CPP_VERSION)
-	@echo The following CPU flags are set:"        "$(MACHINE_FLAGS)
+	@echo The following CPU flags are set:"        "$(MACHINE_FLAGS) $(TARGET_MACHINE)
 	@echo 
 	@echo -----------------------------------------------------------------
 	@echo

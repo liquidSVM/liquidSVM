@@ -496,7 +496,7 @@ string Ttrain_val_info::displaystring_parameters(unsigned display_mode) const
 {
 	string output;
 
-	if (display_mode != TRAIN_INFO_DISPLAY_FORMAT_SUMMARIZED)
+	if ((display_mode != TRAIN_INFO_DISPLAY_FORMAT_SUMMARIZED) and (display_mode != TRAIN_INFO_DISPLAY_FORMAT_TIMINGS_FULL))
 	{
 		output = "g: " + number_to_string(gamma, 2);
 		if (weight_display_mode != DISPLAY_NO_WEIGHTS)
@@ -517,7 +517,7 @@ string Ttrain_val_info::displaystring_train_error(unsigned display_mode) const
 {
 	string output;
 
-	if (display_mode != TRAIN_INFO_DISPLAY_FORMAT_SUMMARIZED)
+	if ((display_mode != TRAIN_INFO_DISPLAY_FORMAT_SUMMARIZED) and (display_mode != TRAIN_INFO_DISPLAY_FORMAT_TIMINGS_FULL))
 	{
 		if (weight_display_mode == DISPLAY_WEIGHTS_AND_ERROR)
 		{
@@ -538,7 +538,7 @@ string Ttrain_val_info::displaystring_val_error(unsigned display_mode) const
 {
 	string output;
 	
-	if (display_mode != TRAIN_INFO_DISPLAY_FORMAT_SUMMARIZED)
+	if ((display_mode != TRAIN_INFO_DISPLAY_FORMAT_SUMMARIZED) and (display_mode != TRAIN_INFO_DISPLAY_FORMAT_TIMINGS_FULL))
 	{
 		if (weight_display_mode == DISPLAY_WEIGHTS_AND_ERROR)
 		{
@@ -562,7 +562,7 @@ string Ttrain_val_info::displaystring_kernel(unsigned display_mode) const
 		output = "   kt: " + pos_number_to_string(train_pre_build_time + train_build_time + train_build_transfer_time + train_kNN_build_time + val_pre_build_time + val_build_time + val_build_transfer_time, 2);
 	else
 	{
-		if (display_mode != TRAIN_INFO_DISPLAY_FORMAT_SUMMARIZED)
+		if ((display_mode != TRAIN_INFO_DISPLAY_FORMAT_SUMMARIZED) and (display_mode != TRAIN_INFO_DISPLAY_FORMAT_TIMINGS_FULL))
 			output = "   ";
 		output = output + "tpt: " + pos_number_to_string(train_pre_build_time, 2);
 		output = output + "  tbt: " + pos_number_to_string(train_build_time, 2);

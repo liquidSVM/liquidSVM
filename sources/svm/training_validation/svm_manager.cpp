@@ -509,7 +509,8 @@ void Tsvm_manager::select(const Tselect_control& select_control, Tsvm_full_train
 	else if (select_control.use_stored_solution == false)
 	{
 		clear_flags();
-		decision_function_manager.clear();
+		if (select_control.select_method != SELECT_ON_ENTIRE_TRAIN_SET)
+			decision_function_manager.clear();
 	}
 	
 	Tsvm_manager::select_control = select_control;
