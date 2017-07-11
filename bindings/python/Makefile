@@ -10,7 +10,7 @@ PKG_NAME_GENERAL=$(PKG_NAME)-python
 BUILD_DIR=build/$(SRC_DIR)
 
 ## needs also to be set in setup.py
-VERSION=1.0.1
+VERSION=$(shell sed -n 's/__version__ = "\(.*\)"/\1/p' setup.py)
 
 PUB_DIR=$(MAIN_DIR)/pub/python
 

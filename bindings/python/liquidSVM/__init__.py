@@ -47,6 +47,7 @@ from . import model, data
 from .model import * # noqa
 # pylint: disable=wildcard-import
 from .data import * # noqa
+import liquidSVM.doc
 
 __all__ = model.__all__ + data.__all__ + ["doc"]
 

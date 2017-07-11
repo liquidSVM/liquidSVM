@@ -6,6 +6,20 @@ import shlex
 import sys
 import os
 
+__version__ = "1.0.8"
+# also used in Makefile
+
+_DEVELOPMENT_STATI = ['Development Status :: 1 - Planning',
+'Development Status :: 2 - Pre-Alpha',
+'Development Status :: 3 - Alpha',
+'Development Status :: 4 - Beta',
+'Development Status :: 5 - Production/Stable',
+'Development Status :: 6 - Mature',
+'Development Status :: 7 - Inactive']
+
+__DEVELOPMENT_STATUS__ = _DEVELOPMENT_STATI[4 - 1]
+
+
 # class liquidSvmInstall(install):
 # 	user_options = install.user_options + [
 #           ('liquid-svm-target=', None, 'liquid svm target: native to optimize for current machine or generic for generic architectures'),
@@ -62,7 +76,7 @@ module = Extension('liquidSVM', sources=['src/liquidSVMmodule.cpp'],
 setup(
     name='liquidSVM',
     # cmdclass={ 'install': liquidSvmInstall},
-    version='1.0.1',  # needs also to be set in Makefile
+    version=__version__,
     description='''Support vector machines (SVMs) and related kernel-based learning
         algorithms are a well-known class of machine learning algorithms, for
         non-parametric classification and regression.
@@ -82,4 +96,28 @@ setup(
     package_data={'liquidSVM': ['data/*.csv*', 'demo.html', 'demo.ipynb']},
     ext_modules=[module],
     install_requires=['numpy'],
+    classifiers=[
+        __DEVELOPMENT_STATUS__,
+        'Environment :: Console',
+        'Intended Audience :: Science / Research',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: GNU Affero General Public License v3',
+        'Programming Language :: C',
+        'Programming Language :: C++',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Topic :: Software Development',
+        'Topic :: Scientific/Engineering',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX',
+        'Operating System :: Unix',
+        'Operating System :: MacOS',
+        'Operating System :: MacOS :: MacOS X',
+    ],
 )

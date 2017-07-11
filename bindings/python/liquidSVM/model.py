@@ -181,9 +181,12 @@ class SVM(object):
             self.err_select = np.append(self.err_select, new_err_select)
         self.selected = True
 
-        if self.selected and self.auto_test_data is not None:
-            self.test(self.auto_test_data)
         return self.err_select
+
+    def _autoTest(self):
+        if self.auto_test_data is not None:
+            self.test(self.auto_test_data)
+        return self
 
     def test(self, test_data, test_labs=None, **kwargs):
         """Predicts labels for `test_data` and if applicable compares to test_labs.
@@ -474,6 +477,7 @@ class lsSVM(SVM):
         SVM.__init__(self, data, labs, scenario="LS", **kwargs)
         self.train()
         self.select()
+        self._autoTest()
 
 
 class mcSVM(SVM):
@@ -495,6 +499,7 @@ class mcSVM(SVM):
         SVM.__init__(self, data, labs, scenario="MC " + mcType, **kwargs)
         self.train()
         self.select()
+        self._autoTest()
 
 
 class qtSVM(SVM):
@@ -519,6 +524,7 @@ class qtSVM(SVM):
         self._predict_cols = range(len(weights))
         self.train()
         self.select()
+        self._autoTest()
 
     def select(self, **kwargs):
         for i in range(len(self.weights)):
@@ -548,6 +554,7 @@ class exSVM(SVM):
         self._predict_cols = range(len(weights))
         self.train()
         self.select()
+        self._autoTest()
 
     def select(self, **kwargs):
         for i in range(len(self.weights)):
@@ -575,6 +582,7 @@ class rocSVM(SVM):
         self._predict_cols = range(weightsteps)
         self.train()
         self.select()
+        self._autoTest()
 
     def select(self, **kwargs):
         for i in range(self.weightsteps):
@@ -608,6 +616,7 @@ class nplSVM(SVM):
         self._predict_cols = range(len(constraintFactors))
         self.train()
         self.select()
+        self._autoTest()
 
     def select(self, **kwargs):
         for cf in self.constraintFactors:
