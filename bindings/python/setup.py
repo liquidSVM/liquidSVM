@@ -46,12 +46,14 @@ print("Using target: ", target)
 print("Using further args: ", extra_compile_args)
 
 if sys.platform.startswith("win"):
-    # extra_compile_args = []
+    extra_compile_args = ['/EHs']
     # extra_link_args = ['/EXPORT:liquid_svm_set_param','/EXPORT:liquid_svm_get_param','/EXPORT:liquid_svm_get_config_line',
     # '/EXPORT:liquid_svm_init','/EXPORT:liquid_svm_train','/EXPORT:liquid_svm_select','/EXPORT:liquid_svm_test','/EXPORT:liquid_svm_clean']
     extra_link_args = []
     export_symbols = ['liquid_svm_set_param', 'liquid_svm_get_param', 'liquid_svm_get_config_line',
-                      'liquid_svm_init', 'liquid_svm_train', 'liquid_svm_select', 'liquid_svm_test', 'liquid_svm_clean']
+                      'liquid_svm_init', 'liquid_svm_init_annotated', 'liquid_svm_clean',
+                      'liquid_svm_train', 'liquid_svm_select', 'liquid_svm_test',
+                      'liquid_svm_get_solution_offset', 'liquid_svm_get_solution_svs', 'liquid_svm_get_solution_coeffs']
 else:
     export_symbols = []
     extra_compile_args += ['-O3', '-std=c++11']

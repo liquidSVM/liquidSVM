@@ -175,7 +175,7 @@ initliquidSVM(void)
         INITERROR;
     struct module_state *st = GETSTATE(module);
 
-    st->error = PyErr_NewException("liquidSVM.Error", NULL, NULL);
+    st->error = PyErr_NewException((char*)"liquidSVM.Error", NULL, NULL);
     if (st->error == NULL) {
         Py_DECREF(module);
         INITERROR;

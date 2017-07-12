@@ -50,7 +50,7 @@ pack: prepare-src README.txt
 	cp dist/$(PKG_NAME_VERSION).tar.gz dist/$(PKG_NAME_GENERAL).tar.gz
 sdist: pack
 
-binary: prepare-src
+bdist: prepare-src
 	$(python) setup.py bdist
 
 install:
@@ -87,27 +87,45 @@ pydoc.html: liquidSVM/__init__.py
 	$(pydoc) -w liquidSVM/__init__.py
 	mv __init__.html pydoc.html
 
-SSH_MAC=isamac
+SSH_MAC=mus01
 SSH_MAC_DIR=work/python
+# condapy3.3 gives a problem on both mac and windows at the moment.
+# should we also do manylinux1: https://github.com/pypa/manylinux ???
+ANACONDA_BUILD_ENVS=condapy2 condapy3 condapy3.4 condapy3.5
+SSH_MAC_CONDA_HOME=~/anaconda
+#SSH_MAC_PIP2=~/anaconda/bin/pip
+#SSH_MAC_PIP3=~/anaconda/bin/pip
+#SSH_MAC_PIP2=venv/py2/bin/pip
+#SSH_MAC_PIP3=venv/py3/bin/pip
+
 SSH_WIN=isawinwin
-SSH_WIN_DIR=isawin/work/python
+SSH_WIN_DIR=winhome2/work/python
+SSH_WIN_CONDA_HOME=~/winhome2/Miniconda3
+#SSH_WIN_PIP2=venv/py2/Scripts/pip
+#SSH_WIN_PIP3=venv/py3/Scripts/pip
 
 BDIST_MAC=$(PKG_NAME_GENERAL).macosx.tar.gz
 BDIST_WIN=$(PKG_NAME_GENERAL).win-amd64.zip
 
 binaries: pack binaries-mac binaries-win
 
-binaries-mac: #pack
-		ssh -x $(SSH_MAC) 'mkdir -p $(SSH_MAC_DIR)'
-		scp dist/$(PKG_NAME_VERSION).tar.gz $(SSH_MAC):$(SSH_MAC_DIR)/
-		ssh -x $(SSH_MAC) 'cd $(SSH_MAC_DIR); rm -r $(PKG_NAME_VERSION); tar xzf $(PKG_NAME_VERSION).tar.gz; cd $(PKG_NAME_VERSION); LIQUIDSVM_CONFIGURE_ARGS=generic python setup.py bdist'
-		scp $(SSH_MAC):$(SSH_MAC_DIR)/$(PKG_NAME_VERSION)/dist/$(PKG_NAME_VERSION)*macosx*.tar.gz dist/$(BDIST_MAC)
+prepare-win: #pack
+	ssh -x $(SSH_WIN) 'mkdir -p $(SSH_WIN_DIR)'
+	scp dist/$(PKG_NAME_VERSION).tar.gz $(SSH_WIN):$(SSH_WIN_DIR)/
 
-binaries-win:
-		ssh -x $(SSH_WIN) 'mkdir -p $(SSH_WIN_DIR)'
-		scp dist/$(PKG_NAME_VERSION).tar.gz $(SSH_WIN):$(SSH_WIN_DIR)/
-		ssh -x $(SSH_WIN) 'cd $(SSH_WIN_DIR); rm -r $(PKG_NAME_VERSION); tar xzf $(PKG_NAME_VERSION).tar.gz; cd $(PKG_NAME_VERSION); LIQUIDSVM_CONFIGURE_ARGS=generic python setup.py bdist'
-		scp $(SSH_WIN):$(SSH_WIN_DIR)/$(PKG_NAME_VERSION)/dist/$(PKG_NAME_VERSION).win-amd64.zip dist/$(BDIST_WIN)
+prepare-mac: #pack
+	ssh -x $(SSH_MAC) 'mkdir -p $(SSH_MAC_DIR)'
+	scp dist/$(PKG_NAME_VERSION).tar.gz $(SSH_MAC):$(SSH_MAC_DIR)/
+
+binaries-mac: prepare-mac
+	ssh -x $(SSH_MAC) 'cd $(SSH_MAC_DIR); export LIQUIDSVM_CONFIGURE_ARGS=generic ; ' \
+	'for i in $(ANACONDA_BUILD_ENVS); do echo +++ making python wheel for $$i; $(SSH_MAC_CONDA_HOME)/envs/$$i/bin/pip wheel --no-deps $(PKG_NAME_VERSION).tar.gz; done'
+	scp $(SSH_MAC):$(SSH_MAC_DIR)/$(PKG_NAME_VERSION)*.whl dist/
+
+binaries-win: prepare-win
+	ssh -x $(SSH_WIN) 'cd $(SSH_WIN_DIR); export LIQUIDSVM_CONFIGURE_ARGS=generic ; ' \
+	'for i in $(ANACONDA_BUILD_ENVS); do echo +++ making python wheel for $$i; $(SSH_WIN_CONDA_HOME)/envs/$$i/Scripts/pip wheel --no-deps $(PKG_NAME_VERSION).tar.gz; done'
+	scp $(SSH_WIN):$(SSH_WIN_DIR)/$(PKG_NAME_VERSION)-*-win_amd64.whl dist/
 
 pub: dist/$(PKG_NAME).tar.gz pub-quick
 

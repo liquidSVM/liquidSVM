@@ -94,7 +94,7 @@ model = svm_mc(banana.train, 'DISPLAY', 1, 'THREADS', 2);
 [result, err] = model.test(banana.test);
 ```
 
-Most of the code also works in \texttt{Octave}
+Most of the code also works in `Octave`
 if you use [liquidSVM-octave.zip](http://www.isa.uni-stuttgart.de/software/matlab/liquidSVM-octave.zip).
 
 
