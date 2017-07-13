@@ -314,6 +314,12 @@ init.liquidSVM.default <- function(x,y, scenario=NULL, useCells=NULL, ..., sampl
                           train_data=as.data.frame(train), train_labels=labels)
   class(result) <- 'liquidSVM'
   
+  # set default values first, they get overwritten by scenario and others
+  opts <- names(options())
+  for(o in opts[startsWith(opts, 'liquidSVM.default.')]){
+    setConfig(result, substring(o, 1+nchar('liquidSVM.default.')), getOption(o))
+  }
+  
   if(is.null(scenario)){
     if(is.null(lev))
       scenario <- "LS"

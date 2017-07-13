@@ -87,8 +87,8 @@ commonParamSet <- function() {
     ParamHelpers::makeDiscreteLearnerParam(id = "retrain_method", default = "select_on_each_fold",
                                            values = c("select_on_entire_train_Set","select_on_each_fold")),
     ParamHelpers::makeLogicalLearnerParam(id = "store_solutions_internally", default = TRUE),
-    ParamHelpers::makeIntegerLearnerParam(id = "display", default = 0, lower = 0, upper=7),
-    ParamHelpers::makeIntegerLearnerParam(id = "threads", default = 0, lower = -1)
+    ParamHelpers::makeIntegerLearnerParam(id = "display", default = getOption("liquidSVM.default.display",0), lower = 0, upper=7),
+    ParamHelpers::makeIntegerLearnerParam(id = "threads", default = getOption("liquidSVM.default.threads",0), lower = -1)
   )
 }
 

@@ -124,7 +124,8 @@ setConfig <- function(model,name, value){
   }
   if(length(value)>1)
     value <- paste(value,collapse=" ")
-  #cat("setConfig: ", name, "to", value, fill=T)
+  name <- toupper(name)
+  # cat("setConfig: ", name, "to", value, fill=T)
   result <- .Call('liquid_svm_R_set_param',as.integer(model$cookie),
                   as.character(name), as.character(value),
                   PACKAGE='liquidSVM')

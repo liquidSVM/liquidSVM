@@ -16,6 +16,8 @@ myOwnCache <- function(name, envir=parent.frame(),vignette_dir="."){
   }
 }
 
+options(liquidSVM.default.threads=1)
+
 library(liquidSVM)
 
 
