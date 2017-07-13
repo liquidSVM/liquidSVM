@@ -20,7 +20,7 @@ require(liquidSVM)
 
 context("liquidSVM-model")
 
-orig <- options(liquidSVM.warn.suboptimal=FALSE)[[1]]
+orig <- options(liquidSVM.warn.suboptimal=FALSE, threads=1)[[1]]
 
 hand_err_name <- 'result'
 
@@ -40,11 +40,11 @@ test_that("print model",{
   
   
   # without selecting
-  model <- mcSVM(Species ~ ., tt$train,threads=1, do.select=FALSE)
+  model <- mcSVM(Species ~ ., tt$train, do.select=FALSE)
   expect_output(print(model))
   
   # now for th full train/select/test
-  model <- mcSVM(Species ~ ., tt,threads=1)
+  model <- mcSVM(Species ~ ., tt)
   expect_output(print(model))
 })
 
@@ -56,7 +56,7 @@ test_that("save/load model",{
   #  tt <- liquidData('banana-mc')
   tt <- ttsplit(iris,testSize=30)
   filename <- tempfile("liquidSVM.testthat.iris",fileext = ".fsol")
-  modelOrig <- mcSVM(Species ~ ., tt$train,threads=1)
+  modelOrig <- mcSVM(Species ~ ., tt$train)
   write.liquidSVM(modelOrig, filename)
   clean(modelOrig)
   
@@ -85,7 +85,7 @@ test_that("save/load model without data",{
   #  tt <- liquidData('banana-mc')
   tt <- ttsplit(iris,testSize=30)
   filename <- tempfile("liquidSVM.testthat.iris",fileext = ".sol")
-  modelOrig <- mcSVM(Species ~ ., tt$train,threads=1)
+  modelOrig <- mcSVM(Species ~ ., tt$train)
   write.liquidSVM(modelOrig, filename)
   clean(modelOrig)
   
@@ -116,7 +116,7 @@ test_that("serialize/unserialize model",{
   #  tt <- liquidData('banana-mc')
   tt <- ttsplit(iris,testSize=30)
   
-  modelOrig <- mcSVM(Species ~ ., tt$train,threads=1)
+  modelOrig <- mcSVM(Species ~ ., tt$train)
   obj <- serialize.liquidSVM(modelOrig)
   clean(modelOrig)
   
@@ -144,7 +144,7 @@ test_that("serialize/unserialize model using R serialize",{
   #  tt <- liquidData('banana-mc')
   tt <- ttsplit(iris,testSize=30)
   
-  modelOrig <- mcSVM(Species ~ ., tt$train,threads=1)
+  modelOrig <- mcSVM(Species ~ ., tt$train)
   obj <- serialize(modelOrig, NULL, refhook=svmSerializeHook)
   clean(modelOrig)
   
@@ -190,7 +190,7 @@ test_that("getSolution",{
   x <- seq(0,1,by=.01)
   y <- sin(x*10)
   f <- 2
-  model <- lsSVM(x,y,threads=1)
+  model <- lsSVM(x,y)
   sol <- getSolution(model, 1,1,f)
   n <- length(sol$sv)
   expect_lte(n,length(x))
@@ -208,15 +208,15 @@ test_that("groupedFolds",{
   tt <- ttsplit(iris, testProb=0.5)
   groups <- sample.int(n=50, size=nrow(tt$train), replace=T)
   
-  model <- lsSVM(Species~., tt$train, threads=1, groupIds=groups)
+  model <- lsSVM(Species~., tt$train, groupIds=groups)
   result <- test(model, tt$test)
   expect_lte(errors(result), 0.1)
   
-  model <- lsSVM(Species~., tt$train, threads=1, groupIds=factor(groups))
+  model <- lsSVM(Species~., tt$train, groupIds=factor(groups))
   result <- test(model, tt$test)
   expect_lte(errors(result), 0.1)
   
-  model <- mcSVM(Species~., tt$train, threads=1, groupIds=groups)
+  model <- mcSVM(Species~., tt$train, groupIds=groups)
   result <- test(model, tt$test)
   expect_lte(errors(result)[1], 0.1)
 })
@@ -227,7 +227,7 @@ test_that("suboptimal warning",{
   set.seed(123)
   
   tt <- ttsplit(iris,testSize=30)
-  expect_warning(model <- svm(Species ~ ., tt$train,threads=1,gammas=c(1,10),lambdas=c(.1,1)), 'optimal')
+  expect_warning(model <- svm(Species ~ ., tt$train,gammas=c(1,10),lambdas=c(.1,1)), 'optimal')
   options(liquidSVM.warn.suboptimal=orig)
 })
 

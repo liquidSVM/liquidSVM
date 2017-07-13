@@ -441,10 +441,11 @@ trainSVMs <- function(model, ... , solver=c("kernel.rule","ls","hinge","quantile
     model$select_errors <- train_errors[NULL,]
     model$gammas <- sort(unique(train_errors$gamma))
     model$lambdas <- sort(unique(train_errors$lambda))
+    model$trained <- T
   }else{
     model$train_errors <- NULL
+    model$trained <- F
   }
-  model$trained <- T
   if(do.select != FALSE){
     if(is.logical(do.select) && do.select == TRUE){
       do.select <- NULL
@@ -515,8 +516,11 @@ selectSVMs <- function(model, command.args=NULL, ..., d=NULL, warn.suboptimal=ge
     select_errors <- as.data.frame(matrix(ret, ncol=length(errors_labels), byrow=T))
     colnames(select_errors) <- errors_labels
     model$select_errors <- rbind(model$select_errors,select_errors)
+    model$selected <- T
+  }else{
+    model$select_errors <- NULL
+    model$selected <- F
   }
-  model$selected <- T
   
   if(all(warn.suboptimal)){
     ### give suggestions for boundary value hits

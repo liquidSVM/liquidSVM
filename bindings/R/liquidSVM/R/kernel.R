@@ -28,7 +28,7 @@
 #' kern(trees)
 #' image(kern(trees, 2, "pois"))
 #' @export
-kern <- function(data, gamma=1, type=c("gaussian.rbf","poisson"), threads=1){
+kern <- function(data, gamma=1, type=c("gaussian.rbf","poisson"), threads=getOption('liquidSVM.default.threads',1)){
   GPUs <- 0
   if(length(dim(data))==2)
     stopifnot(length(dim(data))==2 & all(sapply(data, is.numeric)))

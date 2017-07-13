@@ -20,13 +20,13 @@ require(liquidSVM)
 
 context("liquidSVM-bugs")
 
-orig <- options(liquidSVM.warn.suboptimal=FALSE)[[1]]
+orig <- options(liquidSVM.warn.suboptimal=FALSE, threads=1)[[1]]
 
 test_that("trees bug",{
   set.seed(123)
   
   ### seems to be fixed!
-  expect_true(!is.null(s_trees <- svm(Height ~ ., trees, threads=1)))
+  expect_true(!is.null(s_trees <- svm(Height ~ ., trees)))
 })
 
 options(liquidSVM.warn.suboptimal=orig)

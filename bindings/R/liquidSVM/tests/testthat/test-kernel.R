@@ -24,7 +24,7 @@ test_that("kernel",{
   set.seed(123)
   
   #  tt <- liquidData('banana-mc')
-  result <- kern(trees, threads=1)
+  result <- kern(trees)
   n <- nrow(trees)
   expect_equal(dim(result),c(n,n))
   expect_true(all(result >= 0))
@@ -34,7 +34,7 @@ test_that("kernel named type",{
   set.seed(123)
   
   #  tt <- liquidData('banana-mc')
-  result <- kern(trees, type='gaussian', threads=1)
+  result <- kern(trees, type='gaussian')
   n <- nrow(trees)
   expect_equal(dim(result),c(n,n))
   expect_true(all(result >= 0))
@@ -44,14 +44,14 @@ test_that("kernel aux_file",{
   set.seed(123)
   
   # aux_file is actually not read for gaussian.rbf...
-  expect_error(result <- kern(trees, type=c('gaussian','.'), threads=1))
+  expect_error(result <- kern(trees, type=c('gaussian','.')))
 })
 
 test_that("kernel wrong type",{
   set.seed(123)
   
   #  tt <- liquidData('banana-mc')
-  expect_warning(result <- kern(trees, type=NULL, threads=1))
+  expect_warning(result <- kern(trees, type=NULL))
   n <- nrow(trees)
   expect_equal(dim(result),c(n,n))
   expect_true(all(result >= 0))
@@ -61,7 +61,7 @@ test_that("kernel 1-dim",{
   set.seed(123)
   
   #  tt <- liquidData('banana-mc')
-  result <- kern(trees$Girth, threads=1)
+  result <- kern(trees$Girth)
   n <- nrow(trees)
   expect_equal(dim(result),c(n,n))
   expect_true(all(result >= 0))

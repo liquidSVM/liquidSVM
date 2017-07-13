@@ -4,7 +4,8 @@
 \alias{kern}
 \title{Calculates the kernel matrix.}
 \usage{
-kern(data, gamma = 1, type = c("gaussian.rbf", "poisson"), threads = 1)
+kern(data, gamma = 1, type = c("gaussian.rbf", "poisson"),
+  threads = getOption("liquidSVM.default.threads", 1))
 }
 \arguments{
 \item{data}{the data set}

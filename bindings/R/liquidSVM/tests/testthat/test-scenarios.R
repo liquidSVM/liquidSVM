@@ -20,7 +20,7 @@ require(liquidSVM)
 
 context("liquidSVM-scenarios")
 
-orig <- options(liquidSVM.warn.suboptimal=FALSE)[[1]]
+orig <- options(liquidSVM.warn.suboptimal=FALSE, threads=1)[[1]]
 
 hand_err_name <- 'result'
 
@@ -29,7 +29,7 @@ test_that("mcSVM_AvA_hinge",{
   
   #  tt <- liquidData('banana-mc')
   tt <- ttsplit(iris,testSize=30)
-  model <- mcSVM(Species ~ ., tt$train,threads=1)
+  model <- mcSVM(Species ~ ., tt$train)
   hand_err <- 1-mean(predict(model, tt$test)==tt$test$Species)
   names(hand_err) <- hand_err_name
   test_err <- errors(test(model, tt$test))
@@ -45,7 +45,7 @@ test_that("mcSVM_OvA_ls",{
   
   #  tt <- liquidData('banana-mc')
   tt <- ttsplit(iris,testSize=30)
-  model <- mcSVM(Species ~ ., tt$train,threads=1,mc_type="OvA_ls")
+  model <- mcSVM(Species ~ ., tt$train,mc_type="OvA_ls")
   hand_err <- 1-mean(predict(model, tt$test)==tt$test$Species)
   names(hand_err) <- hand_err_name
   test_err <- errors(test(model, tt$test))
@@ -61,7 +61,7 @@ test_that("mcSVM_OvA_hinge",{
   
   #  tt <- liquidData('banana-mc')
   tt <- ttsplit(iris,testSize=30)
-  model <- mcSVM(Species ~ ., tt$train,threads=1,mc_type="OvA_hinge")
+  model <- mcSVM(Species ~ ., tt$train,mc_type="OvA_hinge")
   hand_err <- 1-mean(predict(model, tt$test)==tt$test$Species)
   names(hand_err) <- hand_err_name
   test_err <- errors(test(model, tt$test))
@@ -77,7 +77,7 @@ test_that("mcSVM_AvA_ls",{
   
   #  tt <- liquidData('banana-mc')
   tt <- ttsplit(iris,testSize=30)
-  model <- mcSVM(Species ~ ., tt$train,threads=1,mc_type="AvA_ls")
+  model <- mcSVM(Species ~ ., tt$train,mc_type="AvA_ls")
   hand_err <- 1-mean(predict(model, tt$test)==tt$test$Species)
   names(hand_err) <- hand_err_name
   test_err <- errors(test(model, tt$test))
@@ -93,7 +93,7 @@ test_that("mcSVM_predict.prob.3levels",{
   
   #  tt <- liquidData('banana-mc')
   tt <- ttsplit(iris,testSize=30)
-  model <- mcSVM(Species ~ ., tt$train,threads=1,predict.prob=TRUE)
+  model <- mcSVM(Species ~ ., tt$train,predict.prob=TRUE)
   probs <- predict(model, tt$test)
   
   expect_equal(ncol(probs),length(levels(iris$Species)))
@@ -109,7 +109,7 @@ test_that("mcSVM_predict.prob.4levels",{
   set.seed(123)
   
   tt <- liquidData('banana-mc',trainSize=200)
-  model <- mcSVM(Y ~ ., tt$train,threads=1,predict.prob=TRUE,folds=3)
+  model <- mcSVM(Y ~ ., tt$train,predict.prob=TRUE,folds=3)
   probs <- predict(model, tt$test)
   
   expect_equal(ncol(probs),length(levels(tt$train$Y)))
@@ -125,7 +125,7 @@ test_that("mcSVM_predict.prob.2levels",{
   set.seed(123)
   
   tt <- liquidData('banana-bc',trainSize=300)
-  model <- mcSVM(Y ~ ., tt$train,threads=1,predict.prob=TRUE,folds=3)
+  model <- mcSVM(Y ~ ., tt$train,predict.prob=TRUE,folds=3)
   probs <- predict(model, tt$test)
   
   expect_equal(ncol(probs),2)
@@ -142,7 +142,7 @@ test_that("svm_predict.prob.3levels",{
   
   #  tt <- liquidData('banana-mc')
   tt <- ttsplit(iris,testSize=30)
-  model <- svm(Species ~ ., tt$train,threads=1,predict.prob=TRUE,folds=3)
+  model <- svm(Species ~ ., tt$train,predict.prob=TRUE,folds=3)
   probs <- predict(model, tt$test)
   
   expect_equal(ncol(probs),length(levels(iris$Species)))
@@ -158,7 +158,7 @@ test_that("svm_predict.prob.4levels",{
   set.seed(123)
   
   tt <- liquidData('banana-mc',trainSize=200)
-  model <- svm(Y ~ ., tt$train,threads=1,predict.prob=TRUE,folds=3)
+  model <- svm(Y ~ ., tt$train,predict.prob=TRUE,folds=3)
   probs <- predict(model, tt$test)
   
   expect_equal(ncol(probs),length(levels(tt$train$Y)))
@@ -180,7 +180,7 @@ test_that("lsSVM",{
   set.seed(123)
   
   tt <- ttsplit(quakes,testSize=600)
-  model <- lsSVM(mag ~ ., tt$train,threads=1)
+  model <- lsSVM(mag ~ ., tt$train)
   hand_err <- mean((predict(model, tt$test)-tt$test$mag)^2,folds=3)
   names(hand_err) <- hand_err_name
   test_err <- errors(test(model, tt$test))
@@ -195,7 +195,7 @@ test_that("qtSVM",{
   quantiles_list <- c(0.05, 0.1, 0.5, 0.9, 0.95)
   
   tt <- ttsplit(quakes,testSize=600)
-  model <- qtSVM(mag ~ ., tt$train,threads=1, weights=quantiles_list,folds=3)
+  model <- qtSVM(mag ~ ., tt$train, weights=quantiles_list,folds=3)
   result <- test(model, tt$test)
   hand_err <- mean((result[,3]-tt$test$mag)^2)
   names(hand_err) <- hand_err_name
@@ -211,7 +211,7 @@ test_that("exSVM",{
   expectiles_list <- c(0.05, 0.1, 0.5, 0.9, 0.95)
   
   tt <- ttsplit(quakes,testSize=600)
-  model <- exSVM(mag ~ ., tt$train,threads=1, weights=expectiles_list,folds=3)
+  model <- exSVM(mag ~ ., tt$train, weights=expectiles_list,folds=3)
   result <- test(model, tt$test)
   hand_err <- mean((result[,3]-tt$test$mag)^2)
   names(hand_err) <- hand_err_name
@@ -228,7 +228,7 @@ test_that("nplSVM (alarm = +1)",{
   
   tt <- liquidData('banana-bc',trainSize=100)
   
-  model <- nplSVM(Y ~ ., tt$train,threads=1, class=-1, constraint.factors=npl_factors,folds=3)
+  model <- nplSVM(Y ~ ., tt$train, class=-1, constraint.factors=npl_factors,folds=3)
   result <- test(model, tt$test)
   false_alarm_rate <- apply(result[tt$test$Y==-1,]==1,2,mean)
   detection_rate <- apply(result[tt$test$Y==1,]==1,2,mean)
@@ -245,7 +245,7 @@ test_that("nplSVM (alarm = -1)",{
   
   tt <- liquidData('banana-bc',trainSize=100)
   
-  model <- nplSVM(Y ~ ., tt$train,threads=1, class=1, constraint.factors=npl_factors,folds=3)
+  model <- nplSVM(Y ~ ., tt$train, class=1, constraint.factors=npl_factors,folds=3)
   result <- test(model, tt$test)
   false_alarm_rate <- apply(result[tt$test$Y==1,]==-1,2,mean)
   detection_rate <- apply(result[tt$test$Y==-1,]==-1,2,mean)
@@ -262,7 +262,7 @@ test_that("rocSVM",{
   
   tt <- liquidData('banana-bc',trainSize=400)
   
-  model <- rocSVM(Y ~ ., tt$train,threads=1, weight_steps=weight_steps,folds=3)
+  model <- rocSVM(Y ~ ., tt$train, weight_steps=weight_steps,folds=3)
   result <- test(model, tt$test)
   test_err <- errors(result, showall=T)
   
@@ -276,7 +276,7 @@ test_that("plotROC p",{
   
   tt <- liquidData('banana-bc',trainSize=300)
   
-  model <- rocSVM(Y~.,tt$train,threads=1, weight_steps=weight_steps,folds=3)
+  model <- rocSVM(Y~.,tt$train, weight_steps=weight_steps,folds=3)
 
   # to neither open any window nor write to Rplots.pdf
   pdf(file=NULL)
@@ -286,7 +286,7 @@ test_that("plotROC p",{
   result <- test(model, tt$test)
   plotROC(result, tt$test$Y)
 
-  model.ls <- lsSVM(Y~., tt$train,threads=1,folds=3)
+  model.ls <- lsSVM(Y~., tt$train,folds=3)
   result <- plotROC(model.ls, tt$test)
   
   dev.off()
@@ -303,7 +303,7 @@ test_that("bsSVM ls",{
   
   tt <- ttsplit(quakes,testSize=600)
 
-  model <- bsSVM(mag ~ ., tt$train, ws.size=50,threads=1, solver=solver)
+  model <- bsSVM(mag ~ ., tt$train, ws.size=50, solver=solver)
   result <- test(model, tt$test)
   test_err <- errors(result)
   

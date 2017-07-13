@@ -20,7 +20,7 @@ require(liquidSVM)
 
 context("liquidSVM-quick")
 
-orig <- options(liquidSVM.warn.suboptimal=FALSE)[[1]]
+orig <- options(liquidSVM.warn.suboptimal=FALSE, threads=1)[[1]]
 
 hand_err_name <- 'result'
 
@@ -28,7 +28,7 @@ test_that("quick iris",{
   set.seed(123)
   
   tt <- ttsplit(iris,testSize=30)
-  model <- svm(Species ~ ., tt$train,threads=1)
+  model <- svm(Species ~ ., tt$train)
   expect_equal(nrow(model$last_result),0)
   hand_err <- 1-mean(predict(model, tt$test)==tt$test$Species)
   names(hand_err) <- hand_err_name
@@ -44,7 +44,7 @@ test_that("quick iris last_result",{
   set.seed(123)
   
   tt <- ttsplit(iris,testSize=30)
-  model <- svm(Species ~ ., tt,threads=1)
+  model <- svm(Species ~ ., tt)
   expect_true(nrow(model$last_result)>0)
 #  expect_true('last_result' %in% ls(model))
   hand_err <- 1-mean(predict(model, tt$test)==tt$test$Species)
@@ -61,7 +61,7 @@ test_that("quick iris no-formula",{
   set.seed(123)
   
   tt <- ttsplit(iris,testSize=30)
-  model <- svm(tt$train[,-5], tt$train$Species, threads=1)
+  model <- svm(tt$train[,-5], tt$train$Species)
   expect_equal(nrow(model$last_result),0)
   hand_err <- 1-mean(predict(model, tt$test[,-5])==tt$test$Species)
   expect_true(nrow(model$last_result)>0)
@@ -78,7 +78,7 @@ test_that("quick iris no-formula",{
 #   set.seed(123)
 #   
 #   co <- liquidData('covtype.1000')
-#   model <- svm(Y ~ ., co$train,threads=1)
+#   model <- svm(Y ~ ., co$train)
 #   expect_false('last_result' %in% ls(model))
 #   expect_gt(mean(predict(model, co$test)==co$test$Y),0.7)
 #   expect_true('last_result' %in% ls(model))
@@ -88,7 +88,7 @@ test_that("quick quakes",{
   set.seed(123)
   
   tt <- ttsplit(quakes,testSize=600)
-  model <- svm(mag ~ ., tt$train,threads=1)
+  model <- svm(mag ~ ., tt$train)
   expect_equal(nrow(model$last_result),0)
   hand_err <- mean((predict(model, tt$test)-tt$test$mag)^2)
   expect_true(nrow(model$last_result)>0)
@@ -114,7 +114,7 @@ test_that("quick 1dim",{
   expect_null(dim(tsX))
   expect_null(dim(tsY))
   
-  model <- svm(trX,trY,threads=1)
+  model <- svm(trX,trY)
   expect_equal(nrow(model$last_result),0)
   hand_err <- mean((predict(model, tsX)-tsY)^2)
   expect_true(nrow(model$last_result)>0)
@@ -132,7 +132,7 @@ test_that("quick iris environment",{
   tt <- ttsplit(iris,testSize=30)
   
   attach(tt$train)
-  model <- svm(Species ~ Sepal.Length+Sepal.Width+Petal.Length+Petal.Width, threads=1)
+  model <- svm(Species ~ Sepal.Length+Sepal.Width+Petal.Length+Petal.Width)
   detach(tt$train)
   expect_equal(nrow(model$last_result),0)
   hand_err <- 1-mean(predict(model, tt$test)==tt$test$Species)
@@ -149,7 +149,7 @@ test_that("quick data as name",{
   set.seed(123)
   
   tt <- liquidData('banana-bc')
-  model <- svm(Y ~ ., 'banana-bc', threads=1, folds=2, gammas=c(1,2,4,8))
+  model <- svm(Y ~ ., 'banana-bc', folds=2, gammas=c(1,2,4,8))
   
   expect_equal(nrow(model$last_result),nrow(tt$test))
   
@@ -174,7 +174,7 @@ test_that("quick threads",{
 
   set.seed(123)
   tt <- liquidData('banana-bc')
-  a <- system.time(model <- svm(Y ~ ., tt$train,threads=1, do.select=FALSE, folds=2))
+  a <- system.time(model <- svm(Y ~ ., tt$train, do.select=FALSE, folds=2))
   b <- system.time(model <- svm(Y ~ ., tt$train,threads=2, do.select=FALSE, folds=2))
   expect_gt(a['elapsed'],b['elapsed'])
   expect_lt(a['user.self'],b['user.self'])

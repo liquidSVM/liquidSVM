@@ -18,7 +18,7 @@
 library(testthat)
 library(liquidSVM)
 
-orig <- options(liquidSVM.warn.suboptimal=FALSE)
+orig <- options(liquidSVM.warn.suboptimal=FALSE, threads=1)
 
 test_check("liquidSVM")
 

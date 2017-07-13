@@ -20,7 +20,7 @@ require(liquidSVM)
 
 context("liquidSVM-mlr")
 
-orig <- options(liquidSVM.warn.suboptimal=FALSE)[[1]]
+orig <- options(liquidSVM.warn.suboptimal=FALSE, threads=1)[[1]]
 
 hand_err_name <- 'result'
 
@@ -32,7 +32,7 @@ test_that("mlr-regr",{
   ## Define a regression task
   task <- makeRegrTask(id = "trees", data = trees, target = "Volume")
   ## Define the learner
-  lrn <- makeLearner("regr.liquidSVM", display=0, threads=1)
+  lrn <- makeLearner("regr.liquidSVM", display=0)
   ## Train the model use mlr::train to get the correct train function
   model <- train(lrn,task)
   pred <- predict(model, task=task)
@@ -48,7 +48,7 @@ test_that("mlr-class",{
   task <- makeClassifTask(id = "iris", data = iris, target = "Species")
   
   ## Define the learner
-  lrn <- makeLearner("classif.liquidSVM", display=0, threads=1)
+  lrn <- makeLearner("classif.liquidSVM", display=0)
   model <- train(lrn,task)
   pred <- predict(model, task=task)
   expect_lt(performance(pred),0.05)
@@ -63,7 +63,7 @@ test_that("mlr-class-prob",{
   task <- makeClassifTask(id = "iris", data = iris, target = "Species")
   
   ## Define the learner
-  lrn <- makeLearner("classif.liquidSVM", display=0, threads=1, predict.type='prob')
+  lrn <- makeLearner("classif.liquidSVM", display=0, predict.type='prob')
   model <- train(lrn,task)
   pred <- predict(model, task=task)
   performance(pred)
