@@ -71,4 +71,3 @@ modelTrees <- svm(trees[,c(1,3)],trees$Height)
 \seealso{
 \code{\link{lsSVM}}, \code{\link{mcSVM}}, \code{\link{init.liquidSVM}}, \code{\link{trainSVMs}}, \code{\link{selectSVMs}}
 }
-

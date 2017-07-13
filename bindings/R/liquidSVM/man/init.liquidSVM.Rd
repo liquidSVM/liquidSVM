@@ -4,6 +4,7 @@
 \alias{init.liquidSVM}
 \alias{init.liquidSVM.default,}
 \alias{init.liquidSVM.formula}
+\alias{init.liquidSVM.formula}
 \alias{init.liquidSVM.default}
 \title{Initialize an SVM object.}
 \usage{

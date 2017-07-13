@@ -3,8 +3,9 @@
 \name{liquidData}
 \alias{liquidData}
 \alias{print.liquidData}
-\alias{sample.liquidData}
 \alias{ttsplit}
+\alias{sample.liquidData}
+\alias{print.liquidData}
 \title{Loads or downloads training and testing data}
 \usage{
 liquidData(name, factor_cols, header = FALSE, loc = c(".", "~/sml/data",
@@ -96,4 +97,3 @@ print(banana)
 \seealso{
 \code{\link{ttsplit}}
 }
-

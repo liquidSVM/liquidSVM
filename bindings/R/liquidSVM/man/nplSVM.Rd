@@ -55,4 +55,3 @@ vignette("demo",package="liquidSVM")
 }
  
 }
-

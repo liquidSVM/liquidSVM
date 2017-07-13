@@ -50,4 +50,3 @@ errors(result)[2] ## is the same as
 mean(ifelse(result[,2]<tt$test$mag, -.1,.9) * (result[,2]-tt$test$mag))
 }
 }
-

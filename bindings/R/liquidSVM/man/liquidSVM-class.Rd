@@ -14,3 +14,4 @@ A Reference Class to represent a liquidSVM model.
 \item{\code{cookie}}{this is used in C++ to access the model in memory}
 }}
 
+

@@ -33,4 +33,3 @@ properties.
 \description{
 This routine performs bootstrap learning for all scenarios except multiclass classification.
 }
-

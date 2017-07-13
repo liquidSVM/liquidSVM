@@ -2,9 +2,9 @@
 % Please edit documentation in R/model.R
 \name{read.liquidSVM}
 \alias{read.liquidSVM}
+\alias{write.liquidSVM}
 \alias{serialize.liquidSVM}
 \alias{unserialize.liquidSVM}
-\alias{write.liquidSVM}
 \title{Read and Write Solution from and to File}
 \usage{
 read.liquidSVM(filename, ...)
@@ -81,4 +81,3 @@ errors(test(modelUnserialized, banana$test))
 \seealso{
 \code{\link{init.liquidSVM}}, \code{\link{write.liquidSVM}}
 }
-

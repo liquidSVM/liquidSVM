@@ -14,4 +14,3 @@ setDisplay(d = 1)
 Set display info mode that controls how much information is displayed
 by liquidSVM C++ routines. Usually you will use \code{display=d} in \code{svm(...)} etc.
 }
-

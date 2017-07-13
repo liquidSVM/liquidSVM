@@ -75,4 +75,3 @@ vignette("demo",package="liquidSVM")
 \seealso{
 \code{\link{Configuration}}
 }
-

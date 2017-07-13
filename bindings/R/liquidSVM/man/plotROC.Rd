@@ -51,4 +51,3 @@ rocSVM, lsSVM
 
 \code{\link{rocSVM}}
 }
-

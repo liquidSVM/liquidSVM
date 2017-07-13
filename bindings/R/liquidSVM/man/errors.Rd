@@ -43,4 +43,3 @@ errors(result, showall=TRUE)
 \seealso{
 \code{\link{test.liquidSVM}}
 }
-

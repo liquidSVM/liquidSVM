@@ -18,4 +18,3 @@ selectSVMs(model, command.args=list(R=0,d=2))
 result <- test(model, reg$test, command.args=list(T=1, d=0))
 }
 }
-

@@ -54,4 +54,3 @@ plot(bananaSub[,-1],col=bananaSub$Y)
 points(supportvecs,pch='x',cex=2)
 }
 }
-

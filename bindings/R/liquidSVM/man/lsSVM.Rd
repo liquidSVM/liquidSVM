@@ -47,4 +47,3 @@ errors(result) ## is the same as
 mean( (tt$test$mag-result)^2 )
  
 }
-

@@ -22,4 +22,3 @@ and be written as the first column.}
 \description{
 Write \code{liquidData} in such a way that it is understood by liquidSVM command line utilities.
 }
-

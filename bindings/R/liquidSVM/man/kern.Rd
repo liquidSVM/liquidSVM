@@ -25,4 +25,3 @@ Calculates the kernel matrix.
 kern(trees)
 image(kern(trees, 2, "pois"))
 }
-

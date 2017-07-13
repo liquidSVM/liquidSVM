@@ -12,4 +12,3 @@ character with the information.
 \description{
 Compilation information: whether the library was compiled using SSE2 or even AVX.
 }
-

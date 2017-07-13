@@ -45,4 +45,3 @@ cells <- apply(distances[model$train_labels \%in\% c(2,3),cover$indices],1,which
 table(cells)
 }
 }
-

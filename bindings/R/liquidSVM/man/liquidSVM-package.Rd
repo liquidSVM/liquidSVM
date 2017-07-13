@@ -2,8 +2,8 @@
 % Please edit documentation in R/liquidSVM.R
 \docType{package}
 \name{liquidSVM-package}
-\alias{liquidSVM}
 \alias{liquidSVM-package}
+\alias{liquidSVM}
 \title{liquidSVM for R}
 \description{
 Support vector machines (SVMs) and related kernel-based learning algorithms are a well-known
@@ -68,6 +68,7 @@ the C++ library in an inconsistent state, so that it is better to save your work
 \pkg{liquidSVM} is multi-threaded and is difficult to be multi-threaded externally, see
 \href{documentation.html\#Using external parallelization}{documentation}
 }
+
 \examples{
 set.seed(123)
 ## Multiclass classification
@@ -89,17 +90,16 @@ modelWarpbreaks <- rocSVM(wool ~ ., warpbreaks, scale=TRUE)
 y <- test(modelWarpbreaks, warpbreaks)
 plotROC(y,warpbreaks$wool)
 }
-\author{
-Ingo Steinwart \email{ingo.steinwart@mathematik.uni-stuttgart.de},
-Philipp Thomann \email{philipp.thomann@mathematik.uni-stuttgart.de}
-
-Maintainer: Philipp Thomann \email{philipp.thomann@mathematik.uni-stuttgart.de}
-}
 \references{
 \url{http://www.isa.uni-stuttgart.de}
 }
 \seealso{
 \code{\link{init.liquidSVM}}, \code{\link{trainSVMs}}, \code{\link{predict.liquidSVM}}, \code{\link{clean.liquidSVM}}, and \code{\link{test.liquidSVM}}, \link{Configuration};
 }
-\keyword{SVM}
+\author{
+Ingo Steinwart \email{ingo.steinwart@mathematik.uni-stuttgart.de},
+Philipp Thomann \email{philipp.thomann@mathematik.uni-stuttgart.de}
 
+Maintainer: Philipp Thomann \email{philipp.thomann@mathematik.uni-stuttgart.de}
+}
+\keyword{SVM}
