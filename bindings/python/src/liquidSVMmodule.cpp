@@ -47,6 +47,7 @@ void CheckUserInterrupt();
 #include "common/liquidSVM.h"
 
 void CheckUserInterrupt(){
+#ifndef _WIN32
     PyGILState_STATE gstate;
     gstate = PyGILState_Ensure();
 	int err = PyErr_CheckSignals();
@@ -55,6 +56,7 @@ void CheckUserInterrupt(){
 	    doInterrupt = true;
 	if(doInterrupt)
 		throw string("Interrupted");
+#endif
 }
 
 
