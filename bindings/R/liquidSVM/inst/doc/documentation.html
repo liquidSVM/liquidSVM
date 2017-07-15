@@ -12,7 +12,7 @@
 
 <meta name="author" content="Philipp Thomann &amp; Ingo Steinwart" />
 
-<meta name="date" content="2017-07-13" />
+<meta name="date" content="2017-07-15" />
 
 <title>liquidSVM: Documentation for R</title>
 
@@ -52,7 +52,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <h1 class="title toc-ignore">liquidSVM: Documentation for R</h1>
 <h4 class="author"><em>Philipp Thomann &amp; Ingo Steinwart</em></h4>
-<h4 class="date"><em>2017-07-13</em></h4>
+<h4 class="date"><em>2017-07-15</em></h4>
 
 
 <div id="TOC">
@@ -73,6 +73,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#adaptive-grid">Adaptive Grid</a></li>
 <li><a href="#cells">Cells</a></li>
 <li><a href="#weights">Weights</a></li>
+<li><a href="#grouped-cross-validation">Grouped Cross Validation</a></li>
 <li><a href="#more-advanced-parameters">More Advanced Parameters</a></li>
 </ul></li>
 <li><a href="#known-issues-common-problems">Known Issues / Common Problems</a><ul>
@@ -447,6 +448,10 @@ MAX_WEIGHT=<span class="fl">0.9</span>
 MIN_WEIGHT=<span class="fl">0.1</span>
 GEO_WEIGHTS=<span class="dv">0</span></code></pre>
 </div>
+<div id="grouped-cross-validation" class="section level2">
+<h2>Grouped Cross Validation</h2>
+<p>By specifying <code>groupIds</code> when initializing an SVM samples obtain group ids. This by default also sets <code>FOLDS_KIND</code> to <code>GROUPED</code>. If the latter is the case then samples with the same group id will be put into the same fold at cross validation. This is important if e.g. there are several patients with several measurements each.</p>
+</div>
 <div id="more-advanced-parameters" class="section level2">
 <h2>More Advanced Parameters</h2>
 <p>The following parameters should only employed by experienced users and are self-explanatory for these:</p>
@@ -476,7 +481,7 @@ GEO_WEIGHTS=<span class="dv">0</span></code></pre>
 <dd><p><code>LINE_BY_LINE</code>, <code>BLOCK</code>, <code>CACHE</code>, <code>EMPTY</code></p>
 </dd>
 <dt><code>FOLDS_KIND</code></dt>
-<dd><p><code>BLOCKS</code>, <code>ALTERNATING</code>, <code>RANDOM</code>, <code>STRATIFIED</code>, <code>RANDOM_SUBSET</code></p>
+<dd><p><code>BLOCKS</code>, <code>ALTERNATING</code>, <code>RANDOM</code>, <code>STRATIFIED</code>, <code>GROUPED</code>, <code>RANDOM_SUBSET</code></p>
 </dd>
 <dt><code>WS_TYPE</code></dt>
 <dd><p><code>FULL_SET</code>, <code>MULTI_CLASS_ALL_VS_ALL</code>, <code>MULTI_CLASS_ONE_VS_ALL</code>, <code>BOOT_STRAP</code></p>

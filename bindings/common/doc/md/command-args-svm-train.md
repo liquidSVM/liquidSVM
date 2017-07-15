@@ -10,10 +10,11 @@
     <kind> = 2  =>  alternating fold assignmend
     <kind> = 3  =>  random
     <kind> = 4  =>  stratified random
-    <kind> = 5  =>  random subset (<train_fraction> and <neg_fraction> required)
+    <kind> = 5  =>  random respecting group information of samples
+    <kind> = 6  =>  random subset (<train_fraction> and <neg_fraction> required)
     
     Allowed values:
-    <kind>:           integer between 1 and 5
+    <kind>:           integer between 1 and 6
     <number>:         integer >= 1
     <train_fraction>: float > 0.0 and <= 1.0
     <neg_fraction>:   float > 0.0 and < 1.0
@@ -327,8 +328,8 @@
     
 * `S=c(<solver>,[<NNs>])`
     
-    Selects the SVM solver <solver> and the number <NNs> of nearest neighbors used in the working
-    set selection strategy (2D-solvers only).
+    Selects the SVM solver <solver> and the number <NNs> of nearest neighbors used
+    in the working set selection strategy (2D-solvers only).
     
     Meaning of specific values:
     <solver> = 0  =>  kernel rule for classification

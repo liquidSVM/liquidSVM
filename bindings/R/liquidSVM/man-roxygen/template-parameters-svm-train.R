@@ -13,10 +13,11 @@
 #'<kind> = 2  =>  alternating fold assignmend\cr
 #'<kind> = 3  =>  random\cr
 #'<kind> = 4  =>  stratified random\cr
-#'<kind> = 5  =>  random subset (<train_fraction> and <neg_fraction> required)\cr
+#'<kind> = 5  =>  random respecting group information of samples\cr
+#'<kind> = 6  =>  random subset (<train_fraction> and <neg_fraction> required)\cr
 #'\ifelse{latex}{\out{\medskip}}{\cr}
 #'Allowed values:\cr
-#'<kind>:           integer between 1 and 5\cr
+#'<kind>:           integer between 1 and 6\cr
 #'<number>:         integer >= 1\cr
 #'<train_fraction>: float > 0.0 and <= 1.0\cr
 #'<neg_fraction>:   float > 0.0 and < 1.0\cr
@@ -330,8 +331,8 @@
 #'\ifelse{latex}{\out{\medskip}}{\cr}
 #'\item \code{S=c(<solver>,[<NNs>])}\cr
 #'\ifelse{latex}{\out{\medskip}}{\cr}
-#'Selects the SVM solver <solver> and the number <NNs> of nearest neighbors used in the working\cr
-#'set selection strategy (2D-solvers only).\cr
+#'Selects the SVM solver <solver> and the number <NNs> of nearest neighbors used\cr
+#'in the working set selection strategy (2D-solvers only).\cr
 #'\ifelse{latex}{\out{\medskip}}{\cr}
 #'Meaning of specific values:\cr
 #'<solver> = 0  =>  kernel rule for classification\cr

@@ -320,6 +320,11 @@ MIN_WEIGHT=0.1
 GEO_WEIGHTS=0}
 }
 
+\section{Grouped Cross Validation}{
+
+By specifying \code{groupIds} when initializing an SVM samples obtain group ids. This by default also sets \code{FOLDS_KIND} to \code{GROUPED}. If the latter is the case then samples with the same group id will be put into the same fold at cross validation. This is important if e.g. there are several patients with several measurements each.
+}
+
 \section{More Advanced Parameters}{
 
 The following parameters should only employed by experienced users and are self-explanatory for these:
@@ -358,7 +363,7 @@ For completeness here are some values that usually get set by the learning scena
 }
 
 \item{\code{FOLDS_KIND}}{
-\code{BLOCKS}, \code{ALTERNATING}, \code{RANDOM}, \code{STRATIFIED}, \code{RANDOM_SUBSET}
+\code{BLOCKS}, \code{ALTERNATING}, \code{RANDOM}, \code{STRATIFIED}, \code{GROUPED}, \code{RANDOM_SUBSET}
 }
 
 \item{\code{WS_TYPE}}{
