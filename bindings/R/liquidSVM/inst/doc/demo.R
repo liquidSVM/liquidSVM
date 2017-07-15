@@ -16,6 +16,18 @@ myOwnCache <- function(name, envir=parent.frame(),vignette_dir="."){
   }
 }
 
+myOwnCacheSVM <- function(name, modelVar="model", envir=parent.frame(),vignette_dir="."){
+  filename <- paste0(vignette_dir,'/demo_cache/',name,".fsol")
+  if(exists(modelVar, envir=envir)){
+    write.liquidSVM(get(modelVar, envir=envir), filename=filename)
+  }else if(file.exists(filename)){
+    #message("Loading")
+    assign(modelVar, read.liquidSVM(filename), envir=envir)
+  }else{
+    warning(paste0("Did not have or load ",name))
+  }
+}
+
 options(liquidSVM.default.threads=1)
 
 library(liquidSVM)
@@ -25,8 +37,12 @@ library(liquidSVM)
 # Load test and training data
 reg <- liquidData('reg-1d')
 
-## ------------------------------------------------------------------------
-model <- svm(Y~., reg$train)
+## ---- eval=FALSE---------------------------------------------------------
+#  model <- svm(Y~., reg$train)
+
+## ---- echo=FALSE---------------------------------------------------------
+rm(model)
+myOwnCacheSVM('reg')
 
 ## ----ls-reg-plot, eval=T, fig.width=7, fig.height=3----------------------
 plot(reg$train$X1, reg$train$Y,pch='.', ylim=c(-.2,.8), ylab='', xlab='', axes=F)
@@ -36,8 +52,14 @@ curve(predict(model, x),add=T,col='red')
 banana <- liquidData('banana-mc')
 banana
 
+## ---- eval=FALSE---------------------------------------------------------
+#  model <- svm(Y~., banana$train)
+
+## ----echo=FALSE----------------------------------------------------------
+rm(model)
+myOwnCacheSVM('banana-mc')
+
 ## ----mc-banana-plot, echo=TRUE, fig.height=3, fig.width=7----------------
-model <- svm(Y~., banana$train)
 plot(banana$train$X1, banana$train$X2,pch='o', col=banana$train$Y, ylab='', xlab='', axes=F)
 x <- seq(-1,1,.05)
 z <- matrix(predict(model,expand.grid(x,x)),length(x))
@@ -375,8 +397,14 @@ detection_rate <- apply(result_roc[banana$test$Y==1,]==1,2,mean)
 plot(false_positive_rate, detection_rate, xlim=0:1,ylim=0:1,asp=1, type='b', pch='x')
 abline(0,1,lty=2)
 
+## ---- eval=FALSE---------------------------------------------------------
+#  model.ls <- lsSVM(Y~.,banana$train)
+
+## ---- echo=FALSE---------------------------------------------------------
+rm(model.ls)
+myOwnCacheSVM("banana-bc-roc-ls", "model.ls")
+
 ## ----roc-ls-banana-plot, eval=T, fig.width=4, fig.height=4---------------
-model.ls <- lsSVM(Y~.,banana$train)
 plotROC(model.ls, banana$test, xlim=0:1,ylim=0:1,asp=1, type='l')
 points(false_positive_rate, detection_rate, pch='x', col='red')
 

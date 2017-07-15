@@ -31,6 +31,18 @@ myOwnCache <- function(name, envir=parent.frame(),vignette_dir="."){
   }
 }
 
+myOwnCacheSVM <- function(name, modelVar="model", envir=parent.frame(),vignette_dir="."){
+  filename <- paste0(vignette_dir,'/demo_cache/',name,".fsol")
+  if(exists(modelVar, envir=envir)){
+    write.liquidSVM(get(modelVar, envir=envir), filename=filename)
+  }else if(file.exists(filename)){
+    #message("Loading")
+    assign(modelVar, read.liquidSVM(filename), envir=envir)
+  }else{
+    warning(paste0("Did not have or load ",name))
+  }
+}
+
 options(liquidSVM.default.threads=1)
 
 library(liquidSVM)
@@ -62,8 +74,12 @@ Now `reg$train` contains the training data and `reg$test` the testing data.
 Both have the labels in its first column `Y` and the feature is in column `X1`.
 To train on the data and select the best hyperparameters do
 (`display=1` gives some information as the training progresses)
-```{r}
+```{r, eval=FALSE}
 model <- svm(Y~., reg$train)
+```
+```{r, echo=FALSE}
+rm(model)
+myOwnCacheSVM('reg')
 ```
 Now you can test with any test set:
 ```r
@@ -85,6 +101,7 @@ model <- svm(Y~., reg, display=1)
 errors(model$last_result)[1]
 #> 0.00541
 ```
+
 **Multi-class:**
 
 ```{r}
@@ -92,8 +109,14 @@ banana <- liquidData('banana-mc')
 banana
 ```
 Since `banana$train$Y` is a factor the following performs multi-class classification
-```{r mc-banana-plot, echo=TRUE, fig.height=3, fig.width=7}
+```{r, eval=FALSE}
 model <- svm(Y~., banana$train)
+```
+```{r echo=FALSE}
+rm(model)
+myOwnCacheSVM('banana-mc')
+```
+```{r mc-banana-plot, echo=TRUE, fig.height=3, fig.width=7}
 plot(banana$train$X1, banana$train$X2,pch='o', col=banana$train$Y, ylab='', xlab='', axes=F)
 x <- seq(-1,1,.05)
 z <- matrix(predict(model,expand.grid(x,x)),length(x))
@@ -683,8 +706,14 @@ This shows nice learning, since the ROC curve is near the north-west corner.
 A quicker way to calculate an ROC curve is to use least-squares regression which
 estimates the conditional probability at any point.
 For this we use the same method `plotROC`:
-```{r roc-ls-banana-plot, eval=T, fig.width=4, fig.height=4}
+```{r, eval=FALSE}
 model.ls <- lsSVM(Y~.,banana$train)
+```
+```{r, echo=FALSE}
+rm(model.ls)
+myOwnCacheSVM("banana-bc-roc-ls", "model.ls")
+```
+```{r roc-ls-banana-plot, eval=T, fig.width=4, fig.height=4}
 plotROC(model.ls, banana$test, xlim=0:1,ylim=0:1,asp=1, type='l')
 points(false_positive_rate, detection_rate, pch='x', col='red')
 ```

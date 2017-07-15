@@ -61,7 +61,7 @@ prepare-src: $(SRC_DIR)
 	find $(BUILD_DIR) -name .directory -exec $(rm) '{}' \;
 	find $(BUILD_DIR) -name \*.o -exec $(rm) '{}' \;
 	find $(BUILD_DIR) -name \*.sol -exec $(rm) '{}' \;
-	find $(BUILD_DIR) -name \*.fsol -exec $(rm) '{}' \;
+	find $(BUILD_DIR) -name \*.fsol -not -path */demo_cache/* -exec $(rm) '{}' \;
 
 pack-src: prepare-src
 	$(rm) -fr build/$(BUNDLE_SRC)
@@ -183,6 +183,7 @@ regenerate-quick:
 		echo >> ../../man-roxygen/$$i.R ; \
 	done
 	cd $(SRC_DIR) && Rscript -e 'devtools::document(); devtools::build_vignettes()'
+	cp -r $(SRC_DIR)/vignettes/demo_cache $(SRC_DIR)/inst/doc/
 
 repository:
 	cd $(PUB_DIR) && mkdir -p ./src/contrib ./bin/windows/contrib/3.2 ./bin/macosx/mavericks/contrib/3.2
