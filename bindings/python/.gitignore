@@ -7,3 +7,5 @@ src/sources
 index.html
 .ipynb_checkpoints/
 www.isa.uni-stuttgart.de/
+.idea/workspace.xml
+.idea/tasks.xml
