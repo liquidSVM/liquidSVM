@@ -1,5 +1,5 @@
 ## Test environments
-* debian 8.6, R 3.3.2, R 3.4.0, R-devel
+* debian 8.6, R 3.3.3, R 3.4.1, R-devel
 * macOS 10.12, R 3.4.0, R-devel
 * Windows 8.1, R 3.4.0
 

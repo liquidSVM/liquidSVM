@@ -174,7 +174,7 @@ test_that("quick threads",{
 
   set.seed(123)
   tt <- liquidData('banana-bc')
-  a <- system.time(model <- svm(Y ~ ., tt$train, do.select=FALSE, folds=2))
+  a <- system.time(model <- svm(Y ~ ., tt$train,threads=1, do.select=FALSE, folds=2))
   b <- system.time(model <- svm(Y ~ ., tt$train,threads=2, do.select=FALSE, folds=2))
   expect_gt(a['elapsed'],b['elapsed'])
   expect_lt(a['user.self'],b['user.self'])

@@ -1,7 +1,17 @@
-# liquidSVM v1.1.0 (Release date: 2017-03-10)
+# liquidSVM v1.2.0 (Release date: 2017-07-15)
 
+* version now up to date with core version
 * added predict.prob parameter to activate conditional probability estimation
+* added grouped cross validation
+* `mlr` support
+* added more explicit aliases for learning scenarios:
+  `svmRegression` for `lsSVM`, `svmMulticlass` for `mcSVM`,
+  `svmQuantileRegression` for `qtSVM`, and `svmExpectileRegression` for `exSVM`.
+  The old ones are still valid and the main implementation.
+* added configuration defaults, e.g.:
+  `options(liquidSVM.default.display=1)`, `options(liquidSVM.default.scale=TRUE)`, ...
 * predict now returns the correct number of columns for expectile, quantile, ...
+* fixed demo vignette run time issues
 * fixed CUDA-compilation issue
 * TARGET defaults to "default" on Sparc
 * fixed PROTECT-issues (thanks to kalibera/rchk!) and switched from CXX1X to CXX11
