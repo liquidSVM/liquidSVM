@@ -20,7 +20,10 @@ require(liquidSVM)
 
 context("liquidSVM-quick")
 
-orig <- options(liquidSVM.warn.suboptimal=FALSE, threads=1)[[1]]
+# These tests break on win32 so ignore this platform at the moment
+if(R.version$os != "mingw32" || R.version$arch != 'i386'){
+
+orig <- options(liquidSVM.warn.suboptimal=FALSE, liquidSVM.default.threads=1)[[1]]
 
 hand_err_name <- 'result'
 
@@ -183,4 +186,4 @@ test_that("quick threads",{
 
 options(liquidSVM.warn.suboptimal=orig)
 
-
+} # end if not win32

@@ -20,7 +20,7 @@ require(liquidSVM)
 
 context("liquidSVM-mlr")
 
-orig <- options(liquidSVM.warn.suboptimal=FALSE, threads=1)[[1]]
+orig <- options(liquidSVM.warn.suboptimal=FALSE, liquidSVM.default.threads=1)[[1]]
 
 hand_err_name <- 'result'
 

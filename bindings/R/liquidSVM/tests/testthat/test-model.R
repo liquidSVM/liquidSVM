@@ -20,7 +20,7 @@ require(liquidSVM)
 
 context("liquidSVM-model")
 
-orig <- options(liquidSVM.warn.suboptimal=FALSE, threads=1)[[1]]
+orig <- options(liquidSVM.warn.suboptimal=FALSE, liquidSVM.default.threads=1)[[1]]
 
 hand_err_name <- 'result'
 
@@ -204,7 +204,7 @@ test_that("getSolution",{
 })
 
 test_that("groupedFolds",{
-  set.seed(123)
+  #set.seed(123)
   tt <- ttsplit(iris, testProb=0.5)
   groups <- sample.int(n=50, size=nrow(tt$train), replace=T)
   

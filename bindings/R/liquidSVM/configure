@@ -98,7 +98,7 @@ if [ "$CUDA_PATH" ]; then
 #  CUDA_PATH=/dev/null
 fi
 
-echo Config in $PWD
+echo Config in `pwd`
 echo Config: using CXX_FLAG=$CXX_FLAGS
 echo Config: using ADDITIONAL_LIBS=$ADDITIONAL_LIBS
 echo Config: using ADDITIONAL_CPP_FLAGS=$ADDITIONAL_CPP_FLAGS

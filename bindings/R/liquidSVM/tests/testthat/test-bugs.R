@@ -20,7 +20,7 @@ require(liquidSVM)
 
 context("liquidSVM-bugs")
 
-orig <- options(liquidSVM.warn.suboptimal=FALSE, threads=1)[[1]]
+orig <- options(liquidSVM.warn.suboptimal=FALSE, liquidSVM.default.threads=1)[[1]]
 
 test_that("trees bug",{
   set.seed(123)
