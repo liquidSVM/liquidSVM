@@ -37,6 +37,7 @@
 Tsvm_manager::Tsvm_manager()
 {
 	use_current_grid = false;
+	clear_previous_train_info = false;
 	fp_log_train_read = NULL;
 	fp_aux_train_read = NULL;
 	fp_sol_train_read = NULL;

@@ -714,7 +714,7 @@ void Tsample::convert_from_io_vector(Tsample_file_format sample_file_format, con
 		j = 0;
 		ii = 0;
 		for (i=0; i<number_of_columns; i++)
-			if (i+1 != sample_file_format.full_exclude_list[j])
+			if (j >= sample_file_format.full_exclude_list.size() || i+1 != sample_file_format.full_exclude_list[j])
 			{
 				x_csv[ii] = io_vector[i];
 				ii++;
