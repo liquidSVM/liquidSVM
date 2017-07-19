@@ -218,7 +218,7 @@ test_that("groupedFolds",{
   
   model <- mcSVM(Species~., tt$train, groupIds=groups)
   result <- test(model, tt$test)
-  expect_lte(errors(result)[1], 0.1)
+  expect_lte(errors(result)[1], 0.2)
 })
 
 
