@@ -37,7 +37,7 @@ class SVM(object):
     data : np.array or LiquidData or Bunch or str
         the data to train on. If it is an `np.array` then
         `labs` have to be provided as well.
-        If it is an instance of `LiquidData` then data.train.data
+        If it is an instance of `liquidSVM.LiquidData` then data.train.data
         and data.train.target will be used and data.test will be
         automagically be tested after training and selection.
         If it is a `str` then `LiquidData(data)` will be used.

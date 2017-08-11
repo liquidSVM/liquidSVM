@@ -16,7 +16,7 @@ Welcome to liquidSVM's documentation!
 .. include:: README.rst
 
 Module liquidSVM
-==================
+================
 
 .. automodule:: liquidSVM
     :members:
@@ -25,7 +25,7 @@ Module liquidSVM
     :show-inheritance:
 
 liquidData
-==================
+==========
 
 .. automodule:: liquidSVM.data
     :members:
@@ -33,7 +33,7 @@ liquidData
     :show-inheritance:
 
 Compatibilty with sklearn.svm
-==================
+=============================
 
 .. automodule:: liquidSVM.learn
     :members:
