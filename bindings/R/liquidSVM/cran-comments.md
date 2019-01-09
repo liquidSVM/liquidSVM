@@ -1,7 +1,7 @@
 ## Test environments
-* debian 8.6, R 3.3.3, R 3.4.1, R-devel
-* macOS 10.12, R 3.4.1, R-devel
-* Windows 8.1, R 3.3.3, R 3.4.1, R-devel
+* rocker/r-devel, R 3.5.1, R-devel
+* macOS 10.14.1, R 3.5.0, R-devel
+* Windows 10, R 3.5.2, R-devel
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 

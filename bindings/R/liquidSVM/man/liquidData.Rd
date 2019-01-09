@@ -8,9 +8,8 @@
 \alias{print.liquidData}
 \title{Loads or downloads training and testing data}
 \usage{
-liquidData(name, factor_cols, header = FALSE, loc = c(".", "~/sml/data",
-  "~/liquidData", system.file("data", package = "liquidSVM"), "../../../data",
-  "http://www.isa.uni-stuttgart.de/liquidData"), prob = NULL,
+liquidData(name, factor_cols, header = FALSE, loc = c(".", "~/liquidData",
+  system.file("data", package = "liquidSVM"), "../../../data"), prob = NULL,
   testSize = NULL, trainSize = NULL, stratified = NULL)
 
 ttsplit(data, target = NULL, testProb = 0.2, testSize = NULL,

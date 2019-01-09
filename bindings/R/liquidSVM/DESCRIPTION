@@ -1,8 +1,8 @@
 Package: liquidSVM
 Type: Package
 Title: A Fast and Versatile SVM Package
-Version: 1.2.1
-Date: 2017-07-19
+Version: 1.2.2
+Date: 2019-01-09
 Author: Ingo Steinwart, Philipp Thomann
 Copyright: Ingo Steinwart, Philipp Thomann, Mohammad Farooq
 Maintainer: Philipp Thomann <philipp.thomann@mathematik.uni-stuttgart.de>

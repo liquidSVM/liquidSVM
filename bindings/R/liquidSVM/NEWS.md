@@ -1,3 +1,7 @@
+# liquidSVM v1.2.2 (Release date: 2019-01-09)
+
+* skipping test that fails due to website reorganization
+
 # liquidSVM v1.2.0 (Release date: 2017-07-15)
 
 * version now up to date with core version

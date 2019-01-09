@@ -49,9 +49,7 @@
 #' @aliases print.liquidData
 #' @export
 liquidData <- function(name, factor_cols, header=FALSE,loc=c(".",
-                        "~/sml/data","~/liquidData",system.file('data',package='liquidSVM'),"../../../data",
-                        #"/afs/.mathe/project/isa-shared/sml/data",
-                        "http://www.isa.uni-stuttgart.de/liquidData"
+                        "~/liquidData",system.file('data',package='liquidSVM'),"../../../data"
                     ), prob=NULL, testSize=NULL, trainSize=NULL, stratified=NULL){
   if(missing(name)){
     ret <- character(0)
