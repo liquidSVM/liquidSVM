@@ -15,6 +15,8 @@
 Printing an SVM model.
 }
 \examples{
+\dontrun{
 s_iris <- svm(solver='hinge', Species ~ ., iris)  # multiclass classification
 print(s_iris)
+}
 }

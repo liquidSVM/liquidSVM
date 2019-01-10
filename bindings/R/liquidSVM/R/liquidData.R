@@ -49,12 +49,13 @@
 #' @aliases print.liquidData
 #' @export
 liquidData <- function(name, factor_cols, header=FALSE,loc=c(".",
-                        "~/liquidData",system.file('data',package='liquidSVM'),"../../../data"
+                        "~/liquidData",system.file('data',package='liquidSVM'),"../../../data",
+                        "https://www.isa.uni-stuttgart.de/liquidData"
                     ), prob=NULL, testSize=NULL, trainSize=NULL, stratified=NULL){
   if(missing(name)){
     ret <- character(0)
     for(i in loc){
-      if(substr(i,0,7)=='http://'){
+      if(startsWith(i,'http://') || startsWith(i,'https://')){
         csvFileNames <- try(({html <- readLines(i)
         pat <- '<a href="([^"]+)\\.train\\.csv(\\.gz)?">'
         gsub(pat, "\\1", regmatches(html, regexpr(pat, html)))
@@ -90,7 +91,7 @@ liquidData <- function(name, factor_cols, header=FALSE,loc=c(".",
   for(i in loc){
     trainname <- paste0(i,'/',name,'.train.csv')
     testname <- paste0(i,'/',name,'.test.csv')
-    if(substr(i,0,7)=='http://'){
+    if(startsWith(i,'http://') || startsWith(i,'https://')){
       # at the moment we trust that this works...
     }else{
       if(!file.exists(trainname)){

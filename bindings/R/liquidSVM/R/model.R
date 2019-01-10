@@ -52,8 +52,10 @@ liquidSVMclass <- setRefClass("liquidSVM",
 #' @param ... other arguments to print.default
 #' @export
 #' @examples
+#' \dontrun{
 #' s_iris <- svm(solver='hinge', Species ~ ., iris)  # multiclass classification
 #' print(s_iris)
+#' }
 print.liquidSVM <- function(x,...){
   model <- x
   cat("SVM model")

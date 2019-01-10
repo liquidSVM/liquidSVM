@@ -60,12 +60,12 @@ in this factor. If this is the case and \code{AvA_hinge} is used,
 then also the binary classification problems will receive the corresponding label...
 }
 \examples{
+\dontrun{
 model <- mcSVM(Species ~ ., iris)
 model <- mcSVM(Species ~ ., iris, mc_type="OvA")
 model <- mcSVM(Species ~ ., iris, mc.type="AvA_hi")
 model <- mcSVM(Species ~ ., iris, predict.prob=TRUE)
 
-\dontrun{
 ## a worked example can be seen at
 
 vignette("demo",package="liquidSVM")

@@ -23,6 +23,8 @@ kernel matrix
 Calculates the kernel matrix.
 }
 \examples{
+\dontrun{
 kern(trees)
 image(kern(trees, 2, "pois"))
+}
 }

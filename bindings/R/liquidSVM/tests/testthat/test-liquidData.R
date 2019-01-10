@@ -35,7 +35,7 @@ test_that("list liquidData",{
 })
 
 test_that("list liquidData http",{
-  skip("Web Server www.isa.uni-stuttgart.de was redesigned and data sets are not available anymore.")
+  skip("Web Server www.isa.uni-stuttgart.de was redesigned and does not list datasets anymore")
   thenames <- c("banana-bc", "banana-mc", "reg-1d", 'covtype.1000','gisette')
   mockHtml <- paste0('<a href="',thenames,'.train.csv">')
   with_mock(

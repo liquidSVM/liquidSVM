@@ -70,12 +70,12 @@ return_with_test <- function(model, formula, data, ..., testdata=NULL, testdata_
 #' @export
 #' @seealso \code{\link{Configuration}}
 #' @examples 
+#' \dontrun{
 #' model <- mcSVM(Species ~ ., iris)
 #' model <- mcSVM(Species ~ ., iris, mc_type="OvA")
 #' model <- mcSVM(Species ~ ., iris, mc.type="AvA_hi")
 #' model <- mcSVM(Species ~ ., iris, predict.prob=TRUE)
 #' 
-#' \dontrun{
 #' ## a worked example can be seen at
 #' 
 #' vignette("demo",package="liquidSVM")
@@ -211,13 +211,14 @@ rocSVM <- function(x,y,...,weight_steps=9,do.select=TRUE){
 #' properties.
 #' @export
 #' @examples 
+#' \dontrun{
 #' tt <- ttsplit(quakes)
 #' model <- lsSVM(mag~., tt$train, display=1)
 #' result <- test(model, tt$test)
 #' 
 #' errors(result) ## is the same as
 #' mean( (tt$test$mag-result)^2 )
-#'  
+#' }
 lsSVM <- function(x,y,...,clipping=-1.0,do.select=TRUE){
   model <- init.liquidSVM(x,y,..., scenario=c("LS", clipping))
   trainSVMs(model)

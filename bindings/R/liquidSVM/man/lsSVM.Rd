@@ -39,11 +39,12 @@ the conditional means of Y given X.
 This is the default for \code{\link{svm}} if the labels are not a factor.
 }
 \examples{
+\dontrun{
 tt <- ttsplit(quakes)
 model <- lsSVM(mag~., tt$train, display=1)
 result <- test(model, tt$test)
 
 errors(result) ## is the same as
 mean( (tt$test$mag-result)^2 )
- 
+}
 }

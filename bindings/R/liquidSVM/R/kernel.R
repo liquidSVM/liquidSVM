@@ -25,8 +25,10 @@
 ## #' @param GPUs how many GPUs to use (not implemented yet)
 #' @return kernel matrix
 #' @examples 
+#' \dontrun{
 #' kern(trees)
 #' image(kern(trees, 2, "pois"))
+#' }
 #' @export
 kern <- function(data, gamma=1, type=c("gaussian.rbf","poisson"), threads=getOption('liquidSVM.default.threads',1)){
   GPUs <- 0

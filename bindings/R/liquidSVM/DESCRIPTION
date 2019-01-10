@@ -2,7 +2,7 @@ Package: liquidSVM
 Type: Package
 Title: A Fast and Versatile SVM Package
 Version: 1.2.2
-Date: 2019-01-09
+Date: 2019-01-10
 Author: Ingo Steinwart, Philipp Thomann
 Copyright: Ingo Steinwart, Philipp Thomann, Mohammad Farooq
 Maintainer: Philipp Thomann <philipp.thomann@mathematik.uni-stuttgart.de>
@@ -16,7 +16,7 @@ Description: Support vector machines (SVMs) and related kernel-based learning
     inclusion of a variety of different learning scenarios:
     multi-class classification, ROC, and Neyman-Pearson learning, and
     least-squares, quantile, and expectile regression.
-URL: http://www.isa.uni-stuttgart.de/software/
+URL: https://github.com/liquidSVM/liquidSVM
 License: AGPL-3
 Depends:
     R (>= 2.12.0),

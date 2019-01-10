@@ -312,7 +312,7 @@ if(require(deldir)){
 ```
 
 We first consider a medium size sample of the `covtype` data set.
-`liquidData` will download this from http://www.isa.uni-stuttgart.de/liquidData/:
+`liquidData` will download this from <http://www.isa.uni-stuttgart.de/liquidData/>:
 ```{r, eval=F}
 co <- liquidData('covtype.10000')
 system.time(svm(Y~., co$train, threads=3))
