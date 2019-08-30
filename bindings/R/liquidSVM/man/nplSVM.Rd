@@ -4,8 +4,8 @@
 \alias{nplSVM}
 \title{Neyman-Pearson-Learning}
 \usage{
-nplSVM(x, y, ..., class = 1, constraint = 0.05, constraint.factors = c(3,
-  4, 6, 9, 12)/6, do.select = TRUE)
+nplSVM(x, y, ..., class = 1, constraint = 0.05,
+  constraint.factors = c(3, 4, 6, 9, 12)/6, do.select = TRUE)
 }
 \arguments{
 \item{x}{either a formula or the features}

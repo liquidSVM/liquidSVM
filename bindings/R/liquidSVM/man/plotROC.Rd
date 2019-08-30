@@ -4,8 +4,8 @@
 \alias{plotROC}
 \title{Plots the ROC curve for a result or model}
 \usage{
-plotROC(x, correct, posValue = NULL, xlim = 0:1, ylim = 0:1, asp = 1,
-  type = NULL, pch = "x", add = FALSE, ...)
+plotROC(x, correct, posValue = NULL, xlim = 0:1, ylim = 0:1,
+  asp = 1, type = NULL, pch = "x", add = FALSE, ...)
 }
 \arguments{
 \item{x}{either the result from a \code{\link{test}} or a model}

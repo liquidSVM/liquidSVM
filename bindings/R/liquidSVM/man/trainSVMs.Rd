@@ -5,8 +5,9 @@
 \alias{train}
 \title{Trains an SVM object.}
 \usage{
-trainSVMs(model, ..., solver = c("kernel.rule", "ls", "hinge", "quantile"),
-  command.args = NULL, do.select = FALSE, useCells = FALSE, d = NULL)
+trainSVMs(model, ..., solver = c("kernel.rule", "ls", "hinge",
+  "quantile"), command.args = NULL, do.select = FALSE,
+  useCells = FALSE, d = NULL)
 }
 \arguments{
 \item{model}{the \code{svm}-model}

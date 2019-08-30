@@ -5,8 +5,8 @@
 \alias{test}
 \title{Tests new data using the selected SVM.}
 \usage{
-\method{test}{liquidSVM}(model, newdata, labels = NULL, command.args = NULL,
-  ..., d = NULL)
+\method{test}{liquidSVM}(model, newdata, labels = NULL,
+  command.args = NULL, ..., d = NULL)
 }
 \arguments{
 \item{model}{the SVM model as returned by \code{\link{init.liquidSVM}}}

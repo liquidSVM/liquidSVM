@@ -4,8 +4,9 @@
 \alias{svm}
 \title{Convenience function to initialize, train, select, and optionally test an SVM.}
 \usage{
-svm(x, y, ..., do.select = TRUE, testdata = NULL, testdata_labels = NULL,
-  scenario = NULL, d = NULL, scale = TRUE, predict.prob = FALSE)
+svm(x, y, ..., do.select = TRUE, testdata = NULL,
+  testdata_labels = NULL, scenario = NULL, d = NULL, scale = TRUE,
+  predict.prob = FALSE)
 }
 \arguments{
 \item{x}{either a formula or the features}

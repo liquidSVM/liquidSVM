@@ -4,7 +4,6 @@
 \alias{init.liquidSVM}
 \alias{init.liquidSVM.default,}
 \alias{init.liquidSVM.formula}
-\alias{init.liquidSVM.formula}
 \alias{init.liquidSVM.default}
 \title{Initialize an SVM object.}
 \usage{
@@ -12,8 +11,9 @@ init.liquidSVM(x, y, ...)
 
 \method{init.liquidSVM}{formula}(x, y, ..., d = NULL)
 
-\method{init.liquidSVM}{default}(x, y, scenario = NULL, useCells = NULL,
-  ..., sampleWeights = NULL, groupIds = NULL, ids = NULL, d = NULL)
+\method{init.liquidSVM}{default}(x, y, scenario = NULL,
+  useCells = NULL, ..., sampleWeights = NULL, groupIds = NULL,
+  ids = NULL, d = NULL)
 }
 \arguments{
 \item{x}{either a formula or the features}

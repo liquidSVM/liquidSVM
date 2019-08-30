@@ -4,7 +4,8 @@
 \alias{bsSVM}
 \title{Bootstrap}
 \usage{
-bsSVM(x, y, ..., solver, ws.number = 5, ws.size = 500, do.select = TRUE)
+bsSVM(x, y, ..., solver, ws.number = 5, ws.size = 500,
+  do.select = TRUE)
 }
 \arguments{
 \item{x}{either a formula or the features}

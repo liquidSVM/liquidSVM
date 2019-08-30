@@ -24,7 +24,7 @@ if [ x$TARGET = x ]; then
       echo Since this is a sparc processor we set TARGET=default
       TARGET=default
     else
-      TARGET=native
+      TARGET=generic
     fi
     ;;
   *)

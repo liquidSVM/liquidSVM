@@ -5,8 +5,8 @@
 \alias{svmMulticlass}
 \title{Multiclass Classification}
 \usage{
-mcSVM(x, y, ..., predict.prob = FALSE, mc_type = c("AvA_hinge", "OvA_ls",
-  "OvA_hinge", "AvA_ls"), do.select = TRUE)
+mcSVM(x, y, ..., predict.prob = FALSE, mc_type = c("AvA_hinge",
+  "OvA_ls", "OvA_hinge", "AvA_ls"), do.select = TRUE)
 
 svmMulticlass(x, y, ..., predict.prob = FALSE, mc_type = c("AvA_hinge",
   "OvA_ls", "OvA_hinge", "AvA_ls"), do.select = TRUE)
