@@ -1,6 +1,7 @@
 # liquidSVM v1.2.3 (Release date: 2019-09-02)
 
 * changed default build target to generic.
+* fixed links in documentation.
 
 # liquidSVM v1.2.2 (Release date: 2019-01-09)
 

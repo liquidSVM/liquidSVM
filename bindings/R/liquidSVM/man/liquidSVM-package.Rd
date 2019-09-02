@@ -55,7 +55,7 @@ To calculate kernel matrices as used by the SVM we also provide for convenience 
 \code{\link{kern}}.
 
 \pkg{liquidSVM} can benefit heavily from native compilation, hence we recommend to (re-)install it
-using the information provided in the \href{documentation.html\#Installation}{installation section}
+using the information provided in the \href{../doc/documentation.html#Installation}{installation section}
 of the documentation vignette.
 }
 \section{Known issues}{
@@ -66,7 +66,7 @@ the C++ library in an inconsistent state, so that it is better to save your work
 \R session.
 
 \pkg{liquidSVM} is multi-threaded and is difficult to be multi-threaded externally, see
-\href{documentation.html\#Using external parallelization}{documentation}
+\href{../doc/documentation.html#Using external parallelization}{documentation}
 }
 
 \examples{

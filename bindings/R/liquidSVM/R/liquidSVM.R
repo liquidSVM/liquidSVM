@@ -66,7 +66,7 @@
 #' \code{\link{kern}}.
 #' 
 #' \pkg{liquidSVM} can benefit heavily from native compilation, hence we recommend to (re-)install it
-#' using the information provided in the \href{documentation.html\#Installation}{installation section}
+#' using the information provided in the \href{../doc/documentation.html#Installation}{installation section}
 #' of the documentation vignette.
 #' 
 #' 
@@ -77,7 +77,7 @@
 #' \R session.
 #' 
 #' \pkg{liquidSVM} is multi-threaded and is difficult to be multi-threaded externally, see
-#' \href{documentation.html\#Using external parallelization}{documentation}
+#' \href{../doc/documentation.html#Using external parallelization}{documentation}
 #' 
 #' @docType package
 #' @name liquidSVM-package

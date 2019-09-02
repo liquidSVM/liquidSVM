@@ -2,6 +2,8 @@ This is a resubmission of a removed package.
 
 It was removed because of using -march=native on Linux-Source installs by default. This default has been changed.
 
+Now the links in documentation should be fixed.
+
 ## Test environments
 * rocker/r-devel, R 3.6.1, R-devel
 * macOS 10.14.6, R 3.6.1, R-devel

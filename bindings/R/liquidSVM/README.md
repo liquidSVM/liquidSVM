@@ -28,6 +28,6 @@ If you install build the package to be used on several machines please use the f
 install.packages("liquidSVM", configure.args="generic")
 ```
 
-For details please look at the vignettes [demo](vignettes/demo.html) and [documentation](vignettes/documentation.html).
+For details please look at the vignettes [demo](inst/doc/demo.html) and [documentation](inst/doc/documentation.html).
 Also check the help `?liquidSVM` and `?svm`.
 For the command-line version and other bindings go to (http://www.isa.uni-stuttgart.de/software/).

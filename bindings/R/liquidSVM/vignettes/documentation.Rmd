@@ -69,9 +69,9 @@ or binary
 Source (default on Linux Systems): 
   : Allows for optimization to the system and liquidSVM can benefit a lot from these optimizations.
     The drawback is that this needs a C++ compiler. This is usually okay on Linux-systems,
-    but on Windows one has to install [https://cran.r-project.org/bin/windows/Rtools/](Rtools),
-    and on MacOS X [https://itunes.apple.com/de/app/xcode/id497799835?mt=12](Xcode in MacApp Store)
-    ([https://developer.apple.com/download/](Xcode also for older MacOS versions).)
+    but on Windows one has to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/),
+    and on MacOS X [Xcode in MacApp Store](https://itunes.apple.com/de/app/xcode/id497799835?mt=12)
+    ([Xcode also for older MacOS versions](https://developer.apple.com/download/).)
     
 Binary (default on Windows and MacOS X):
   : compiled versions are provided, so you do not need compilers.
@@ -187,7 +187,7 @@ Sys.setenv(LIQUIDSVM_CONFIGURE_ARGS="empty -march=core2 -O3")
 install.packages("liquidSVM")
 ```
 
-If you have [https://cran.r-project.org/bin/windows/Rtools/](Rtools) installed then
+If you have [Rtools](https://cran.r-project.org/bin/windows/Rtools/) installed then
 you should definitely try to use `native`, because on Windows we use `generic` as the default configuration even for source installs.
 
 
