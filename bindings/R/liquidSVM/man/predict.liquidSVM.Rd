@@ -30,6 +30,7 @@ For multi-class classification, if the model was setup with \code{predict.prob=T
 Then this will return only the probability columns and not the prediction.
 }
 \examples{
+\dontrun{
 ## Multiclass classification
 modelIris <- svm(Species ~ ., iris)
 y <- predict(modelIris, iris)
@@ -38,6 +39,7 @@ y <- predict(modelIris, iris)
 modelTrees <- svm(Height ~ Girth + Volume, trees)
 y <- predict(modelTrees, trees)
 plot(trees$Height, y)
+}
 }
 \seealso{
 \code{\link{init.liquidSVM}} and \code{\link{test.liquidSVM}}

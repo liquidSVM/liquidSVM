@@ -2,7 +2,7 @@ This is a resubmission of a removed package.
 
 It was removed because of using -march=native on Linux-Source installs by default. This default has been changed.
 
-Now the links in documentation should be fixed.
+Now the links in documentation should be fixed. Also the examples runtime has been reduced.
 
 ## Test environments
 * rocker/r-devel, R 3.6.1, R-devel

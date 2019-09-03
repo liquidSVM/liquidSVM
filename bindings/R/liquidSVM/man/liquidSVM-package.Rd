@@ -70,6 +70,7 @@ the C++ library in an inconsistent state, so that it is better to save your work
 }
 
 \examples{
+\dontrun{
 set.seed(123)
 ## Multiclass classification
 modelIris <- svm(Species ~ ., iris)
@@ -89,6 +90,7 @@ y <- predict(modelTrees, trees)
 modelWarpbreaks <- rocSVM(wool ~ ., warpbreaks, scale=TRUE)
 y <- test(modelWarpbreaks, warpbreaks)
 plotROC(y,warpbreaks$wool)
+}
 }
 \references{
 \url{http://www.isa.uni-stuttgart.de}

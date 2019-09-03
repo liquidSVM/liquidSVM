@@ -94,6 +94,7 @@
 #' @importFrom utils ls.str read.table str write.table
 #' @seealso \code{\link{init.liquidSVM}}, \code{\link{trainSVMs}}, \code{\link{predict.liquidSVM}}, \code{\link{clean.liquidSVM}}, and \code{\link{test.liquidSVM}}, \link{Configuration};
 #' @examples
+#' \dontrun{
 #' set.seed(123)
 #' ## Multiclass classification
 #' modelIris <- svm(Species ~ ., iris)
@@ -113,6 +114,7 @@
 #' modelWarpbreaks <- rocSVM(wool ~ ., warpbreaks, scale=TRUE)
 #' y <- test(modelWarpbreaks, warpbreaks)
 #' plotROC(y,warpbreaks$wool)
+#' }
 NULL
 
 
@@ -568,6 +570,7 @@ selectSVMs <- function(model, command.args=NULL, ..., d=NULL, warn.suboptimal=ge
 #' @aliases predict
 #' @seealso \code{\link{init.liquidSVM}} and \code{\link{test.liquidSVM}}
 #' @examples
+#' \dontrun{
 #' ## Multiclass classification
 #' modelIris <- svm(Species ~ ., iris)
 #' y <- predict(modelIris, iris)
@@ -576,6 +579,7 @@ selectSVMs <- function(model, command.args=NULL, ..., d=NULL, warn.suboptimal=ge
 #' modelTrees <- svm(Height ~ Girth + Volume, trees)
 #' y <- predict(modelTrees, trees)
 #' plot(trees$Height, y)
+#' }
 predict.liquidSVM <- function(object, newdata, ...){
   result <- test(model=object,newdata=newdata,labels=0,...)
   if(!is.null(dim(result)))
@@ -803,6 +807,7 @@ noop <- function(x){}
 #' @aliases clean
 #' @seealso \code{\link{init.liquidSVM}}
 #' @examples
+#' \dontrun{
 #' ## Multiclass classification
 #' modelIris <- svm(Species ~ ., iris)
 #' y <- predict(modelIris, iris)
@@ -816,6 +821,7 @@ noop <- function(x){}
 #' clean(modelTrees)
 #' clean(modelIris)
 #' # now predict(modelTrees, ...) would not be possible any more
+#' }
 clean.liquidSVM <- function(model, warn=TRUE, ...){
   if(length(model$cookie)!=1){
     warning(paste0("Weird cookie: ",model$cookie))

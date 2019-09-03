@@ -20,6 +20,7 @@ Usually this has not to be done by the user since
 liquidSVM harnesses garbage collection offered by R.
 }
 \examples{
+\dontrun{
 ## Multiclass classification
 modelIris <- svm(Species ~ ., iris)
 y <- predict(modelIris, iris)
@@ -33,6 +34,7 @@ test(modelTrees, trees)
 clean(modelTrees)
 clean(modelIris)
 # now predict(modelTrees, ...) would not be possible any more
+}
 }
 \seealso{
 \code{\link{init.liquidSVM}}
