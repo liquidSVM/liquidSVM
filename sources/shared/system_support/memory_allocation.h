@@ -42,7 +42,7 @@ using namespace std;
 
 // Check for GCC
 #if __GNUC__
-	#if __x86_64__ || __ppc64__
+	#if __x86_64__ || __ppc64__ || __PPC64__
 	#define SYSTEM_WITH_64BIT
 	#else
 	#define SYSTEM_WITH_32BIT
